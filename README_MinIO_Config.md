@@ -11,6 +11,19 @@ replace C:\minio with location of the executable
 
 # Connect your Browser to the MinIO Server
 
-Access the MinIO Console by going to a browser and going to http://127.0.0.1:9001
+1. Access the MinIO Console by going to a browser and going to http://127.0.0.1:9001
+
+2. Log in to the Console with the RootUser and RootPass user credentials displayed in the output. These default to minioadmin | minioadmin.
+
+# Use MinIO
+## Create buckets
+1. Go to buckets in left pannel
+2. Create 3 buckets *raw, processed, analytics*
+
+## Upload files to bucket
+Run upload.py to upload json files
+
+## Retrieve files from bucket
+Run retrieve.py to download files from buckets
 
 ***For more information, read https://min.io/docs/minio/windows/index.html***
