@@ -7,15 +7,14 @@ Run : pip install -r requirements.txt
 
 ## Install the MinIO Server
 
-Download the MinIO executable from the following URL: [text](https://dl.min.io/server/minio/release/windows-amd64/minio.exe)
+Download the MinIO executable from the following URL: https://dl.min.io/server/minio/release/windows-amd64/minio.exe   
 Keep this in C Drive.
 
 ## Launch the minio server
 
-In PowerShell or the Command Prompt, navigate to the location of the executable or 
-add the path of the minio.exe file to the system $PATH.
-Run **.\minio.exe server C:\minio --console-address :9001** 
-replace C:\minio with location of the executable
+In PowerShell or the Command Prompt, navigate to the location of the executable or add the path of the minio.exe file to the system $PATH.  
+Run **.\minio.exe server C:\minio --console-address :9001**  
+Replace C:\minio with location of the executable
 
 ## Connect your Browser to the MinIO Server
 
@@ -58,13 +57,13 @@ MinIO itself is primarily an object storage solution, it can be used with variou
 ### Step 2: Set Up Environment Variables
 Add Spark, Hadoop and JAVA to your system environment variables 
 
-###### System Properties → Advanced → Environment Variables → click New and add followings 
+#### System Properties → Advanced → Environment Variables → click New and add followings 
 
 * SPARK_HOME → C:\spark-3.5.0-bin-hadoop3 (your_spark_path)
 * HADOOP_HOME → C:\spark-3.5.0-bin-hadoop3 (your_hadoop_path)
 * JAVA_HOME = C:\Program Files\Java\jdk-17 (your_java_path, if not already set)
 
-###### Add to PATH
+#### Add to PATH
 * Add %SPARK_HOME%\bin to PATH in system variables
 * Add %JAVA_HOME%\bin to the PATH
 
@@ -75,7 +74,7 @@ hadoop version
 java -version
 
 ### Step 4: Add Required Dependencies
-Spark needs the Hadoop-AWS and AWS SDK libraries to interact with S3-compatible storage like MinIO.
+Spark needs the Hadoop-AWS and AWS SDK libraries to interact with S3-compatible storage like MinIO.  
 Check if the following JARs are present in <your_Spark_path>/jars. Apache Spark does not include them by default.
 
 * hadoop-aws-<version>.jar
@@ -84,26 +83,26 @@ Check if the following JARs are present in <your_Spark_path>/jars. Apache Spark 
 
 If they are missing, you need to download them from MVN repository and place them in the <your_Spark_path>/jars directory.
 
-###### 1. Find Compatible hadoop-aws and aws-java-sdk-bundle Versions
-First find spark compatible hadoop-aws and aws-jsb versions : https://docs.qubole.com/en/latest/user-guide/engines/spark/spark-supportability.html 
-or
+#### 1. Find Compatible hadoop-aws and aws-java-sdk-bundle Versions
+First find spark compatible hadoop-aws and aws-jsb versions : https://docs.qubole.com/en/latest/user-guide/engines/spark/spark-supportability.html  
+or  
 Official Spark-Hadoop Compatibility: https://spark.apache.org/docs/latest/
 
-###### 2. Download the compatible JARs
-* Hadoop-AWS JAR:
+#### 2. Download the compatible JARs
+##### Hadoop-AWS JAR:
 
-Maven Repository: https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-aws
-Find compatibility version from the list and download it.
-Place it in the <your_spark_path>/jars directory.
+- Maven Repository: https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-aws  
+- Find compatibility version from the list and download it.  
+- Place it in the <your_spark_path>/jars directory.  
 
-* AWS SDK JAR:
+##### AWS SDK JAR:
 
-Maven Repository: https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-bundle
-Find compatibility version from the list and download it.
-Place it in the <your_Spark_path>/jars directory.
+- Maven Repository: https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-bundle
+- Find compatibility version from the list and download it.
+- Place it in the <your_Spark_path>/jars directory.
 
 ### Step 5: Run the Codes
-Ensure raw bucket has json files.
-Run clean_data.py 
-Run Filter_low_confidence_data.py 
-Use read_parquet_file.py to get details of parquet files.
+Ensure raw bucket has json files.  
+Run clean_data.py   
+Run Filter_low_confidence_data.py   
+Use read_parquet_file.py to get details of parquet files    
