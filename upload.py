@@ -1,14 +1,15 @@
-#upload json file to raw bucket
-
 import boto3
+import os
 
-# MinIO Connection Details
+#  MinIO Connection Details
 ENDPOINT = 'http://127.0.0.1:9000'
 ACCESS_KEY = 'minioadmin'
 SECRET_KEY = 'minioadmin'
-BUCKET_NAME = 'raw'  # Bucket to upload to
+BUCKET_NAME = 'raw'  #  Use only "raw" as the bucket name (MinIO does not allow subdirectories as bucket names)
+FOLDER_NAME = 'vehicle_detection'  # Folder inside the bucket
+LOCAL_FILE = "lake_code/vehicle_tracking.json"  #  JSON file to upload
 
-# Connect to MinIO
+#  Connect to MinIO (S3-compatible API)
 s3 = boto3.client(
     's3',
     endpoint_url=ENDPOINT,
@@ -16,21 +17,23 @@ s3 = boto3.client(
     aws_secret_access_key=SECRET_KEY,
 )
 
-# Get JSON File Name from User
-file_name = input("Enter the full path of the JSON file to upload: ")
-
 try:
-    # Upload JSON File
-    s3.upload_file(file_name, BUCKET_NAME, file_name.split('\\')[-1])  # Only the filename is used as the key
-    print(f"File '{file_name}' uploaded to bucket '{BUCKET_NAME}'")
+    #  Ensure that we upload the file inside the "vehicle_detection" folder inside "raw" bucket
+    s3_key = f"{FOLDER_NAME}/{os.path.basename(LOCAL_FILE)}"  # Saves inside `raw/vehicle_detection/`
+    
+    #  Upload JSON File to MinIO inside `raw/vehicle_detection/`
+    s3.upload_file(LOCAL_FILE, BUCKET_NAME, s3_key)
+    print(f" File '{LOCAL_FILE}' uploaded to 's3://{BUCKET_NAME}/{s3_key}'")
 
-    # List Objects in a Bucket
-    response = s3.list_objects_v2(Bucket=BUCKET_NAME)
+    # List objects inside `raw/vehicle_detection/`
+    response = s3.list_objects_v2(Bucket=BUCKET_NAME, Prefix=FOLDER_NAME + "/")
+    
     if 'Contents' in response:
+        print("\n Files inside `raw/vehicle_detection/` in MinIO:")
         for obj in response['Contents']:
-            print(f"File: {obj['Key']}, Size: {obj['Size']} bytes")
+            print(f" {obj['Key']} ({obj['Size']} bytes)")
     else:
-        print(f"Bucket '{BUCKET_NAME}' is empty.")
+        print(f"\n No files found in `raw/vehicle_detection/`.")
 
 except Exception as e:
-    print(f"Error uploading file: {e}")
+    print(f" Error uploading file: {e}")
