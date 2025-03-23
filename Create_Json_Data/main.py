@@ -2,10 +2,10 @@ from flask import Flask, request, jsonify
 import os
 import supervision as sv
 from ultralytics import YOLO
-import os
 import json
 import cv2
 import numpy as np
+import requests  # Added to send data to second backend
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
@@ -13,6 +13,8 @@ RESULTS_FOLDER = "results"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 FRAME_SAVE_DIR = "results/Frames"
+
+SECOND_BACKEND_URL = "http://localhost:8012/upload_2"  # URL of the second backend
 
 
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
@@ -89,7 +91,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
 
     return json_output_path
 
-
 @app.route("/upload", methods=["POST"])
 def upload_video():
     if "file" not in request.files:
@@ -105,13 +106,22 @@ def upload_video():
     target_video_path = os.path.join(RESULTS_FOLDER, "processed_" + file.filename)
 
     json_output_path = ModelRun(source_video_path, target_video_path)
+    
+    try:
+        with open(json_output_path, 'rb') as json_file:
+            response = requests.post("http://localhost:8012/upload_2", files={"json_file": json_file})
+            response_data = response.json()
+    except Exception as e:
+        response_data = {"error": str(e)}
 
     return jsonify({
         "message": "File uploaded and processed successfully",
         "source_video": source_video_path,
         "processed_video": target_video_path,
-        "json_output": json_output_path
+        "json_output": json_output_path,
+        "second_backend_response": response_data
     }), 200
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8011, debug=True)
