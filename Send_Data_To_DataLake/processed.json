@@ -1,0 +1,22 @@
+[
+    {
+        "tracker_id": 1,
+        "class_id": 7,
+        "average_confidence": 0.9172698936679147
+    },
+    {
+        "tracker_id": 2,
+        "class_id": 2,
+        "average_confidence": 0.8897959942167456
+    },
+    {
+        "tracker_id": 3,
+        "class_id": 2,
+        "average_confidence": 0.8676683117042888
+    },
+    {
+        "tracker_id": 4,
+        "class_id": 2,
+        "average_confidence": 0.7088475864041935
+    }
+]

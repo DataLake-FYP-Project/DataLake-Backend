@@ -5,7 +5,7 @@ from ultralytics import YOLO
 import json
 import cv2
 import numpy as np
-import requests  # Added to send data to second backend
+import requests  
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
@@ -14,7 +14,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 FRAME_SAVE_DIR = "results/Frames"
 
-SECOND_BACKEND_URL = "http://localhost:8012/upload_2"  # URL of the second backend
+SECOND_BACKEND_URL = "http://localhost:8012/upload_2"
 
 
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
@@ -34,6 +34,10 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
 
     video_info = sv.VideoInfo.from_video_path(SOURCE_VIDEO_PATH)
     generator = sv.video.get_video_frames_generator(SOURCE_VIDEO_PATH)
+
+    # Extract the video name (without extension) for the JSON filename
+    video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
+    json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_frame_data.json")
 
     with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:  
         tracking_model_path = os.path.join("Model", "yolov8x.pt")
@@ -85,7 +89,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
 
             sink.write_frame(frame)
 
-    json_output_path = "results/frame_data.json"
     with open(json_output_path, 'w') as json_file:
         json.dump(frame_data_list, json_file, indent=4)
 
