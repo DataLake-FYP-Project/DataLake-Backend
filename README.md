@@ -47,7 +47,7 @@ python main.py
 ```
 
 
-### 2. **Create JSON Data**
+### 2. **Test Frontend (Streamlit UI)**
 
 Go to the Test_frontend folder and run the following command to start the Streamlit UI:
 
