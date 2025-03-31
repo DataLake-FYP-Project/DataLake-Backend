@@ -1,0 +1,42 @@
+[
+    {
+        "tracker_id": 1,
+        "class_id": 7,
+        "class_name": "Car",
+        "vehicle_color": "Red",
+        "direction": "North",
+        "lane": 1,
+        "speed": 65,
+        "average_confidence": 0.9172698936679147
+    },
+    {
+        "tracker_id": 2,
+        "class_id": 2,
+        "class_name": "Truck",
+        "vehicle_color": "Blue",
+        "direction": "South",
+        "lane": 2,
+        "speed": 55,
+        "average_confidence": 0.8897959942167456
+    },
+    {
+        "tracker_id": 3,
+        "class_id": 2,
+        "class_name": "Truck",
+        "vehicle_color": "Green",
+        "direction": "East",
+        "lane": 1,
+        "speed": 50,
+        "average_confidence": 0.8676683117042888
+    },
+    {
+        "tracker_id": 4,
+        "class_id": 2,
+        "class_name": "Truck",
+        "vehicle_color": "Yellow",
+        "direction": "West",
+        "lane": 3,
+        "speed": 45,
+        "average_confidence": 0.7088475864041935
+    }
+]

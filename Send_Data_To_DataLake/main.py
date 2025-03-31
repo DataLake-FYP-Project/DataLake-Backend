@@ -4,6 +4,8 @@ import os
 import json
 from elasticsearch import Elasticsearch
 from collections import defaultdict
+from datetime import datetime
+
 
 app = Flask(__name__)
 
@@ -115,10 +117,10 @@ def upload_to_elasticsearch(file_path):
 
         if isinstance(data, list):
             for i, record in enumerate(data):
-                res = es.index(index=ES_INDEX, id=i + 1, body=record)
+                res = es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="add_timestamp")
                 print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
         else:
-            res = es.index(index=ES_INDEX, id=1, body=data)
+            res = es.index(index=ES_INDEX, id=1, body=data, pipeline="add_timestamp")
             print(f"Single document uploaded to Elasticsearch: {res['result']}")
     except Exception as e:
         print(f"Error uploading to Elasticsearch: {e}")
@@ -148,7 +150,7 @@ def upload_json():
 
     upload_to_minio(json_path, video_name)
     upload_to_minio(processed_json, video_name)
-    # upload_to_elasticsearch(processed_json)
+    upload_to_elasticsearch(processed_json)
 
     return jsonify({"message": "File uploaded successfully"}), 200
 

@@ -112,7 +112,7 @@ def upload_video():
     
     try:
         with open(json_output_path, 'rb') as json_file:
-            response = requests.post("http://localhost:8012/upload_2", files={"json_file": json_file})
+            response = requests.post("http://localhost:8012/upload_2", files={"json_file": json_file}, timeout=10)
             response_data = response.json()
     except Exception as e:
         response_data = {"error": str(e)}
