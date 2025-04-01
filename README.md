@@ -17,6 +17,16 @@ Elasticsearch on http://localhost:9200
 
 Kibana on http://localhost:5601
 
+# MinIo Setup
+
+Go to the Minio EXE folder and run following in cmd.
+```bash
+.\minio.exe server C:\minio --console-address :9001
+```
+
+And then access the MinIo   http://127.0.0.1:9001
+
+
 
 # Vehicle Data Upload to MinIO and Elasticsearch
 
