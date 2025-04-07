@@ -1,3 +1,4 @@
+import json
 import streamlit as st
 import requests
 import cv2
@@ -48,11 +49,13 @@ def upload_video_and_points(video_file, points):
         tmp.write(video_file.read())
         tmp_path = tmp.name
 
+    points_data = json.dumps(points)
+
     # Rewind the file pointer before upload
     video_file.seek(0)
 
     files = {"file": (video_file.name, video_file, "video/mp4")}
-    data = {"points": str(points)}  # if backend expects points
+    data = {"points": points_data}  # if backend expects points
     response = requests.post(url, files=files, data=data)
 
     return response

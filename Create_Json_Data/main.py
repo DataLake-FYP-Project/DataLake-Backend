@@ -21,6 +21,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     model = YOLO(model_path)  
     model.fuse() 
 
+    SOURCE = np.array(points)
+
     box_annotator = sv.BoxAnnotator(
         thickness=4,
         text_thickness=4,
@@ -66,6 +68,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                 for bbox, confidence, class_id, tracker_id in detections
             ]
 
+
             frame = box_annotator.annotate(scene=frame, detections=detections, labels=labels)
 
             frame_path = os.path.join(FRAME_SAVE_DIR, f"frame_{frame_number:04d}.jpg")
@@ -85,6 +88,9 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                 ]
             }
             frame_data_list.append(frame_data)
+  
+            cv2.polylines(frame, [SOURCE.astype(np.int32)], isClosed=True, color=(0, 255, 0), thickness=5)
+
 
             sink.write_frame(frame)
 
@@ -92,6 +98,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
         json.dump(frame_data_list, json_file, indent=4)
 
     return json_output_path
+
 
 @app.route("/upload", methods=["POST"])
 def upload_video():
@@ -101,36 +108,37 @@ def upload_video():
     file = request.files["file"]
     if file.filename == "":
         return jsonify({"error": "No selected file"}), 400
+    points = request.form.get("points", None)
     
+    if points:
+        try:
+            points = json.loads(points)
+        except json.JSONDecodeError as e:
+            return jsonify({"error": f"Invalid JSON in points: {e}"}), 400
+    else:
+        points = []
+
     source_video_path = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(source_video_path)
 
     target_video_path = os.path.join(RESULTS_FOLDER, "processed_" + file.filename)
     
     try:
-        # Debugging: Check the paths
         print(f"Source Video Path: {source_video_path}")
         print(f"Target Video Path: {target_video_path}")
 
-        # Try running ModelRun function and capture any exceptions
-        points = []  # Initialize points as an empty list in case it's not provided
         json_output_path = ModelRun(source_video_path, target_video_path, points)
-        
-        # Debugging: Check if the ModelRun was successful
         print(f"JSON Output Path: {json_output_path}")
 
     except Exception as e:
-        # Catch any errors from the ModelRun function and return a message
         print(f"Error in ModelRun: {str(e)}")
         return jsonify({"error": f"Error processing video: {str(e)}"}), 500
 
-    # Communicating with the second backend
     try:
         with open(json_output_path, 'rb') as json_file:
             response = requests.post(SECOND_BACKEND_URL, files={"json_file": json_file}, timeout=10)
             response_data = response.json()
 
-            # Handle points here, etc.
             points = response_data.get("points", None)
             if points is None:
                 return jsonify({"error": "Points not found in the response from the second backend"}), 400
@@ -138,7 +146,7 @@ def upload_video():
             print("Received points from second backend:", points)
 
             try:
-                points = json.loads(points)  # Parse points as JSON
+                points = json.loads(points)
             except json.JSONDecodeError as e:
                 return jsonify({"error": f"Invalid JSON in points: {e}"}), 400
 
@@ -154,6 +162,8 @@ def upload_video():
         "json_output": json_output_path,
         "second_backend_response": response_data
     }), 200
+
+
 
 
 if __name__ == "__main__":
