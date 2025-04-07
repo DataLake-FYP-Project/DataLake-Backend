@@ -6,10 +6,17 @@ import tempfile
 
 
 # Function to capture points on the video
-def select_points_on_video(video_path):
+def select_points_on_video(video_path, new_width=640, new_height=480):
     # Initialize video capture
     cap = cv2.VideoCapture(video_path)
     ret, frame = cap.read()
+
+    # Get the original video dimensions
+    original_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    original_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # Resize the frame to the new size for selecting points
+    frame_resized = cv2.resize(frame, (new_width, new_height))
 
     # List to store clicked points
     points = []
@@ -23,23 +30,27 @@ def select_points_on_video(video_path):
             if len(points) == 4:
                 cv2.destroyAllWindows()
 
-    # Capture the first frame
-    if ret:
-        frame = cv2.resize(frame, (640, 480))
+    # Show the resized frame
+    cv2.imshow("Click to Select Points", frame_resized)
+    cv2.setMouseCallback("Click to Select Points", click_event)
 
-        # Show the first frame
-        cv2.imshow("Click to Select Points", frame)
-        cv2.setMouseCallback("Click to Select Points", click_event)
+    # Wait until 4 points are clicked
+    while len(points) < 4:
+        cv2.waitKey(1)  # Allow OpenCV to process mouse events
 
-        # Wait until 4 points are clicked
-        while len(points) < 4:
-            cv2.waitKey(1)  # Allow OpenCV to process mouse events
-
-        cv2.destroyAllWindows()
-
+    cv2.destroyAllWindows()
     cap.release()
 
-    return points
+    # Scale the points to match the original frame dimensions
+    scaled_points = scale_polygon_points(points, original_width, original_height, new_width, new_height)
+
+    return scaled_points
+
+
+def scale_polygon_points(polygon_points, original_width, original_height, new_width, new_height):
+    scale_x = original_width / new_width
+    scale_y = original_height / new_height
+    return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
 
 def upload_video_and_points(video_file, points):
