@@ -16,8 +16,7 @@ FRAME_SAVE_DIR = "results/Frames"
 
 SECOND_BACKEND_URL = "http://localhost:8012/upload_2"
 
-
-def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
+def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     model_path = os.path.join("Model", "yolov8x.pt")
     model = YOLO(model_path)  
     model.fuse() 
@@ -107,15 +106,46 @@ def upload_video():
     file.save(source_video_path)
 
     target_video_path = os.path.join(RESULTS_FOLDER, "processed_" + file.filename)
-
-    json_output_path = ModelRun(source_video_path, target_video_path)
     
     try:
-        with open(json_output_path, 'rb') as json_file:
-            response = requests.post("http://localhost:8012/upload_2", files={"json_file": json_file}, timeout=10)
-            response_data = response.json()
+        # Debugging: Check the paths
+        print(f"Source Video Path: {source_video_path}")
+        print(f"Target Video Path: {target_video_path}")
+
+        # Try running ModelRun function and capture any exceptions
+        points = []  # Initialize points as an empty list in case it's not provided
+        json_output_path = ModelRun(source_video_path, target_video_path, points)
+        
+        # Debugging: Check if the ModelRun was successful
+        print(f"JSON Output Path: {json_output_path}")
+
     except Exception as e:
-        response_data = {"error": str(e)}
+        # Catch any errors from the ModelRun function and return a message
+        print(f"Error in ModelRun: {str(e)}")
+        return jsonify({"error": f"Error processing video: {str(e)}"}), 500
+
+    # Communicating with the second backend
+    try:
+        with open(json_output_path, 'rb') as json_file:
+            response = requests.post(SECOND_BACKEND_URL, files={"json_file": json_file}, timeout=10)
+            response_data = response.json()
+
+            # Handle points here, etc.
+            points = response_data.get("points", None)
+            if points is None:
+                return jsonify({"error": "Points not found in the response from the second backend"}), 400
+
+            print("Received points from second backend:", points)
+
+            try:
+                points = json.loads(points)  # Parse points as JSON
+            except json.JSONDecodeError as e:
+                return jsonify({"error": f"Invalid JSON in points: {e}"}), 400
+
+            print("Successfully parsed points:", points)
+
+    except Exception as e:
+        return jsonify({"error": f"Error during second backend communication: {str(e)}"}), 500
 
     return jsonify({
         "message": "File uploaded and processed successfully",
