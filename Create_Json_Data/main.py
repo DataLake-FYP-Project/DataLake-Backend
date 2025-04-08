@@ -16,6 +16,11 @@ FRAME_SAVE_DIR = "results/Frames"
 
 SECOND_BACKEND_URL = "http://localhost:8012/upload_2"
 
+def is_in_target_polygon(center_x, center_y, polygon):
+    point = (center_x, center_y)
+    return cv2.pointPolygonTest(np.array(polygon, dtype=np.int32), point, False) >= 0
+
+
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     model_path = os.path.join("Model", "yolov8x.pt")
     model = YOLO(model_path)  
@@ -63,35 +68,41 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 
                 detections.tracker_id = [id_map[tracker_id] for tracker_id in result.boxes.id.cpu().numpy().astype(int)]
 
-            labels = [
-                f"ID: {tracker_id} | {model.model.names[class_id]} {confidence:0.2f}"
-                for bbox, confidence, class_id, tracker_id in detections
-            ]
+            # Only keep detections that are inside the polygon
+            filtered_detections = []
+            filtered_labels = []
+            for bbox, confidence, class_id, tracker_id in detections:
+                center_x = (bbox[0] + bbox[2]) / 2  # center x of the bounding box
+                center_y = (bbox[1] + bbox[3]) / 2  # center y of the bounding box
 
+                # Check if the center of the bounding box is inside the polygon
+                if is_in_target_polygon(center_x, center_y, points):
+                    filtered_detections.append((bbox, confidence, class_id, tracker_id))
+                    filtered_labels.append(
+                        f"ID: {tracker_id} | {model.model.names[class_id]} {confidence:0.2f}"
+                    )
 
-            frame = box_annotator.annotate(scene=frame, detections=detections, labels=labels)
+            # Only annotate the filtered detections
+            if filtered_detections:
+                frame = box_annotator.annotate(scene=frame, detections=filtered_detections, labels=filtered_labels)
 
-            frame_path = os.path.join(FRAME_SAVE_DIR, f"frame_{frame_number:04d}.jpg")
-            cv2.imwrite(frame_path, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+                # Collect frame data for JSON
+                frame_data = {
+                    "frame_number": frame_number,
+                    "detections": [
+                        {
+                            "tracker_id": int(tracker_id), 
+                            "class_id": int(class_id),     
+                            "confidence": float(confidence),
+                            "bbox": [float(coord) for coord in bbox] 
+                        }
+                        for bbox, confidence, class_id, tracker_id in filtered_detections
+                    ]
+                }
+                frame_data_list.append(frame_data)
 
-            # Collect frame data for JSON
-            frame_data = {
-                "frame_number": frame_number,
-                "detections": [
-                    {
-                        "tracker_id": int(tracker_id), 
-                        "class_id": int(class_id),     
-                        "confidence": float(confidence),
-                        "bbox": [float(coord) for coord in bbox] 
-                    }
-                    for bbox, confidence, class_id, tracker_id in detections
-                ]
-            }
-            frame_data_list.append(frame_data)
-  
             cv2.polylines(frame, [SOURCE.astype(np.int32)], isClosed=True, color=(0, 255, 0), thickness=5)
-
-
+            
             sink.write_frame(frame)
 
     with open(json_output_path, 'w') as json_file:
@@ -138,19 +149,6 @@ def upload_video():
         with open(json_output_path, 'rb') as json_file:
             response = requests.post(SECOND_BACKEND_URL, files={"json_file": json_file}, timeout=10)
             response_data = response.json()
-
-            points = response_data.get("points", None)
-            if points is None:
-                return jsonify({"error": "Points not found in the response from the second backend"}), 400
-
-            print("Received points from second backend:", points)
-
-            try:
-                points = json.loads(points)
-            except json.JSONDecodeError as e:
-                return jsonify({"error": f"Invalid JSON in points: {e}"}), 400
-
-            print("Successfully parsed points:", points)
 
     except Exception as e:
         return jsonify({"error": f"Error during second backend communication: {str(e)}"}), 500
