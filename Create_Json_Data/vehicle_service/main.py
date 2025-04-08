@@ -14,7 +14,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 FRAME_SAVE_DIR = "results/Frames"
 
-SECOND_BACKEND_URL = "http://localhost:8012/upload_2"
+SECOND_BACKEND_URL = "http://localhost:8013/upload_2"
 
 def is_in_target_polygon(center_x, center_y, polygon):
     point = (center_x, center_y)
@@ -165,4 +165,4 @@ def upload_video():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8011, debug=True)
+    app.run(host="0.0.0.0", port=8012, debug=True)

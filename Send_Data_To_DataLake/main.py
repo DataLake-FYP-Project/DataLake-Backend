@@ -155,4 +155,4 @@ def upload_json():
     return jsonify({"message": "File uploaded successfully"}), 200
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8012, debug=True)
+    app.run(host="0.0.0.0", port=8013, debug=True)

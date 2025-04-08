@@ -5,6 +5,8 @@ import cv2
 import tempfile
 
 
+# python -m streamlit run app.py
+
 # Function to capture points on the video
 def select_points_on_video(video_path, new_width=640, new_height=480):
     # Initialize video capture
@@ -53,8 +55,13 @@ def scale_polygon_points(polygon_points, original_width, original_height, new_wi
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
 
-def upload_video_and_points(video_file, points):
-    url = "http://localhost:8011/upload"
+def upload_video_and_points(video_file, points, video_type):
+    if video_type == "People":
+        url = "http://localhost:8011/upload"
+    elif video_type == "Vehicle":
+        url = "http://localhost:8012/upload"
+    else:
+        raise ValueError("Invalid video type selected")
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
         tmp.write(video_file.read())
@@ -62,17 +69,17 @@ def upload_video_and_points(video_file, points):
 
     points_data = json.dumps(points)
 
-    # Rewind the file pointer before upload
-    video_file.seek(0)
+    video_file.seek(0)  # Reset file pointer
 
     files = {"file": (video_file.name, video_file, "video/mp4")}
-    data = {"points": points_data}  # if backend expects points
+    data = {"points": points_data}
+
     response = requests.post(url, files=files, data=data)
 
     return response
 
 
-# Streamlit UI to upload video and select points
+# Streamlit UI
 st.title("Video Uploader with Points Selection")
 
 video_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov", "mkv"])
@@ -80,32 +87,28 @@ video_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov", 
 if video_file:
     st.video(video_file)
 
-    # Save the video temporarily for processing using tempfile
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file:
         temp_video_file.write(video_file.read())
         temp_video_path = temp_video_file.name
         st.write(f"Temporary video file saved at: {temp_video_path}")
 
-    # Initialize session state for points
     if 'points' not in st.session_state:
         st.session_state.points = []
 
-    # Button to start selecting points
+    # Select video type
+    video_type = st.selectbox("Select Video Type", ["People", "Vehicle"])
+
     if st.button("Select Points on Video"):
         points = select_points_on_video(temp_video_path)
-
-        # Store the selected points in session state
         st.session_state.points = points
-
         st.write(f"Selected points: {points}")
 
-    # Button to upload video along with selected points
     if st.button("Upload Video"):
         points = st.session_state.points
 
         if points:
             with st.spinner("Uploading..."):
-                response = upload_video_and_points(video_file, points)
+                response = upload_video_and_points(video_file, points, video_type)
 
             if response.status_code == 200:
                 st.success("Video uploaded successfully!")
@@ -113,3 +116,4 @@ if video_file:
                 st.error(f"Upload failed: {response.status_code} - {response.text}")
         else:
             st.warning("Please select 4 points first!")
+
