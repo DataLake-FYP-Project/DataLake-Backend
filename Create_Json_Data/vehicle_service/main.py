@@ -53,17 +53,18 @@ def get_video_creation_time(video_path):
         '-show_entries', 'format_tags=creation_time',
         '-of', 'json', video_path
     ]
-    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = json.loads(result.stdout)
+    try:
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        output = json.loads(result.stdout)
 
-    # Check if 'creation_time' is available
-    if 'creation_time' in output['format']['tags']:
-        # Parse the creation time into a datetime object
-        video_start_time_str = output['format']['tags']['creation_time']
-        video_start_time = datetime.strptime(video_start_time_str, "%Y-%m-%dT%H:%M:%S.%fZ")
-        return video_start_time
-    else:
-        # Return None if the creation time is not found
+        if 'format' in output and 'tags' in output['format'] and 'creation_time' in output['format']['tags']:
+            video_start_time_str = output['format']['tags']['creation_time']
+            video_start_time = datetime.strptime(video_start_time_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+            return video_start_time
+        else:
+            return None
+    except Exception as e:
+        print(f"Error getting video creation time: {e}")
         return None
 
 def datetime_converter(obj):
@@ -227,13 +228,14 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
             # Extract frame and detections
             frame = result.orig_img
             detections = sv.Detections.from_yolov8(result)
-            print("Open")
+            creation_time = get_video_creation_time(SOURCE_VIDEO_PATH)
 
-            # if creation_time:
-            #     VIDEO_START_TIME = creation_time
-            # else:
-            #     #print("Warning: Could not retrieve video creation time. Using the current time instead.")
-            #     VIDEO_START_TIME = datetime.now()
+            if creation_time:
+                VIDEO_START_TIME = creation_time
+            else:
+                #print("Warning: Could not retrieve video creation time. Using the current time instead.")
+                print("open")
+                VIDEO_START_TIME = datetime.now()
 
             # Handle object IDs (tracker IDs)
             if result.boxes.id is not None:
@@ -324,16 +326,16 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                                         "stopped": stopped,
                                         "confidence": float(confidence),  # Convert to Python float
                                         "bbox": [float(coord) for coord in bbox],  # Convert bbox to list of floats
-                    #                     "entry_time": (
-                    #     (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
-                    #     .strftime("%Y-%m-%d %H:%M:%S")
-                    #     if vehicle_times.get(int(tracker_id)) else None
-                    # ),
-                    # "exit_time": (
-                    #     (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("exit", 0) / FPS))
-                    #     .strftime("%Y-%m-%d %H:%M:%S")
-                    #     if vehicle_times.get(int(tracker_id)) else None
-                    # )
+                                        "entry_time": (
+                        (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
+                        .strftime("%Y-%m-%d %H:%M:%S")
+                        if vehicle_times.get(int(tracker_id)) else None
+                    ),
+                    "exit_time": (
+                        (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("exit", 0) / FPS))
+                        .strftime("%Y-%m-%d %H:%M:%S")
+                        if vehicle_times.get(int(tracker_id)) else None
+                    )
                                     }
                                     for bbox, confidence, class_id, tracker_id in detections
                                 ]
