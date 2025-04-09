@@ -109,7 +109,7 @@ if video_file:
 
     if st.button("Upload Video"):
         points = st.session_state.points
-
+# test
         if points:
             with st.spinner("Uploading..."):
                 response = upload_video_and_points(video_file, points, video_type)
