@@ -1,12 +1,34 @@
 {
-    "processing_time": "2025-04-09 12:11:54 UTC",
+    "video_metadata": {
+        "filename": "uploads\\people_video - Trim.mp4",
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "format_long_name": "QuickTime / MOV",
+        "duration_seconds": 1.706646,
+        "size_bytes": 491502,
+        "bitrate": 2303943,
+        "creation_time": "2025-04-09T16:44:19.000000Z",
+        "encoder": null,
+        "video_codec": "h264",
+        "width": 960,
+        "height": 544,
+        "fps": 29.97,
+        "device_model": null,
+        "software": null,
+        "audio_codec": "aac",
+        "sample_rate": 48000,
+        "channels": 2,
+        "creation_time_utc": "2025-04-09 16:44:19 UTC",
+        "creation_time_local": "2025-04-09 22:14:19 Sri Lanka Standard Time",
+        "recording_time": "2025-04-09 22:14:19 Sri Lanka Standard Time"
+    },
+    "processing_time": "2025-04-09 16:51:16 UTC",
     "summary": {
         "total_people": 0,
         "total_entering": 0,
         "total_exiting": 0,
-        "restricted_area_entries": 2,
+        "restricted_area_entries": 0,
         "fps": 29.0,
-        "duration_seconds": 3.4482758620689653
+        "duration_seconds": 1.7586206896551724
     },
     "detections": {
         "2": {
@@ -23,7 +45,7 @@
                         65.9464340209961,
                         503.6124572753906
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:57",
                     "carrying": "no objects",
                     "speed": 0,
                     "in_restricted_area": false
@@ -36,7 +58,7 @@
                         67.06361389160156,
                         503.2447509765625
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:57",
                     "carrying": "no objects",
                     "speed": 55.71570392269061,
                     "in_restricted_area": false
@@ -49,7 +71,7 @@
                         69.45378875732422,
                         503.36053466796875
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:57",
                     "carrying": "no objects",
                     "speed": 65.73974199376137,
                     "in_restricted_area": false
@@ -62,7 +84,7 @@
                         69.67802429199219,
                         503.26483154296875
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:57",
                     "carrying": "no objects",
                     "speed": 19.47132380986004,
                     "in_restricted_area": false
@@ -75,7 +97,7 @@
                         70.4940414428711,
                         503.7150573730469
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:57",
                     "carrying": "no objects",
                     "speed": 18.44696794454484,
                     "in_restricted_area": false
@@ -88,7 +110,7 @@
                         71.6396484375,
                         504.0719299316406
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:57",
                     "carrying": "no objects",
                     "speed": 24.987651028064587,
                     "in_restricted_area": false
@@ -101,7 +123,7 @@
                         72.83639526367188,
                         504.5602722167969
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 24.221662299499805,
                     "in_restricted_area": false
@@ -114,7 +136,7 @@
                         76.09793853759766,
                         505.05059814453125
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 76.85064204685551,
                     "in_restricted_area": false
@@ -127,7 +149,7 @@
                         80.20947265625,
                         505.14019775390625
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 96.40629137430895,
                     "in_restricted_area": false
@@ -140,7 +162,7 @@
                         85.27119445800781,
                         505.2728576660156
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 115.87161290671962,
                     "in_restricted_area": false
@@ -153,7 +175,7 @@
                         93.88971710205078,
                         505.6851806640625
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 231.56449832028272,
                     "in_restricted_area": false
@@ -166,7 +188,7 @@
                         101.67759704589844,
                         505.017822265625
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 212.82965636257296,
                     "in_restricted_area": false
@@ -179,7 +201,7 @@
                         107.34368896484375,
                         504.0262145996094
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 147.9818359904741,
                     "in_restricted_area": false
@@ -192,7 +214,7 @@
                         119.61286163330078,
                         503.44561767578125
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 305.8425501738209,
                     "in_restricted_area": false
@@ -205,7 +227,7 @@
                         132.4234619140625,
                         503.3822937011719
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 299.5145860154776,
                     "in_restricted_area": false
@@ -218,7 +240,7 @@
                         144.35293579101562,
                         503.3804931640625
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 263.6950878526276,
                     "in_restricted_area": false
@@ -231,7 +253,7 @@
                         154.1724395751953,
                         502.8751525878906
                     ],
-                    "timestamp": "2025-04-09 17:38:55",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 196.2631820139154,
                     "in_restricted_area": false
@@ -244,7 +266,7 @@
                         162.00340270996094,
                         502.5155334472656
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 139.01337452906597,
                     "in_restricted_area": false
@@ -257,7 +279,7 @@
                         168.61917114257812,
                         502.15081787109375
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 107.31959161004653,
                     "in_restricted_area": false
@@ -270,7 +292,7 @@
                         173.90621948242188,
                         501.5806579589844
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 74.61414291725477,
                     "in_restricted_area": false
@@ -283,7 +305,7 @@
                         179.25962829589844,
                         500.64776611328125
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 94.03849212354349,
                     "in_restricted_area": false
@@ -296,7 +318,7 @@
                         185.59786987304688,
                         499.7775573730469
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 139.86192700449965,
                     "in_restricted_area": false
@@ -309,7 +331,7 @@
                         192.1773223876953,
                         499.7835388183594
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 160.89304173575235,
                     "in_restricted_area": false
@@ -322,7 +344,7 @@
                         198.35670471191406,
                         496.1483154296875
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 202.00229152474978,
                     "in_restricted_area": false
@@ -335,7 +357,7 @@
                         204.63589477539062,
                         494.3635559082031
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 204.8138470900805,
                     "in_restricted_area": false
@@ -348,7 +370,7 @@
                         211.06138610839844,
                         493.59033203125
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 217.96368598333115,
                     "in_restricted_area": false
@@ -361,7 +383,7 @@
                         217.69882202148438,
                         493.488525390625
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 234.64555955737816,
                     "in_restricted_area": false
@@ -374,7 +396,7 @@
                         227.8192596435547,
                         493.3633728027344
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 344.39588559713565,
                     "in_restricted_area": false
@@ -387,7 +409,7 @@
                         234.18740844726562,
                         493.41748046875
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 234.20697763083763,
                     "in_restricted_area": false
@@ -400,7 +422,7 @@
                         240.48609924316406,
                         493.6068420410156
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 219.74915772711702,
                     "in_restricted_area": false
@@ -413,7 +435,7 @@
                         247.44239807128906,
                         493.380615234375
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 225.53803291073905,
                     "in_restricted_area": false
@@ -426,7 +448,7 @@
                         252.6381378173828,
                         493.1360168457031
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 162.41481691614916,
                     "in_restricted_area": false
@@ -439,7 +461,7 @@
                         263.0135192871094,
                         492.50408935546875
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 279.45091857977593,
                     "in_restricted_area": false
@@ -452,7 +474,7 @@
                         270.5241394042969,
                         492.1574401855469
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 191.3530146293315,
                     "in_restricted_area": false
@@ -465,7 +487,7 @@
                         275.354736328125,
                         491.93060302734375
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:58",
                     "carrying": "no objects",
                     "speed": 107.1585951331841,
                     "in_restricted_area": false
@@ -478,7 +500,7 @@
                         278.4172058105469,
                         491.6934814453125
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 56.24370212902614,
                     "in_restricted_area": false
@@ -491,7 +513,7 @@
                         280.8326416015625,
                         491.73046875
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 38.11669197550107,
                     "in_restricted_area": false
@@ -504,7 +526,7 @@
                         282.57366943359375,
                         490.8964538574219
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 27.4034622758035,
                     "in_restricted_area": false
@@ -517,7 +539,7 @@
                         286.50958251953125,
                         489.773681640625
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 99.90254667528114,
                     "in_restricted_area": false
@@ -530,7 +552,7 @@
                         291.02716064453125,
                         488.84014892578125
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 124.29735794021515,
                     "in_restricted_area": false
@@ -543,7 +565,7 @@
                         296.9526062011719,
                         485.8304748535156
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 202.38919080775202,
                     "in_restricted_area": false
@@ -556,7 +578,7 @@
                         301.99835205078125,
                         481.8185119628906
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 198.79104406381515,
                     "in_restricted_area": false
@@ -569,7 +591,7 @@
                         307.8342590332031,
                         478.63531494140625
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 224.25224461277347,
                     "in_restricted_area": false
@@ -582,7 +604,7 @@
                         314.40283203125,
                         477.491455078125
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 236.662303646149,
                     "in_restricted_area": false
@@ -595,315 +617,16 @@
                         320.987060546875,
                         477.3789978027344
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 237.82477790327317,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 51,
-                    "bbox": [
-                        223.38006591796875,
-                        205.65240478515625,
-                        326.8428039550781,
-                        477.0179748535156
-                    ],
-                    "timestamp": "2025-04-09 17:38:56",
-                    "carrying": "no objects",
-                    "speed": 215.96604615479686,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 52,
-                    "bbox": [
-                        231.76768493652344,
-                        205.8029327392578,
-                        332.2384033203125,
-                        476.0387878417969
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 200.21732687649035,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 53,
-                    "bbox": [
-                        240.93215942382812,
-                        206.38180541992188,
-                        339.723388671875,
-                        474.8755187988281
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 241.56518046284802,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 54,
-                    "bbox": [
-                        249.00186157226562,
-                        206.491943359375,
-                        348.14776611328125,
-                        474.3368225097656
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 239.2457626429922,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 55,
-                    "bbox": [
-                        256.7286071777344,
-                        207.69308471679688,
-                        357.5609130859375,
-                        474.3932189941406
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 249.19649181498914,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 56,
-                    "bbox": [
-                        258.1499938964844,
-                        208.28919982910156,
-                        360.2305908203125,
-                        474.09283447265625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 59.475205023509595,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 57,
-                    "bbox": [
-                        263.7056884765625,
-                        209.8782958984375,
-                        368.5020751953125,
-                        473.6850280761719
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 201.22405316384467,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 58,
-                    "bbox": [
-                        265.17584228515625,
-                        210.86839294433594,
-                        372.42303466796875,
-                        472.7565002441406
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 78.17623107838685,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 59,
-                    "bbox": [
-                        264.9908142089844,
-                        210.49635314941406,
-                        374.9337463378906,
-                        471.9587707519531
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 37.747632896658814,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 60,
-                    "bbox": [
-                        265.01983642578125,
-                        211.18521118164062,
-                        377.283203125,
-                        471.8777770996094
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 35.59637128372928,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 61,
-                    "bbox": [
-                        265.1343078613281,
-                        210.68844604492188,
-                        379.6383056640625,
-                        471.6279296875
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 37.408959417286916,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 62,
-                    "bbox": [
-                        267.2242431640625,
-                        210.61524963378906,
-                        382.91436767578125,
-                        470.56085205078125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 79.54486899393243,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 63,
-                    "bbox": [
-                        269.73822021484375,
-                        209.6183319091797,
-                        386.4371643066406,
-                        469.9842834472656
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 90.45823019002208,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 64,
-                    "bbox": [
-                        275.8370666503906,
-                        208.19332885742188,
-                        392.1310119628906,
-                        468.51885986328125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 176.05506256720366,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 65,
-                    "bbox": [
-                        283.03302001953125,
-                        206.6175994873047,
-                        398.5753479003906,
-                        468.12249755859375
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 199.8409762931933,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 66,
-                    "bbox": [
-                        290.3182373046875,
-                        205.12010192871094,
-                        404.6167907714844,
-                        468.559326171875
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 193.84763828321704,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 67,
-                    "bbox": [
-                        298.0592956542969,
-                        203.67202758789062,
-                        409.6141052246094,
-                        467.9156799316406
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 187.17962993705487,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 68,
-                    "bbox": [
-                        307.51104736328125,
-                        203.5637969970703,
-                        415.01556396484375,
-                        467.64642333984375
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 215.4410959889312,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 69,
-                    "bbox": [
-                        315.9822082519531,
-                        202.0650634765625,
-                        419.3497314453125,
-                        467.4449462890625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 187.30628208026602,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 70,
-                    "bbox": [
-                        323.3437194824219,
-                        203.28196716308594,
-                        421.90252685546875,
-                        467.4534606933594
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 144.851363866493,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 71,
-                    "bbox": [
-                        328.52484130859375,
-                        203.53497314453125,
-                        422.38702392578125,
-                        466.7672119140625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 82.39173764266629,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 72,
-                    "bbox": [
-                        333.1123046875,
-                        202.41006469726562,
-                        422.432373046875,
-                        464.8869323730469
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 80.07112992861627,
-                    "in_restricted_area": true
-                },
-                {
-                    "frame_number": 73,
-                    "bbox": [
-                        339.72686767578125,
-                        214.64755249023438,
-                        421.3991394042969,
-                        465.9970703125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 209.77988518291252,
                     "in_restricted_area": false
                 }
             ],
             "confidence": 0.8719883561134338,
-            "entered_restricted_area": true,
-            "restricted_area_entry_time": "2025-04-09 17:38:57",
-            "restricted_area_entry_frame": 72
+            "entered_restricted_area": false,
+            "restricted_area_entry_time": null,
+            "restricted_area_entry_frame": null
         },
         "4": {
             "tracker_id": 4,
@@ -919,7 +642,7 @@
                         52.97196578979492,
                         514.8854370117188
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 0,
                     "in_restricted_area": false
@@ -932,7 +655,7 @@
                         54.480873107910156,
                         514.9674682617188
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 205.37413407350414,
                     "in_restricted_area": false
@@ -945,7 +668,7 @@
                         56.01864242553711,
                         515.1199340820312
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 224.44167664566032,
                     "in_restricted_area": false
@@ -958,7 +681,7 @@
                         55.809600830078125,
                         514.939697265625
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 97.67247148965403,
                     "in_restricted_area": false
@@ -971,7 +694,7 @@
                         57.664268493652344,
                         514.5185546875
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 57.01081492069244,
                     "in_restricted_area": false
@@ -984,7 +707,7 @@
                         61.84050369262695,
                         514.9320678710938
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 61.40121982928392,
                     "in_restricted_area": false
@@ -997,7 +720,7 @@
                         66.50853729248047,
                         515.6575927734375
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 78.46962219507071,
                     "in_restricted_area": false
@@ -1010,7 +733,7 @@
                         72.80581665039062,
                         514.8402709960938
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 168.59379598848494,
                     "in_restricted_area": false
@@ -1023,7 +746,7 @@
                         83.61492919921875,
                         515.1515502929688
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 275.81708188619734,
                     "in_restricted_area": false
@@ -1036,653 +759,16 @@
                         96.31599426269531,
                         515.6493530273438
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 309.40345664728846,
                     "in_restricted_area": false
-                },
-                {
-                    "frame_number": 51,
-                    "bbox": [
-                        28.88401222229004,
-                        204.7968292236328,
-                        107.27043914794922,
-                        515.5108032226562
-                    ],
-                    "timestamp": "2025-04-09 17:38:56",
-                    "carrying": "no objects",
-                    "speed": 247.91030232271854,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 52,
-                    "bbox": [
-                        32.87791442871094,
-                        206.35621643066406,
-                        116.842529296875,
-                        515.4148559570312
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 197.84815975294526,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 53,
-                    "bbox": [
-                        34.60002899169922,
-                        207.40670776367188,
-                        124.47721099853516,
-                        515.1597290039062
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 136.16281376169292,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 54,
-                    "bbox": [
-                        34.04842758178711,
-                        208.40785217285156,
-                        129.79727172851562,
-                        515.3649291992188
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 71.32105655806464,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 55,
-                    "bbox": [
-                        33.0603141784668,
-                        208.9445343017578,
-                        134.6120147705078,
-                        515.1112670898438
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 55.63768115420172,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 56,
-                    "bbox": [
-                        31.81254768371582,
-                        208.96356201171875,
-                        138.77821350097656,
-                        513.8837890625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 45.80147794864648,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 57,
-                    "bbox": [
-                        29.74418830871582,
-                        208.4497528076172,
-                        142.19363403320312,
-                        513.5323486328125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 23.214514891625036,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 58,
-                    "bbox": [
-                        29.799118041992188,
-                        208.02792358398438,
-                        146.6309051513672,
-                        512.8150634765625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 67.19843845483183,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 59,
-                    "bbox": [
-                        32.54930114746094,
-                        207.3152313232422,
-                        152.59031677246094,
-                        512.0657348632812
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 128.05609203445988,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 60,
-                    "bbox": [
-                        38.02546310424805,
-                        206.1293182373047,
-                        158.5162353515625,
-                        506.9336853027344
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 189.01491701709807,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 61,
-                    "bbox": [
-                        44.9820556640625,
-                        205.4473114013672,
-                        164.87057495117188,
-                        503.3639221191406
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 202.6155733696189,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 62,
-                    "bbox": [
-                        52.96621322631836,
-                        204.4466552734375,
-                        171.76866149902344,
-                        501.9776611328125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 218.5504553129244,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 63,
-                    "bbox": [
-                        62.98905944824219,
-                        203.5325469970703,
-                        178.8948516845703,
-                        500.137939453125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 251.84666506884466,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 64,
-                    "bbox": [
-                        70.41670227050781,
-                        202.80215454101562,
-                        183.73306274414062,
-                        500.9281005859375
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 177.85699198022112,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 65,
-                    "bbox": [
-                        76.2000503540039,
-                        203.07110595703125,
-                        186.2552490234375,
-                        501.16156005859375
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 120.65030154187762,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 66,
-                    "bbox": [
-                        86.8614273071289,
-                        203.71087646484375,
-                        194.9077606201172,
-                        500.9779357910156
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 280.12971222304503,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 67,
-                    "bbox": [
-                        98.13675689697266,
-                        204.5320281982422,
-                        205.54742431640625,
-                        501.336181640625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 318.22700304726624,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 68,
-                    "bbox": [
-                        109.11804962158203,
-                        204.8705596923828,
-                        217.35292053222656,
-                        501.713623046875
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 330.5717103064133,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 69,
-                    "bbox": [
-                        118.76631927490234,
-                        204.46173095703125,
-                        228.77418518066406,
-                        501.6278381347656
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 305.59217676315,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 70,
-                    "bbox": [
-                        126.36714935302734,
-                        206.2594451904297,
-                        238.22964477539062,
-                        502.27642822265625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 249.8471963593458,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 71,
-                    "bbox": [
-                        130.8736572265625,
-                        207.7231903076172,
-                        245.06857299804688,
-                        502.10308837890625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 165.56936343271187,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 72,
-                    "bbox": [
-                        133.43618774414062,
-                        208.6657257080078,
-                        250.49630737304688,
-                        502.2745056152344
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 116.97934679179988,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 73,
-                    "bbox": [
-                        135.0911102294922,
-                        209.1643524169922,
-                        254.66183471679688,
-                        501.1590270996094
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 84.86898832983698,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 74,
-                    "bbox": [
-                        135.90863037109375,
-                        209.21685791015625,
-                        257.7876281738281,
-                        498.8309631347656
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 66.01530146592896,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 75,
-                    "bbox": [
-                        135.09881591796875,
-                        208.09881591796875,
-                        260.1282958984375,
-                        497.6972351074219
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 39.48223833130608,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 76,
-                    "bbox": [
-                        136.3745574951172,
-                        207.01998901367188,
-                        263.8206787109375,
-                        497.2302551269531
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 75.44437433066159,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 77,
-                    "bbox": [
-                        139.10043334960938,
-                        206.64683532714844,
-                        267.5399475097656,
-                        496.0045166015625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 96.2870967170662,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 78,
-                    "bbox": [
-                        143.43002319335938,
-                        205.49609375,
-                        271.7071533203125,
-                        493.69122314453125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 133.0489969134732,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 79,
-                    "bbox": [
-                        149.64373779296875,
-                        203.64712524414062,
-                        276.1098327636719,
-                        489.3711853027344
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 178.03996415428637,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 80,
-                    "bbox": [
-                        157.4114532470703,
-                        201.81765747070312,
-                        281.50164794921875,
-                        486.624267578125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 202.0222301431587,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 81,
-                    "bbox": [
-                        166.86758422851562,
-                        200.5688018798828,
-                        286.673095703125,
-                        482.78387451171875
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 224.5706925844621,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 82,
-                    "bbox": [
-                        177.08212280273438,
-                        199.47235107421875,
-                        292.4872131347656,
-                        480.6368408203125
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 237.126164282161,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 83,
-                    "bbox": [
-                        187.23080444335938,
-                        199.13699340820312,
-                        298.50994873046875,
-                        479.602294921875
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 235.32541755388777,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 84,
-                    "bbox": [
-                        195.33218383789062,
-                        199.00576782226562,
-                        303.3148193359375,
-                        479.1435546875
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 187.3360394161346,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 85,
-                    "bbox": [
-                        204.59703063964844,
-                        199.3092498779297,
-                        310.5376892089844,
-                        479.2757568359375
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 239.15513764704295,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 86,
-                    "bbox": [
-                        215.34271240234375,
-                        200.246337890625,
-                        320.33154296875,
-                        478.8078918457031
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 297.90117199562536,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 87,
-                    "bbox": [
-                        225.31761169433594,
-                        200.52757263183594,
-                        330.9258117675781,
-                        478.7412109375
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 298.26895043026434,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 88,
-                    "bbox": [
-                        232.62733459472656,
-                        199.8363037109375,
-                        340.29034423828125,
-                        479.0771179199219
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 241.83160422732516,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 89,
-                    "bbox": [
-                        237.47018432617188,
-                        200.64405822753906,
-                        346.84716796875,
-                        478.44110107421875
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 165.3146761485984,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 90,
-                    "bbox": [
-                        239.66978454589844,
-                        201.00709533691406,
-                        351.8383483886719,
-                        479.4183349609375
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 106.06132472055296,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 91,
-                    "bbox": [
-                        240.9462890625,
-                        201.28680419921875,
-                        355.03314208984375,
-                        478.07952880859375
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 66.6279305284141,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 92,
-                    "bbox": [
-                        242.36163330078125,
-                        201.32395935058594,
-                        357.83038330078125,
-                        476.38323974609375
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 65.64922105221022,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 93,
-                    "bbox": [
-                        243.58143615722656,
-                        200.43826293945312,
-                        360.80462646484375,
-                        475.68975830078125
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 64.98143685172667,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 94,
-                    "bbox": [
-                        244.31329345703125,
-                        199.34939575195312,
-                        362.8802795410156,
-                        475.05914306640625
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 47.73780359919304,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 95,
-                    "bbox": [
-                        246.83477783203125,
-                        199.95635986328125,
-                        365.2621765136719,
-                        473.9439392089844
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 71.4791447294671,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 96,
-                    "bbox": [
-                        251.7067413330078,
-                        199.80447387695312,
-                        369.05712890625,
-                        472.30853271484375
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 128.3146699702397,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 97,
-                    "bbox": [
-                        257.3857116699219,
-                        199.0257568359375,
-                        373.3485107421875,
-                        471.6371154785156
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 146.09201677406026,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 98,
-                    "bbox": [
-                        264.21331787109375,
-                        197.29188537597656,
-                        378.22747802734375,
-                        471.26507568359375
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 172.46953124601876,
-                    "in_restricted_area": true
-                },
-                {
-                    "frame_number": 99,
-                    "bbox": [
-                        272.26568603515625,
-                        197.2753448486328,
-                        382.7641906738281,
-                        471.1136779785156
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 182.55834914428087,
-                    "in_restricted_area": true
                 }
             ],
             "confidence": 0.7102272510528564,
-            "entered_restricted_area": true,
-            "restricted_area_entry_time": "2025-04-09 17:38:58",
-            "restricted_area_entry_frame": 98
+            "entered_restricted_area": false,
+            "restricted_area_entry_time": null,
+            "restricted_area_entry_frame": null
         },
         "5": {
             "tracker_id": 5,
@@ -1698,7 +784,7 @@
                         501.2908020019531,
                         450.4862060546875
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 0,
                     "in_restricted_area": false
@@ -1711,7 +797,7 @@
                         499.4381408691406,
                         450.475830078125
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 62.81543947620113,
                     "in_restricted_area": false
@@ -1724,7 +810,7 @@
                         498.4427795410156,
                         450.1871643066406
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 33.27916294771473,
                     "in_restricted_area": false
@@ -1737,7 +823,7 @@
                         496.06512451171875,
                         449.89996337890625
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 76.52779382181278,
                     "in_restricted_area": false
@@ -1750,7 +836,7 @@
                         495.9653015136719,
                         449.8798828125
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 21.912709116495527,
                     "in_restricted_area": false
@@ -1763,766 +849,13 @@
                         495.7512512207031,
                         451.38580322265625
                     ],
-                    "timestamp": "2025-04-09 17:38:56",
+                    "timestamp": "2025-04-09 22:19:59",
                     "carrying": "no objects",
                     "speed": 21.228913853337605,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 51,
-                    "bbox": [
-                        452.798583984375,
-                        208.1312255859375,
-                        495.0752868652344,
-                        451.2657775878906
-                    ],
-                    "timestamp": "2025-04-09 17:38:56",
-                    "carrying": "no objects",
-                    "speed": 27.683684906419884,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 52,
-                    "bbox": [
-                        443.1156921386719,
-                        208.8302459716797,
-                        487.5338439941406,
-                        452.4665222167969
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 251.26786103032632,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 53,
-                    "bbox": [
-                        436.44818115234375,
-                        209.54588317871094,
-                        482.9583435058594,
-                        451.5560302734375
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 163.0485811737384,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 54,
-                    "bbox": [
-                        430.0042419433594,
-                        209.8468017578125,
-                        478.3399963378906,
-                        449.6151123046875
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 162.15587740164466,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 74,
-                    "bbox": [
-                        359.6275939941406,
-                        221.52224731445312,
-                        407.0866394042969,
-                        467.43212890625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 2097.687558774729,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 75,
-                    "bbox": [
-                        359.9823913574219,
-                        220.89308166503906,
-                        406.1116638183594,
-                        467.9797668457031
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 9.06986678635888,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 76,
-                    "bbox": [
-                        359.7769775390625,
-                        220.84454345703125,
-                        405.0396728515625,
-                        467.447509765625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 20.347090129040176,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 77,
-                    "bbox": [
-                        360.82891845703125,
-                        229.40692138671875,
-                        403.96759033203125,
-                        466.96929931640625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 117.22079427752342,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 78,
-                    "bbox": [
-                        362.1271057128906,
-                        225.92970275878906,
-                        404.5758361816406,
-                        464.7384948730469
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 87.2604161742518,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 79,
-                    "bbox": [
-                        364.5634460449219,
-                        226.17971801757812,
-                        405.8665466308594,
-                        465.2222595214844
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 55.07961509474527,
                     "in_restricted_area": false
                 }
             ],
             "confidence": 0.6605830192565918,
-            "entered_restricted_area": false,
-            "restricted_area_entry_time": null,
-            "restricted_area_entry_frame": null
-        },
-        "6": {
-            "tracker_id": 6,
-            "gender": "Man",
-            "age": 22,
-            "carrying": "no objects",
-            "bbox_history": [
-                {
-                    "frame_number": 53,
-                    "bbox": [
-                        0.26031795144081116,
-                        240.26336669921875,
-                        14.390993118286133,
-                        335.5572204589844
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 0,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 54,
-                    "bbox": [
-                        0.2877415120601654,
-                        238.43182373046875,
-                        14.888071060180664,
-                        336.8199157714844
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 11.219381859181023,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 55,
-                    "bbox": [
-                        0.5103021860122681,
-                        239.6481170654297,
-                        14.924877166748047,
-                        336.5658874511719
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 14.451012681789786,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 56,
-                    "bbox": [
-                        0.6400966644287109,
-                        234.7130584716797,
-                        15.871100425720215,
-                        336.7925109863281
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 70.03240801404036,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 57,
-                    "bbox": [
-                        1.1135237216949463,
-                        236.03622436523438,
-                        16.33736801147461,
-                        337.2527770996094
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 29.230042302172496,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 58,
-                    "bbox": [
-                        1.051879644393921,
-                        233.57098388671875,
-                        16.821582794189453,
-                        337.7338562011719
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 29.416007789431955,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 59,
-                    "bbox": [
-                        1.2434133291244507,
-                        232.5291290283203,
-                        17.350341796875,
-                        337.8747253417969
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 16.725452441495005,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 60,
-                    "bbox": [
-                        2.026210069656372,
-                        230.14573669433594,
-                        18.859390258789062,
-                        338.1138000488281
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 45.50964073077901,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 61,
-                    "bbox": [
-                        2.3544070720672607,
-                        229.57296752929688,
-                        19.6117000579834,
-                        337.9078674316406
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 19.311934835534537,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 62,
-                    "bbox": [
-                        2.5229461193084717,
-                        229.67257690429688,
-                        20.1674747467041,
-                        337.8981018066406
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 10.58303603284438,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 63,
-                    "bbox": [
-                        2.350680351257324,
-                        230.08026123046875,
-                        20.314443588256836,
-                        338.0225524902344
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 7.724229358628386,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 64,
-                    "bbox": [
-                        2.6579408645629883,
-                        229.98780822753906,
-                        21.146774291992188,
-                        338.1610412597656
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 16.537576556406993,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 65,
-                    "bbox": [
-                        2.6656010150909424,
-                        229.6446990966797,
-                        21.69461441040039,
-                        338.205322265625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 9.14627822221698,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 66,
-                    "bbox": [
-                        2.6078569889068604,
-                        229.35986328125,
-                        22.103200912475586,
-                        337.9136657714844
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 9.785250059884978,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 67,
-                    "bbox": [
-                        2.4187586307525635,
-                        229.62721252441406,
-                        22.382349014282227,
-                        338.3721008300781
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 10.604345812983054,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 68,
-                    "bbox": [
-                        2.22715425491333,
-                        229.74835205078125,
-                        22.661907196044922,
-                        338.84783935546875
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 8.747971595939351,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 69,
-                    "bbox": [
-                        2.3511290550231934,
-                        229.94064331054688,
-                        23.273963928222656,
-                        339.1053771972656
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 12.507794643463217,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 70,
-                    "bbox": [
-                        2.3279571533203125,
-                        230.15093994140625,
-                        23.619508743286133,
-                        338.8330993652344
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 4.760097238918967,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 71,
-                    "bbox": [
-                        2.4200103282928467,
-                        230.8156280517578,
-                        23.890045166015625,
-                        337.8463439941406
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 7.031655833135323,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 72,
-                    "bbox": [
-                        2.4855048656463623,
-                        231.26004028320312,
-                        24.49744987487793,
-                        338.44989013671875
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 18.058421783321602,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 73,
-                    "bbox": [
-                        2.528498411178589,
-                        232.6170654296875,
-                        24.92234992980957,
-                        339.1475830078125
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 30.555684704700305,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 74,
-                    "bbox": [
-                        2.5783474445343018,
-                        233.7916717529297,
-                        25.475969314575195,
-                        340.2023010253906
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 33.4883923241177,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 75,
-                    "bbox": [
-                        2.364712953567505,
-                        234.44667053222656,
-                        25.846784591674805,
-                        341.4595947265625
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 27.821749635345626,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 76,
-                    "bbox": [
-                        2.2829527854919434,
-                        236.24166870117188,
-                        25.972009658813477,
-                        342.0989074707031
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 35.303355437285845,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 77,
-                    "bbox": [
-                        2.0246570110321045,
-                        235.96343994140625,
-                        26.229637145996094,
-                        342.3971252441406
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 0.2904454713951559,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 78,
-                    "bbox": [
-                        1.7509405612945557,
-                        234.21498107910156,
-                        26.689407348632812,
-                        342.4360046386719
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 24.935491379414433,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 79,
-                    "bbox": [
-                        1.3847438097000122,
-                        232.10153198242188,
-                        27.016902923583984,
-                        342.29248046875
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 32.73070266809405,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 80,
-                    "bbox": [
-                        1.5037848949432373,
-                        230.82022094726562,
-                        27.700414657592773,
-                        342.021240234375
-                    ],
-                    "timestamp": "2025-04-09 17:38:57",
-                    "carrying": "no objects",
-                    "speed": 25.34263798547137,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 81,
-                    "bbox": [
-                        1.705978512763977,
-                        230.1964874267578,
-                        28.326852798461914,
-                        341.5639343261719
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 19.74971771038494,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 82,
-                    "bbox": [
-                        1.6418766975402832,
-                        229.7980499267578,
-                        28.720273971557617,
-                        341.678466796875
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 6.3049228664459,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 83,
-                    "bbox": [
-                        1.5333737134933472,
-                        229.22323608398438,
-                        29.079408645629883,
-                        341.7659606933594
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 7.945707773168157,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 84,
-                    "bbox": [
-                        1.440397024154663,
-                        229.22731018066406,
-                        29.39397430419922,
-                        342.2412414550781
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 7.657563145093362,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 85,
-                    "bbox": [
-                        1.3651655912399292,
-                        229.19497680664062,
-                        29.668594360351562,
-                        342.4945373535156
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 4.315387840870924,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 86,
-                    "bbox": [
-                        1.3985222578048706,
-                        229.40199279785156,
-                        30.005199432373047,
-                        342.7134704589844
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 8.180835346852747,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 87,
-                    "bbox": [
-                        1.446268916130066,
-                        229.70217895507812,
-                        30.381587982177734,
-                        343.0777893066406
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 11.430537812107312,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 88,
-                    "bbox": [
-                        1.4410650730133057,
-                        229.95001220703125,
-                        30.707015991210938,
-                        343.4287414550781
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 9.846403403143508,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 89,
-                    "bbox": [
-                        1.6895391941070557,
-                        230.5611114501953,
-                        31.247709274291992,
-                        343.6615295410156
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 16.75300587186777,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 90,
-                    "bbox": [
-                        1.97498619556427,
-                        230.77389526367188,
-                        31.97589874267578,
-                        343.83575439453125
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 15.732341441748629,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 91,
-                    "bbox": [
-                        2.1005425453186035,
-                        230.82699584960938,
-                        32.729679107666016,
-                        344.5356140136719
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 16.7863986474575,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 92,
-                    "bbox": [
-                        2.088679075241089,
-                        230.694091796875,
-                        33.33391571044922,
-                        345.0689392089844
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 10.367927743317415,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 93,
-                    "bbox": [
-                        2.2341535091400146,
-                        231.0035858154297,
-                        33.923011779785156,
-                        345.2151184082031
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 12.533812132537102,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 94,
-                    "bbox": [
-                        2.312880516052246,
-                        231.60130310058594,
-                        34.317317962646484,
-                        345.1737365722656
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 10.588676400960656,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 95,
-                    "bbox": [
-                        2.368222951889038,
-                        231.71934509277344,
-                        34.842830657958984,
-                        345.1954040527344
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 8.662562386623886,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 96,
-                    "bbox": [
-                        2.264009952545166,
-                        231.59507751464844,
-                        35.2761344909668,
-                        345.3334655761719
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 4.776051936941084,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 97,
-                    "bbox": [
-                        2.202392101287842,
-                        231.6596221923828,
-                        35.669097900390625,
-                        345.3934326171875
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 5.132517061483879,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 98,
-                    "bbox": [
-                        2.061380386352539,
-                        230.94784545898438,
-                        36.1006965637207,
-                        345.26226806640625
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 12.9287431827307,
-                    "in_restricted_area": false
-                },
-                {
-                    "frame_number": 99,
-                    "bbox": [
-                        1.991355299949646,
-                        230.45237731933594,
-                        36.58380126953125,
-                        345.3215637207031
-                    ],
-                    "timestamp": "2025-04-09 17:38:58",
-                    "carrying": "no objects",
-                    "speed": 8.710467715489376,
-                    "in_restricted_area": false
-                }
-            ],
-            "confidence": 0.7915592193603516,
             "entered_restricted_area": false,
             "restricted_area_entry_time": null,
             "restricted_area_entry_frame": null

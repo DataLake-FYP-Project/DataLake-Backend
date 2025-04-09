@@ -21,10 +21,12 @@ FRAME_SAVE_DIR = "results/Frames"
 
 SECOND_BACKEND_URL = "http://localhost:8012/upload_2"
 
+
 # Object classes (COCO dataset)
 BAG_CLASSES = [24, 26, 28]  # backpack, handbag, suitcase
 CAT_CLASS = 15
 DOG_CLASS = 16
+
 
 
 
@@ -110,14 +112,6 @@ def extract_video_metadata(video_path):
         print(f"Error: {str(e)}")
         return None
 
-def predict_age_gender(face_img):
-    """Predict age and gender using DeepFace"""
-    try:
-        analysis = DeepFace.analyze(face_img, actions=["age", "gender"], enforce_detection=False)
-        return analysis[0]["dominant_gender"], analysis[0]["age"]
-    except Exception:
-        return "Unknown", "Unknown"
-
 def is_carried(obj_bbox, person_bbox):
     """Check if an object is being carried by a person"""
     px1, py1, px2, py2 = person_bbox
@@ -128,36 +122,41 @@ def is_carried(obj_bbox, person_bbox):
     in_carry_position = obj_center_y > lower_half_threshold
     return overlap and in_carry_position
 
-def calculate_speed(prev_position, current_position, fps, frame_interval=1):
-    """
-    Calculate speed in pixels per second between two positions
-    frame_interval: number of frames between measurements (for smoothing)
-    """
-    if prev_position is None or current_position is None:
-        return 0
+def analyze_person(frame, bbox, objects):
+    """Analyze a person's attributes at entry/exit points"""
+    x1, y1, x2, y2 = map(int, bbox)
+    face_roi = frame[y1:y2, x1:x2]
 
-    # Use center points for speed calculation
-    prev_center = ((prev_position[0] + prev_position[2]) / 2, (prev_position[1] + prev_position[3]) / 2)
-    curr_center = ((current_position[0] + current_position[2]) / 2, (current_position[1] + current_position[3]) / 2)
+    # Age/gender detection
+    try:
+        analysis = DeepFace.analyze(face_roi, actions=['age', 'gender'], enforce_detection=False)
+        gender = analysis[0]['dominant_gender']
+        age = analysis[0]['age']
+    except:
+        gender, age = "Unknown", "Unknown"
 
-    # Calculate Euclidean distance
-    distance = math.sqrt((curr_center[0] - prev_center[0])**2 + (curr_center[1] - prev_center[1])**2)
+    # Check for carried items
+    carried_items = []
+    for obj_bbox, _, class_id in objects:
+        if is_carried(obj_bbox, bbox):
+            if class_id in BAG_CLASSES:
+                carried_items.append("bag")
+            elif class_id == CAT_CLASS:
+                carried_items.append("cat")
+            elif class_id == DOG_CLASS:
+                carried_items.append("dog")
 
-    # Convert to pixels per second
-    speed = distance * fps / frame_interval
-    return speed
+    return gender, age, carried_items if carried_items else "no objects"
 
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 
-        # ===== Initialize =====
     total_count = 0
     entering_count = 0
     exiting_count = 0
     restricted_area_count = 0  # New counter for restricted area
-    tracker_states = {}
-    restricted_area_states = {}  # To track who entered restricted area
-    detection_data = {}
-    previous_positions = {}  # To track movement between frames
+    tracker_states = {}  # Tracks area crossings
+    detection_data = {}  # Stores entry/exit information
+    restricted_people = set()  # Track people who entered restricted area
 
     model_path = os.path.join("Model", "yolov8x.pt")
     model = YOLO(model_path)  
@@ -167,22 +166,24 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     
     video_info = sv.VideoInfo.from_video_path(SOURCE_VIDEO_PATH)
 
-    area1 = np.array([(1169, 1678+50), (1942, 2025+50), (1816, 2102+50), (1085, 1703+50)], np.int32)
+    restricted_area = np.array([(500, 500), (800, 500), (800, 800), (500, 800)], np.int32)
+    area1 = np.array(points)
     area2 = np.array([(1040, 1710+50), (1771, 2117+50), (1673, 2142+50), (981, 1713+50)], np.int32)
-    restricted_area = np.array(points)
+
 
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
     json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_frame_data.json")
-    # video_metadata = extract_video_metadata(SOURCE_VIDEO_PATH)
+    video_metadata = extract_video_metadata(SOURCE_VIDEO_PATH)
 
     # Get recording time from metadata or use current time as fallback
     try:
-        recording_time = datetime.now()
+        recording_time = datetime.strptime(video_metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
         recording_time = recording_time.replace(tzinfo=timezone.utc)
     except (KeyError, ValueError):
         print("Warning: Using current time as recording time fallback")
         recording_time = datetime.now(timezone.utc)
 
+    
     with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
         for frame_number, result in enumerate(
             model.track(source=SOURCE_VIDEO_PATH, tracker="bytetrack.yaml", show=False, stream=True, persist=True)
@@ -202,138 +203,146 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                     elif class_id in BAG_CLASSES + [CAT_CLASS, DOG_CLASS]:
                         objects.append((bbox, conf, class_id))
 
-            # Process each person
-            for person_bbox, confidence, tracker_id in people:
-                x1, y1, x2, y2 = person_bbox
-                bottom_right = (int(x2), int(y2))
-                center = (int((x1 + x2) / 2), int((y1 + y2) / 2))
+            # Process each person's area crossings
+            for bbox, conf, tracker_id in people:
+                x1, y1, x2, y2 = bbox
+                bottom_center = (int((x1+x2)/2), int(y2))
 
-                # Calculate speed
-                current_position = (x1, y1, x2, y2)
-                prev_position = previous_positions.get(tracker_id, None)
-                speed = calculate_speed(prev_position, current_position, video_info.fps) if frame_number > 0 else 0
-                previous_positions[tracker_id] = current_position
+                # Check area crossings
+                in_area1 = cv2.pointPolygonTest(area1, bottom_center, False) >= 0
+                in_area2 = cv2.pointPolygonTest(area2, bottom_center, False) >= 0
+                in_restricted = cv2.pointPolygonTest(restricted_area, bottom_center, False) >= 0
 
-                # Age/gender detection
-                face_roi = frame[int(y1):int(y2), int(x1):int(x2)]
-                gender, age = predict_age_gender(face_roi)
+                current_area = None
+                if in_area1: current_area = "area1"
+                elif in_area2: current_area = "area2"
 
-                # Check for carried items
-                carried_items = []
-                for obj_bbox, _, class_id in objects:
-                    if is_carried(obj_bbox, person_bbox):
-                        if class_id in BAG_CLASSES:
-                            carried_items.append("bag")
-                        elif class_id == CAT_CLASS:
-                            carried_items.append("cat")
-                        elif class_id == DOG_CLASS:
-                            carried_items.append("dog")
-
-                # Initialize or update person data
-                if tracker_id not in tracker_states:
-                    tracker_states[tracker_id] = []
-                    restricted_area_states[tracker_id] = False
+                # Initialize tracker only when entering monitored areas
+                if tracker_id not in tracker_states and current_area:
+                    tracker_states[tracker_id] = {
+                        'current_area': current_area,
+                        'last_area': None,
+                        'entry_time': None,
+                        'entered_restricted': False
+                    }
                     detection_data[tracker_id] = {
                         "tracker_id": int(tracker_id),
-                        "gender": gender,
-                        "age": age,
-                        "carrying": carried_items if carried_items else "no objects",
-                        "bbox_history": [],
-                        "confidence": float(confidence),
-                        "entered_restricted_area": False,
-                        "restricted_area_entry_time": None,
-                        "restricted_area_entry_frame": None
+                        "gender": "Unknown",
+                        "age": "Unknown",
+                        "carrying": "none",
+                        "confidence": float(conf),
+                        "entry_time": None,
+                        "exit_time": None,
+                        "entry_frame": None,
+                        "exit_frame": None,
+                        "entered_restricted": False,
+                        "restricted_entry_time": None,
+                        "restricted_exit_time": None
                     }
 
-                # Check restricted area entry
-                in_restricted_area = cv2.pointPolygonTest(restricted_area, center, False) >= 0
-                if in_restricted_area and not restricted_area_states[tracker_id]:
-                    restricted_area_states[tracker_id] = True
-                    detection_data[tracker_id]["entered_restricted_area"] = True
-                    detection_data[tracker_id]["restricted_area_entry_time"] = (
-                        recording_time + timedelta(seconds=frame_number / video_info.fps)).strftime("%Y-%m-%d %H:%M:%S")
-                    detection_data[tracker_id]["restricted_area_entry_frame"] = frame_number
-                    restricted_area_count += 1
-                elif not in_restricted_area and restricted_area_states[tracker_id]:
-                    restricted_area_states[tracker_id] = False
+                # Only process if person is in our tracking system (entered monitored area)
+                if tracker_id in tracker_states:
+                    # Check restricted area entry
+                    if in_restricted and not tracker_states[tracker_id]['entered_restricted']:
+                        tracker_states[tracker_id]['entered_restricted'] = True
+                        detection_data[tracker_id]['entered_restricted'] = True
+                        detection_data[tracker_id]['restricted_entry_time'] = (
+                            recording_time + timedelta(seconds=frame_number / video_info.fps)
+                        ).strftime("%Y-%m-%d %H:%M:%S")
+                        restricted_area_count += 1
+                        restricted_people.add(tracker_id)
 
-                # Area crossing logic
-                in_area1 = cv2.pointPolygonTest(area1, bottom_right, False) >= 0
-                in_area2 = cv2.pointPolygonTest(area2, bottom_right, False) >= 0
+                        # Draw alert for restricted area entry
+                        cv2.putText(frame, "RESTRICTED AREA ENTRY!", (int(x1), int(y1)-30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
-                if in_area2 and "area2" not in tracker_states[tracker_id]:
-                    tracker_states[tracker_id].append("area2")
-                    if tracker_states[tracker_id] == ["area2"]:
-                        entry_time = recording_time + timedelta(seconds=frame_number / video_info.fps)
-                        detection_data[tracker_id]["entry_time"] = entry_time.strftime("%Y-%m-%d %H:%M:%S")
-                        detection_data[tracker_id]["entry_frame"] = frame_number
+                    # Check restricted area exit
+                    elif not in_restricted and tracker_states[tracker_id]['entered_restricted']:
+                        detection_data[tracker_id]['restricted_exit_time'] = (
+                            recording_time + timedelta(seconds=frame_number / video_info.fps)
+                        ).strftime("%Y-%m-%d %H:%M:%S")
 
-                if in_area1 and "area1" not in tracker_states[tracker_id]:
-                    tracker_states[tracker_id].append("area1")
-                    if tracker_states[tracker_id] == ["area1"]:
-                        exit_time = recording_time + timedelta(seconds=frame_number / video_info.fps)
-                        detection_data[tracker_id]["exit_time"] = exit_time.strftime("%Y-%m-%d %H:%M:%S")
-                        detection_data[tracker_id]["exit_frame"] = frame_number
+                    # Handle area transitions
+                    if current_area != tracker_states[tracker_id]['current_area']:
+                        # Entry event (area2)
+                        if current_area == "area1" and tracker_states[tracker_id]['last_area'] == "area2":
+                            # Analyze person attributes
+                            gender, age, mask_status, mask_conf, carrying = analyze_person(frame, bbox, objects)
 
-                # Update counts
-                if tracker_states[tracker_id] == ["area2", "area1"]:
-                    entering_count += 1
-                    tracker_states[tracker_id] = []
-                elif tracker_states[tracker_id] == ["area1", "area2"]:
-                    exiting_count += 1
-                    tracker_states[tracker_id] = []
+                            # Update detection data
+                            entry_time = recording_time + timedelta(seconds=frame_number / video_info.fps)
+                            detection_data[tracker_id].update({
+                                "tracker_id": int(tracker_id),
+                                "gender": gender,
+                                "age": age,
+                                "carrying": carrying,
+                                "mask_status": mask_status,
+                                "mask_confidence": mask_conf,
+                                "entry_time": entry_time.strftime("%Y-%m-%d %H:%M:%S"),
+                                "entry_frame": frame_number,
+                            })
+                            entering_count += 1
+                            total_count += 1
 
-                total_count = entering_count + exiting_count
+                        # Exit event (area1 after area2)
+                        elif current_area == "area2" and tracker_states[tracker_id]['last_area'] == "area1":
+                            # Analyze person attributes again at exit
+                            gender, age, mask_status, mask_conf, carrying = analyze_person(frame, bbox, objects)
 
-                # Store bounding box history
-                detection_data[tracker_id]["bbox_history"].append({
-                    "frame_number": int(frame_number),
-                    "bbox": [float(x1), float(y1), float(x2), float(y2)],
-                    "timestamp": (recording_time + timedelta(seconds=frame_number / video_info.fps)).strftime("%Y-%m-%d %H:%M:%S"),
-                    "carrying": carried_items if carried_items else "no objects",
-                    "speed": speed,
+                            # Update detection data
+                            exit_time = recording_time + timedelta(seconds=frame_number / video_info.fps)
+                            detection_data[tracker_id].update({
+                                "tracker_id": int(tracker_id),
+                                "gender": gender,
+                                "age": age,
+                                "carrying": carrying,
+                                "exit_time": exit_time.strftime("%Y-%m-%d %H:%M:%S"),
+                                "exit_frame": frame_number,
+                            })
+                            exiting_count += 1
+                            total_count += 1
 
-                    "in_restricted_area": in_restricted_area
-                })
+                        # Update tracker state
+                        tracker_states[tracker_id]['last_area'] = tracker_states[tracker_id]['current_area']
+                        tracker_states[tracker_id]['current_area'] = current_area
 
-                # Draw bounding box and label
-                carrying_str = ", ".join(carried_items) if carried_items else "no objects"
-                label = f"ID: {tracker_id} | {gender}, {age} |Carrying: {carrying_str} | Speed: {speed:.2f} px/s"
-                if in_restricted_area:
-                    label += " | IN RESTRICTED AREA"
-                    box_color = (0, 0, 255)  # Red for restricted area
-                else:
-                    box_color = (255, 0, 0)  # Blue for normal
+                    # Draw bounding box if person is being tracked
+                    if detection_data[tracker_id]['entry_time']:
+                        person = detection_data[tracker_id]
+                        label = f"ID: {tracker_id} | {person['gender']}, {person['age']}"
+                        if person['entered_restricted']:
+                            # Highlight people who entered restricted area
+                            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 3)
+                            label += " | RESTRICTED"
+                        else:
+                            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
+                        cv2.putText(frame, label, (int(x1), int(y1)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
 
-                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), box_color, 3)
-                cv2.putText(frame, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-
-            # Draw counting areas and counters
-            cv2.polylines(frame, [area1], isClosed=True, color=(255, 0, 0), thickness=2)
+            # Draw counters and areas
+            cv2.polylines(frame, [area1], isClosed=True, color=(0, 255, 0), thickness=2)
             cv2.polylines(frame, [area2], isClosed=True, color=(0, 255, 0), thickness=2)
             cv2.polylines(frame, [restricted_area], isClosed=True, color=(0, 0, 255), thickness=2)
-            cv2.putText(frame, "Restricted Area", (restricted_area[0][0], restricted_area[0][1] - 10),
+            cv2.putText(frame, "RESTRICTED AREA", (restricted_area[0][0], restricted_area[0][1]-10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
-            # Display counters
             cv2.putText(frame, f"Total: {total_count}", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
             cv2.putText(frame, f"Entering: {entering_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             cv2.putText(frame, f"Exiting: {exiting_count}", (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            cv2.putText(frame, f"Restricted Area Entries: {restricted_area_count}", (50, 200),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 165, 255), 2)
+            cv2.putText(frame, f"Restricted Area: {restricted_area_count}", (50, 200),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-            # Write frame to output video
             sink.write_frame(frame)
 
     # ===== Save Results =====
     json_output = {
-        # "video_metadata": video_metadata,
+        "video_metadata": video_metadata,
         "processing_time": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z"),
         "summary": {
             "total_people": int(total_count),
             "total_entering": int(entering_count),
             "total_exiting": int(exiting_count),
-            "restricted_area_entries": int(restricted_area_count),  # New field
+            "restricted_area_entries": int(restricted_area_count),
+            "restricted_people_ids": [int(id) for id in restricted_people],
             "fps": float(video_info.fps),
             "duration_seconds": float(video_info.total_frames / video_info.fps)
         },
@@ -344,7 +353,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 
     with open(json_output_path, "w") as f:
         json.dump(json_output, f, indent=4)
-
     return json_output_path
 
 @app.route("/upload", methods=["POST"])
