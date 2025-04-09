@@ -47,32 +47,12 @@ Before starting, ensure you have the following prerequisites set up:
 
 The project contains two backends: one for generating JSON data from the model and the other for sending the data to MinIO and Elasticsearch.
 
-### 1. **Create JSON Data**
+### 1. **Start backends**
 
-Go to the `Create_Json_Data` folder and run the following command to generate JSON data from the model:
-
-```bash
-cd Create_Json_Data
-python main.py
-```
-
-
-### 2. **Test Frontend (Streamlit UI)**
-
-Go to the Test_frontend folder and run the following command to start the Streamlit UI:
+Go to the `run_all_services.ps1` file and run the following command to generate JSON data from the model:
 
 ```bash
-cd Test_frontend
-python -m streamlit run app.py
-```
-
-### 3. **Sending Data to Data Lake**
-
-Once the frontend is up, go to the Send_Data_To_DataLake folder and run the following command to send the generated data to MinIO and Elasticsearch:
-
-```bash
-cd Send_Data_To_DataLake
-python main.py
+powershell -ExecutionPolicy Bypass -File .\run_all_services.ps1
 ```
 
 ## Uploading Files via Streamlit UI
