@@ -74,9 +74,13 @@ def upload_video_and_points(video_file, points, video_type):
     files = {"file": (video_file.name, video_file, "video/mp4")}
     data = {"points": points_data}
 
-    response = requests.post(url, files=files, data=data)
-
-    return response
+    try:
+        response = requests.post(url, files=files, data=data)
+        response.raise_for_status()  # Raise HTTPError for bad responses
+        return response
+    except requests.exceptions.RequestException as e:
+        st.error(f"Upload failed: {str(e)}")
+        return
 
 
 # Streamlit UI
@@ -110,10 +114,11 @@ if video_file:
             with st.spinner("Uploading..."):
                 response = upload_video_and_points(video_file, points, video_type)
 
-            if response.status_code == 200:
-                st.success("Video uploaded successfully!")
+            if response is not None:  # This is the key fix
+                if response.status_code == 200:
+                    st.success("Video uploaded successfully!")
+                else:
+                    st.error(f"Upload failed: {response.status_code} - {response.text}")
             else:
-                st.error(f"Upload failed: {response.status_code} - {response.text}")
-        else:
-            st.warning("Please select 4 points first!")
+                st.error("Upload failed: No response from server (backend may have crashed)")
 

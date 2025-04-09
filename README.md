@@ -21,7 +21,8 @@ Kibana on http://localhost:5601
 
 Go to the Minio EXE folder and run following in cmd.
 ```bash
-.\minio.exe server C:\minio --console-address :9001
+minio server C:\minio --console-address ":9001"
+
 ```
 
 And then access the MinIo   http://127.0.0.1:9001
