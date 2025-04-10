@@ -166,9 +166,9 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     
     video_info = sv.VideoInfo.from_video_path(SOURCE_VIDEO_PATH)
 
-    restricted_area = np.array([(500, 500), (800, 500), (800, 800), (500, 800)], np.int32)
-    area1 = np.array(points)
-    area2 = np.array([(1040, 1710+50), (1771, 2117+50), (1673, 2142+50), (981, 1713+50)], np.int32)
+    restricted_area = np.array(points)
+    area1 = np.array([(265, 427), (294, 423), (478, 514), (433, 523)], np.int32)
+    area2 = np.array([(243, 446), (274, 437), (403, 510), (367, 521)], np.int32)
 
 
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
@@ -267,7 +267,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                         # Entry event (area2)
                         if current_area == "area1" and tracker_states[tracker_id]['last_area'] == "area2":
                             # Analyze person attributes
-                            gender, age, mask_status, mask_conf, carrying = analyze_person(frame, bbox, objects)
+                            gender, age, carrying = analyze_person(frame, bbox, objects)
 
                             # Update detection data
                             entry_time = recording_time + timedelta(seconds=frame_number / video_info.fps)
@@ -276,8 +276,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                                 "gender": gender,
                                 "age": age,
                                 "carrying": carrying,
-                                "mask_status": mask_status,
-                                "mask_confidence": mask_conf,
                                 "entry_time": entry_time.strftime("%Y-%m-%d %H:%M:%S"),
                                 "entry_frame": frame_number,
                             })
@@ -287,7 +285,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                         # Exit event (area1 after area2)
                         elif current_area == "area2" and tracker_states[tracker_id]['last_area'] == "area1":
                             # Analyze person attributes again at exit
-                            gender, age, mask_status, mask_conf, carrying = analyze_person(frame, bbox, objects)
+                            gender, age, carrying = analyze_person(frame, bbox, objects)
 
                             # Update detection data
                             exit_time = recording_time + timedelta(seconds=frame_number / video_info.fps)
@@ -319,7 +317,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                         cv2.putText(frame, label, (int(x1), int(y1)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
 
             # Draw counters and areas
-            cv2.polylines(frame, [area1], isClosed=True, color=(0, 255, 0), thickness=2)
+            cv2.polylines(frame, [area1], isClosed=True, color=(255, 0, 0), thickness=2)
             cv2.polylines(frame, [area2], isClosed=True, color=(0, 255, 0), thickness=2)
             cv2.polylines(frame, [restricted_area], isClosed=True, color=(0, 0, 255), thickness=2)
             cv2.putText(frame, "RESTRICTED AREA", (restricted_area[0][0], restricted_area[0][1]-10),
