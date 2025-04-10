@@ -9,7 +9,7 @@ import cv2  # OpenCV for image saving
 import numpy as np
 from sklearn.cluster import KMeans
 import ffmpeg
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
@@ -47,30 +47,88 @@ color_dict = {
     "light_yellow": (255, 255, 102),
 }
 
-def get_video_creation_time(video_path):
-    cmd = [
-        'ffprobe', '-v', 'error',
-        '-show_entries', 'format_tags=creation_time',
-        '-of', 'json', video_path
-    ]
+# ===== Helper Functions =====
+def extract_video_metadata(video_path):
+    """Extract all available metadata from a video file using ffmpeg-python."""
     try:
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        output = json.loads(result.stdout)
+        probe = ffmpeg.probe(video_path)
+        metadata = {}
 
-        if 'format' in output and 'tags' in output['format'] and 'creation_time' in output['format']['tags']:
-            video_start_time_str = output['format']['tags']['creation_time']
-            video_start_time = datetime.strptime(video_start_time_str, "%Y-%m-%dT%H:%M:%S.%fZ")
-            return video_start_time
-        else:
-            return None
+        # ===== 1. General Video Information =====
+        if "format" in probe:
+            format_info = probe["format"]
+            metadata.update({
+                "filename": format_info.get("filename"),
+                "format_name": format_info.get("format_name"),
+                "format_long_name": format_info.get("format_long_name"),
+                "duration_seconds": float(format_info.get("duration", 0)),
+                "size_bytes": int(format_info.get("size", 0)),
+                "bitrate": int(format_info.get("bit_rate", 0)),
+            })
+
+            # Extract creation_time (if available)
+            if "tags" in format_info:
+                metadata.update({
+                    "creation_time": format_info["tags"].get("creation_time"),
+                    "encoder": format_info["tags"].get("encoder"),
+                })
+
+        # ===== 2. Video Stream Metadata =====
+        video_streams = [s for s in probe["streams"] if s["codec_type"] == "video"]
+        if video_streams:
+            video_info = video_streams[0]
+            metadata.update({
+                "video_codec": video_info.get("codec_name"),
+                "width": int(video_info.get("width", 0)),
+                "height": int(video_info.get("height", 0)),
+                "fps": eval(video_info.get("avg_frame_rate", "0/1")),  # e.g., "30/1" → 30.0
+            })
+
+            # Extract device-specific metadata (iPhone, Android, etc.)
+            if "tags" in video_info:
+                metadata.update({
+                    "device_model": video_info["tags"].get("com.apple.quicktime.model"),
+                    "software": video_info["tags"].get("software"),
+                })
+
+        # ===== 3. Audio Stream Metadata =====
+        audio_streams = [s for s in probe["streams"] if s["codec_type"] == "audio"]
+        if audio_streams:
+            audio_info = audio_streams[0]
+            metadata.update({
+                "audio_codec": audio_info.get("codec_name"),
+                "sample_rate": int(audio_info.get("sample_rate", 0)),
+                "channels": int(audio_info.get("channels", 0)),
+            })
+
+        # ===== 4. GPS Coordinates (if recorded) =====
+        if "format" in probe and "tags" in probe["format"]:
+            tags = probe["format"]["tags"]
+            if "location" in tags:  # Some Android devices store GPS here
+                metadata["gps_coordinates"] = tags["location"]
+            elif "com.apple.quicktime.location.ISO6709" in tags:  # iPhone GPS
+                metadata["gps_coordinates"] = tags["com.apple.quicktime.location.ISO6709"]
+
+        # ===== 5. Convert ISO Timestamp to Readable Format =====
+        if "creation_time" in metadata:
+            try:
+                dt = datetime.strptime(metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
+                dt = dt.replace(tzinfo=timezone.utc)
+                metadata["creation_time_utc"] = dt.strftime("%Y-%m-%d %H:%M:%S UTC")
+                metadata["creation_time_local"] = dt.astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
+                metadata["recording_time"] = metadata["creation_time_local"]  # For backward compatibility
+            except Exception:
+                pass
+
+        return metadata
+
+    except ffmpeg.Error as e:
+        print(f"FFmpeg error: {e.stderr.decode('utf-8')}")
+        return None
     except Exception as e:
-        print(f"Error getting video creation time: {e}")
+        print(f"Error: {str(e)}")
         return None
 
-def datetime_converter(obj):
-    if isinstance(obj, datetime):
-        return obj.isoformat()  # Convert datetime to ISO format string
-    raise TypeError("Type not serializable")
         
 # Function to get the closest color name based on RGB values
 def closest_color(rgb):
@@ -228,13 +286,19 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
             # Extract frame and detections
             frame = result.orig_img
             detections = sv.Detections.from_yolov8(result)
-            creation_time = get_video_creation_time(SOURCE_VIDEO_PATH)
+            video_metadata = extract_video_metadata(SOURCE_VIDEO_PATH)
 
-            if creation_time:
-                VIDEO_START_TIME = creation_time
+                # Get recording time from metadata or use current time as fallback
+            try:
+                recording_time = datetime.strptime(video_metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
+                recording_time = recording_time.replace(tzinfo=timezone.utc)
+            except (KeyError, ValueError):
+                print("Warning: Using current time as recording time fallback")
+                recording_time = datetime.now(timezone.utc)
+
+            if recording_time:
+                VIDEO_START_TIME = recording_time
             else:
-                #print("Warning: Could not retrieve video creation time. Using the current time instead.")
-                print("open")
                 VIDEO_START_TIME = datetime.now()
 
             # Handle object IDs (tracker IDs)
@@ -313,33 +377,36 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
         
                 # Collect frame data for JSON with traffic congestion level and vehicle color
                     frame_data = {
-                                "frame_number": frame_number,
-                                "congestion_level": congestion_level,  # Add congestion level
-                                "detections": [
-                                    {
-                                        "tracker_id": int(tracker_id),  # Convert to Python int
-                                        "class_id": int(class_id),      # Convert to Python int
-                                        "class_name": model.names[class_id],
-                                        "direction": direction,
-                                        "lane": lane,
-                                        "vehicle_color": vehicle_color,
-                                        "stopped": stopped,
-                                        "confidence": float(confidence),  # Convert to Python float
-                                        "bbox": [float(coord) for coord in bbox],  # Convert bbox to list of floats
-                                        "entry_time": (
-                        (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
-                        .strftime("%Y-%m-%d %H:%M:%S")
-                        if vehicle_times.get(int(tracker_id)) else None
-                    ),
-                    "exit_time": (
-                        (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("exit", 0) / FPS))
-                        .strftime("%Y-%m-%d %H:%M:%S")
-                        if vehicle_times.get(int(tracker_id)) else None
-                    )
-                                    }
-                                    for bbox, confidence, class_id, tracker_id in detections
-                                ]
+                        "video_metadata": video_metadata,
+                        "processing_time": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z"),
+                        "frame_number": frame_number,
+                        "congestion_level": congestion_level,
+                        "detections": [
+                            {
+                                "tracker_id": int(tracker_id),
+                                "class_id": int(class_id),
+                                "class_name": model.names[class_id],
+                                "direction": direction,
+                                "lane": lane,
+                                "vehicle_color": vehicle_color,
+                                "stopped": stopped,
+                                "confidence": float(confidence),
+                                "bbox": [float(coord) for coord in bbox],
+                                "entry_time": (
+                                    (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
+                                    .strftime("%Y-%m-%d %H:%M:%S")
+                                    if vehicle_times.get(int(tracker_id)) else None
+                                ),
+                                "exit_time": (
+                                    (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("exit", 0) / FPS))
+                                    .strftime("%Y-%m-%d %H:%M:%S")
+                                    if vehicle_times.get(int(tracker_id)) else None
+                                )
                             }
+                            for bbox, confidence, class_id, tracker_id in detections
+                        ]
+                    }
+
                     frame_data_list.append(frame_data)
                 
             # Draw the source polygon
