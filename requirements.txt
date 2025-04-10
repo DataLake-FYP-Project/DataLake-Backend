@@ -1,4 +1,0 @@
-pyspark
-boto3
-minio
-requests
