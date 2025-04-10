@@ -93,15 +93,23 @@ def extract_video_metadata(video_path):
                 metadata["gps_coordinates"] = tags["com.apple.quicktime.location.ISO6709"]
 
         # ===== 5. Convert ISO Timestamp to Readable Format =====
-        if "creation_time" in metadata:
+        if "creation_time" in metadata and metadata["creation_time"]:
             try:
+                # If creation_time exists, process it
                 dt = datetime.strptime(metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
                 dt = dt.replace(tzinfo=timezone.utc)
                 metadata["creation_time_utc"] = dt.strftime("%Y-%m-%d %H:%M:%S UTC")
                 metadata["creation_time_local"] = dt.astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
                 metadata["recording_time"] = metadata["creation_time_local"]  # For backward compatibility
-            except Exception:
-                pass
+            except Exception as e:
+                # Log any exception
+                print(f"Error processing creation_time: {e}")
+                # Fallback to current time if there's an error
+                dt = datetime.now(timezone.utc)
+        else:
+            # If creation_time is not found or is None, use the current time
+            dt = datetime.now(timezone.utc)
+
 
         return metadata
 
@@ -176,14 +184,19 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     video_metadata = extract_video_metadata(SOURCE_VIDEO_PATH)
 
     # Get recording time from metadata or use current time as fallback
-    try:
-        recording_time = datetime.strptime(video_metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
-        recording_time = recording_time.replace(tzinfo=timezone.utc)
-    except (KeyError, ValueError):
-        print("Warning: Using current time as recording time fallback")
+    if "creation_time" in video_metadata and video_metadata["creation_time"]:
+        try:
+            # Attempt to split and convert creation_time to a datetime object
+            recording_time = datetime.strptime(video_metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
+            recording_time = recording_time.replace(tzinfo=timezone.utc)
+        except (ValueError, AttributeError) as e:
+            print(f"Error processing 'creation_time': {e}. Using current time as fallback.")
+            recording_time = datetime.now(timezone.utc)
+    else:
+        print("No 'creation_time' found. Using current time as fallback.")
         recording_time = datetime.now(timezone.utc)
 
-    
+        
     with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
         for frame_number, result in enumerate(
             model.track(source=SOURCE_VIDEO_PATH, tracker="bytetrack.yaml", show=False, stream=True, persist=True)

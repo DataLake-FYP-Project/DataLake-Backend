@@ -110,15 +110,23 @@ def extract_video_metadata(video_path):
                 metadata["gps_coordinates"] = tags["com.apple.quicktime.location.ISO6709"]
 
         # ===== 5. Convert ISO Timestamp to Readable Format =====
-        if "creation_time" in metadata:
+        if "creation_time" in metadata and metadata["creation_time"]:
             try:
+                # If creation_time exists, process it
                 dt = datetime.strptime(metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
                 dt = dt.replace(tzinfo=timezone.utc)
                 metadata["creation_time_utc"] = dt.strftime("%Y-%m-%d %H:%M:%S UTC")
                 metadata["creation_time_local"] = dt.astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
                 metadata["recording_time"] = metadata["creation_time_local"]  # For backward compatibility
-            except Exception:
-                pass
+            except Exception as e:
+                # Log any exception
+                print(f"Error processing creation_time: {e}")
+                # Fallback to current time if there's an error
+                dt = datetime.now(timezone.utc)
+        else:
+            # If creation_time is not found or is None, use the current time
+            dt = datetime.now(timezone.utc)
+
 
         return metadata
 
@@ -289,11 +297,15 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
             video_metadata = extract_video_metadata(SOURCE_VIDEO_PATH)
 
                 # Get recording time from metadata or use current time as fallback
-            try:
-                recording_time = datetime.strptime(video_metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
-                recording_time = recording_time.replace(tzinfo=timezone.utc)
-            except (KeyError, ValueError):
-                print("Warning: Using current time as recording time fallback")
+            if "creation_time" in video_metadata and video_metadata["creation_time"]:
+                try:
+                    # Attempt to split and convert creation_time to a datetime object
+                    recording_time = datetime.strptime(video_metadata["creation_time"].split(".")[0], "%Y-%m-%dT%H:%M:%S")
+                    recording_time = recording_time.replace(tzinfo=timezone.utc)
+                except (ValueError, AttributeError) as e:
+                    print(f"Error processing 'creation_time': {e}. Using current time as fallback.")
+                    recording_time = datetime.now(timezone.utc)
+            else:
                 recording_time = datetime.now(timezone.utc)
 
             if recording_time:
@@ -377,37 +389,38 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
         
                 # Collect frame data for JSON with traffic congestion level and vehicle color
                     frame_data = {
-                        "video_metadata": video_metadata,
-                        "processing_time": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z"),
-                        "frame_number": frame_number,
-                        "congestion_level": congestion_level,
-                        "detections": [
-                            {
-                                "tracker_id": int(tracker_id),
-                                "class_id": int(class_id),
-                                "class_name": model.names[class_id],
-                                "direction": direction,
-                                "lane": lane,
-                                "vehicle_color": vehicle_color,
-                                "stopped": stopped,
-                                "confidence": float(confidence),
-                                "bbox": [float(coord) for coord in bbox],
-                                "entry_time": (
-                                    (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
-                                    .strftime("%Y-%m-%d %H:%M:%S")
-                                    if vehicle_times.get(int(tracker_id)) else None
-                                ),
-                                "exit_time": (
-                                    (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("exit", 0) / FPS))
-                                    .strftime("%Y-%m-%d %H:%M:%S")
-                                    if vehicle_times.get(int(tracker_id)) else None
-                                )
+                                "frame_number": frame_number,
+                                "congestion_level": congestion_level,  # Add congestion level
+                                "detections": [
+                                    {
+                                        "tracker_id": int(tracker_id),  # Convert to Python int
+                                        "class_id": int(class_id),      # Convert to Python int
+                                        "class_name": model.names[class_id],
+                                        "direction": direction,
+                                        "lane": lane,
+                                        "vehicle_color": vehicle_color,
+                                        "stopped": stopped,
+                                        "speed" : speed,
+                                        "confidence": float(confidence),  # Convert to Python float
+                                        "bbox": [float(coord) for coord in bbox],  # Convert bbox to list of floats
+                                        "entry_time": (
+                        (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
+                        .strftime("%Y-%m-%d %H:%M:%S")
+                        if vehicle_times.get(int(tracker_id)) else None
+                    ),
+                    "exit_time": (
+                        (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("exit", 0) / FPS))
+                        .strftime("%Y-%m-%d %H:%M:%S")
+                        if vehicle_times.get(int(tracker_id)) else None
+                    )
+                                    }
+                                    for bbox, confidence, class_id, tracker_id in detections
+                                ]
                             }
-                            for bbox, confidence, class_id, tracker_id in detections
-                        ]
-                    }
-
                     frame_data_list.append(frame_data)
+                
+
+
                 
             # Draw the source polygon
             cv2.polylines(frame, [SOURCE.astype(np.int32)], isClosed=True, color=(0, 255, 0), thickness=2)
