@@ -17,7 +17,7 @@ BUCKET_NAME = 'vehicle-data'
 
 # Elasticsearch Connection Details
 ES_HOST = "http://localhost:9200"
-ES_INDEX = "camera-footage"  
+ES_INDEX = "datalake-vehicle-data"  
 
 
 def get_max_percentage(attribute_values):
@@ -33,14 +33,18 @@ def get_average_confidence(confidences):
     """Helper function to get the average confidence from a list of confidence values."""
     return sum(confidences) / len(confidences) if confidences else 0
 
+def get_average_speed(speeds):
+    """Helper function to get the average confidence from a list of confidence values."""
+    return sum(speeds) / len(speeds) if speeds else 0
+
 def process_tracker_data(data):
     """Process the data to get max percentage values for each tracker and average confidence."""
     tracker_data = defaultdict(lambda: {
         "class_id": [],
-        # "class_name": [],
-        # "vehicle_color": [],
-        # "direction": [],
-        # "lane": [],
+        "class_name": [],
+        "vehicle_color": [],
+        "direction": [],
+        "lane": [],
         "confidence": []
     })
 
@@ -49,11 +53,12 @@ def process_tracker_data(data):
         for detection in frame["detections"]:
             tracker_id = detection["tracker_id"]
             tracker_data[tracker_id]["class_id"].append(detection["class_id"])
-            # tracker_data[tracker_id]["class_name"].append(detection["class_name"])
-            # tracker_data[tracker_id]["vehicle_color"].append(detection["vehicle_color"])
-            # tracker_data[tracker_id]["direction"].append(detection["direction"])
-            # tracker_data[tracker_id]["lane"].append(detection["lane"])
+            tracker_data[tracker_id]["class_name"].append(detection["class_name"])
+            tracker_data[tracker_id]["vehicle_color"].append(detection["vehicle_color"])
+            tracker_data[tracker_id]["direction"].append(detection["direction"])
+            tracker_data[tracker_id]["lane"].append(detection["lane"])
             tracker_data[tracker_id]["confidence"].append(detection["confidence"])
+            tracker_data[tracker_id]["speed"].append(detection["speed"])
 
     # Prepare the output data with max values for each tracker_id
     output_data = []
@@ -61,11 +66,12 @@ def process_tracker_data(data):
         output_entry = {
             "tracker_id": tracker_id,
             "class_id": get_max_percentage(attributes["class_id"]),
-            # "class_name": get_max_percentage(attributes["class_name"]),
-            # "vehicle_color": get_max_percentage(attributes["vehicle_color"]),
-            # "direction": get_max_percentage(attributes["direction"]),
-            # "lane": get_max_percentage(attributes["lane"]),
-            "average_confidence": get_average_confidence(attributes["confidence"])
+            "class_name": get_max_percentage(attributes["class_name"]),
+            "vehicle_color": get_max_percentage(attributes["vehicle_color"]),
+            "direction": get_max_percentage(attributes["direction"]),
+            "lane": get_max_percentage(attributes["lane"]),
+            "average_confidence": get_average_confidence(attributes["confidence"]),
+            "average_speed": get_average_confidence(attributes["speed"])
         }
         output_data.append(output_entry)
 
@@ -117,7 +123,7 @@ def upload_to_elasticsearch(file_path):
 
         if isinstance(data, list):
             for i, record in enumerate(data):
-                res = es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="add_timestamp")
+                res = es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="vehicle_data_timestamp_pipeline")
                 print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
         else:
             res = es.index(index=ES_INDEX, id=1, body=data, pipeline="add_timestamp")
