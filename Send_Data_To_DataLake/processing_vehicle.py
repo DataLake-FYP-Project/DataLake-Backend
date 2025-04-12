@@ -77,7 +77,7 @@ def convert_json_format(input_path, output_path):
 
     print(f"Transformed JSON saved to {output_path}")
 
-def upload_to_minio(file_path, video_name):
+def vehicle_upload_to_minio(file_path, video_name):
     s3 = boto3.client(
         's3',
         endpoint_url=MINIO_ENDPOINT,
@@ -92,7 +92,7 @@ def upload_to_minio(file_path, video_name):
     except Exception as e:
         print(f"Error uploading to MinIO: {e}")
 
-def upload_to_elasticsearch(file_path):
+def vehicle_upload_to_elasticsearch(file_path):
     try:
         with open(file_path, "r") as file:
             data = json.load(file)
