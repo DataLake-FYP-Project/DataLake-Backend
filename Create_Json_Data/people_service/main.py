@@ -19,7 +19,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 FRAME_SAVE_DIR = "results/Frames"
 
-SECOND_BACKEND_URL = "http://localhost:8012/upload_2"
+SECOND_BACKEND_URL = "http://localhost:8013/upload_2_people"
 
 
 # Object classes (COCO dataset)
@@ -180,7 +180,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 
 
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
-    json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_frame_data.json")
+    json_output_path = os.path.join(RESULTS_FOLDER, f"people_{video_name}_frame_data.json")
     video_metadata = extract_video_metadata(SOURCE_VIDEO_PATH)
 
     # Get recording time from metadata or use current time as fallback
@@ -366,7 +366,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
         json.dump(json_output, f, indent=4)
     return json_output_path
 
-@app.route("/upload", methods=["POST"])
+@app.route("/upload_people", methods=["POST"])
 def upload_video():
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -390,8 +390,10 @@ def upload_video():
     target_video_path = os.path.join(RESULTS_FOLDER, "processed_" + file.filename)
     
     try:
-        print(f"Source Video Path: {source_video_path}")
-        print(f"Target Video Path: {target_video_path}")
+        print(f"SOURCE_VIDEO_PATH: {source_video_path}")
+        print(f"TARGET_VIDEO_PATH: {target_video_path}")
+        print(f"FRAME_SAVE_DIR: {FRAME_SAVE_DIR}")
+
 
         json_output_path = ModelRun(source_video_path, target_video_path, points)
         print(f"JSON Output Path: {json_output_path}")
@@ -404,19 +406,6 @@ def upload_video():
         with open(json_output_path, 'rb') as json_file:
             response = requests.post(SECOND_BACKEND_URL, files={"json_file": json_file}, timeout=10)
             response_data = response.json()
-
-            points = response_data.get("points", None)
-            if points is None:
-                return jsonify({"error": "Points not found in the response from the second backend"}), 400
-
-            print("Received points from second backend:", points)
-
-            try:
-                points = json.loads(points)
-            except json.JSONDecodeError as e:
-                return jsonify({"error": f"Invalid JSON in points: {e}"}), 400
-
-            print("Successfully parsed points:", points)
 
     except Exception as e:
         return jsonify({"error": f"Error during second backend communication: {str(e)}"}), 500

@@ -18,7 +18,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 FRAME_SAVE_DIR = 'results/frames/'
 
-SECOND_BACKEND_URL = "http://localhost:8013/upload_2"
+SECOND_BACKEND_URL = "http://localhost:8013/upload_2_vehicle"
 SCALE_FACTOR = 0.05  # Conversion factor from pixels/frame to real-world speed (km/h)
 VEHICLE_POSITIONS = {}
 FPS = 30
@@ -277,7 +277,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 
     # Extract the video name (without extension) for the JSON filename
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
-    json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_frame_data.json")
+    json_output_path = os.path.join(RESULTS_FOLDER, f"vehicle_{video_name}_frame_data.json")
 
     # Open output video stream
     with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
@@ -444,7 +444,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     return json_output_path
 
 
-@app.route("/upload", methods=["POST"])
+@app.route("/upload_vehicle", methods=["POST"])
 def upload_video():
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
