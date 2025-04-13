@@ -8,88 +8,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Unknown",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": true,
-                "speed": 0,
-                "confidence": 0.9252080917358398,
-                "bbox": [
-                    935.7334594726562,
-                    895.0731201171875,
-                    1245.7578125,
-                    1307.772216796875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Unknown",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": true,
-                "speed": 0,
-                "confidence": 0.8963170647621155,
-                "bbox": [
-                    2940.02197265625,
-                    1271.7353515625,
-                    3225.78369140625,
-                    1497.4505615234375
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Unknown",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": true,
-                "speed": 0,
-                "confidence": 0.8571374416351318,
-                "bbox": [
-                    1436.09228515625,
-                    1084.849853515625,
-                    1621.1341552734375,
-                    1230.456787109375
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Unknown",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": true,
-                "speed": 0,
-                "confidence": 0.7660661935806274,
-                "bbox": [
-                    1477.656005859375,
-                    1005.40380859375,
-                    1630.88671875,
-                    1132.466552734375
-                ],
-                "entry_time": null,
-                "exit_time": null
-            }
-        ]
-    },
-    {
-        "frame_number": 0,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Unknown",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": true,
@@ -101,8 +19,8 @@
                     1245.7578125,
                     1307.772216796875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -183,8 +101,8 @@
                     1245.7578125,
                     1307.772216796875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -254,88 +172,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 6.931752429211234,
-                "confidence": 0.9285821914672852,
-                "bbox": [
-                    931.3441162109375,
-                    896.6533813476562,
-                    1244.3974609375,
-                    1313.4281005859375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 6.931752429211234,
-                "confidence": 0.8853052258491516,
-                "bbox": [
-                    2927.588623046875,
-                    1264.299560546875,
-                    3204.366943359375,
-                    1482.8804931640625
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 6.931752429211234,
-                "confidence": 0.869629979133606,
-                "bbox": [
-                    1436.03466796875,
-                    1091.23193359375,
-                    1621.610107421875,
-                    1237.3092041015625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 6.931752429211234,
-                "confidence": 0.6863301396369934,
-                "bbox": [
-                    1477.1123046875,
-                    1011.0945434570312,
-                    1632.8055419921875,
-                    1140.269287109375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 1,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -347,8 +183,8 @@
                     1244.3974609375,
                     1313.4281005859375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -429,8 +265,8 @@
                     1244.3974609375,
                     1313.4281005859375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -500,88 +336,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 9.955171754545765,
-                "confidence": 0.9087614417076111,
-                "bbox": [
-                    927.037841796875,
-                    901.6158447265625,
-                    1240.4046630859375,
-                    1318.8248291015625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 9.955171754545765,
-                "confidence": 0.8851667046546936,
-                "bbox": [
-                    2910.68310546875,
-                    1253.3798828125,
-                    3184.018310546875,
-                    1469.1953125
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 9.955171754545765,
-                "confidence": 0.8605393171310425,
-                "bbox": [
-                    1433.201171875,
-                    1094.0155029296875,
-                    1626.8795166015625,
-                    1246.66259765625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 9.955171754545765,
-                "confidence": 0.39035338163375854,
-                "bbox": [
-                    1477.094970703125,
-                    1015.8699340820312,
-                    1629.146484375,
-                    1141.8739013671875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 2,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -593,8 +347,8 @@
                     1240.4046630859375,
                     1318.8248291015625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -675,8 +429,8 @@
                     1240.4046630859375,
                     1318.8248291015625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -746,88 +500,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.295428010494627,
-                "confidence": 0.9072750806808472,
-                "bbox": [
-                    919.9891357421875,
-                    905.3787231445312,
-                    1237.1795654296875,
-                    1327.8372802734375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.295428010494627,
-                "confidence": 0.9041170477867126,
-                "bbox": [
-                    2891.2529296875,
-                    1242.3431396484375,
-                    3160.433349609375,
-                    1454.8603515625
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.295428010494627,
-                "confidence": 0.8454892635345459,
-                "bbox": [
-                    1429.86376953125,
-                    1102.22412109375,
-                    1623.923095703125,
-                    1255.1700439453125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.295428010494627,
-                "confidence": 0.36758193373680115,
-                "bbox": [
-                    1473.2698974609375,
-                    1020.3636474609375,
-                    1629.0433349609375,
-                    1149.322509765625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 3,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -839,8 +511,8 @@
                     1237.1795654296875,
                     1327.8372802734375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -921,8 +593,8 @@
                     1237.1795654296875,
                     1327.8372802734375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -992,88 +664,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.285803947103478,
-                "confidence": 0.9075916409492493,
-                "bbox": [
-                    914.9013671875,
-                    910.2459106445312,
-                    1234.42529296875,
-                    1335.8128662109375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.285803947103478,
-                "confidence": 0.9063388109207153,
-                "bbox": [
-                    2872.11865234375,
-                    1231.5374755859375,
-                    3137.15380859375,
-                    1440.937744140625
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.285803947103478,
-                "confidence": 0.8500665426254272,
-                "bbox": [
-                    1428.8182373046875,
-                    1111.428466796875,
-                    1622.2528076171875,
-                    1263.8048095703125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.285803947103478,
-                "confidence": 0.6394785642623901,
-                "bbox": [
-                    1469.9058837890625,
-                    1026.4603271484375,
-                    1630.1112060546875,
-                    1159.216796875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 4,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -1085,8 +675,8 @@
                     1234.42529296875,
                     1335.8128662109375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -1167,8 +757,8 @@
                     1234.42529296875,
                     1335.8128662109375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -1238,88 +828,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 9.887080965454004,
-                "confidence": 0.8992304801940918,
-                "bbox": [
-                    909.5165405273438,
-                    913.695068359375,
-                    1231.6492919921875,
-                    1342.716796875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 9.887080965454004,
-                "confidence": 0.8887080550193787,
-                "bbox": [
-                    2855.48779296875,
-                    1218.6597900390625,
-                    3118.541015625,
-                    1426.554931640625
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 9.887080965454004,
-                "confidence": 0.8529068231582642,
-                "bbox": [
-                    1424.7950439453125,
-                    1120.169677734375,
-                    1623.143798828125,
-                    1276.43798828125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 9.887080965454004,
-                "confidence": 0.7371628284454346,
-                "bbox": [
-                    1467.9578857421875,
-                    1033.4547119140625,
-                    1632.1505126953125,
-                    1169.90380859375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 5,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -1331,8 +839,8 @@
                     1231.6492919921875,
                     1342.716796875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -1413,8 +921,8 @@
                     1231.6492919921875,
                     1342.716796875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -1484,88 +992,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 10.478707764549116,
-                "confidence": 0.89751136302948,
-                "bbox": [
-                    903.6756591796875,
-                    916.9541625976562,
-                    1228.959228515625,
-                    1350.5224609375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 10.478707764549116,
-                "confidence": 0.8784465789794922,
-                "bbox": [
-                    2837.796875,
-                    1209.308837890625,
-                    3096.634765625,
-                    1414.0322265625
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 10.478707764549116,
-                "confidence": 0.868716299533844,
-                "bbox": [
-                    1422.0548095703125,
-                    1129.215576171875,
-                    1620.666259765625,
-                    1285.6163330078125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 10.478707764549116,
-                "confidence": 0.6684024930000305,
-                "bbox": [
-                    1462.7921142578125,
-                    1039.3775634765625,
-                    1632.460693359375,
-                    1180.6278076171875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 6,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -1577,8 +1003,8 @@
                     1228.959228515625,
                     1350.5224609375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -1659,8 +1085,8 @@
                     1228.959228515625,
                     1350.5224609375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -1730,88 +1156,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.050584042023651,
-                "confidence": 0.910550057888031,
-                "bbox": [
-                    896.3720703125,
-                    920.3779907226562,
-                    1224.8466796875,
-                    1358.405029296875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.050584042023651,
-                "confidence": 0.8845182061195374,
-                "bbox": [
-                    2821.9228515625,
-                    1199.47900390625,
-                    3076.112060546875,
-                    1400.6241455078125
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.050584042023651,
-                "confidence": 0.8672672510147095,
-                "bbox": [
-                    1419.7281494140625,
-                    1137.6455078125,
-                    1622.0367431640625,
-                    1297.0048828125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.050584042023651,
-                "confidence": 0.4930054545402527,
-                "bbox": [
-                    1460.8001708984375,
-                    1045.9007568359375,
-                    1632.24365234375,
-                    1188.67529296875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 7,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -1823,8 +1167,8 @@
                     1224.8466796875,
                     1358.405029296875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -1905,8 +1249,8 @@
                     1224.8466796875,
                     1358.405029296875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -1976,88 +1320,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.136475266441218,
-                "confidence": 0.9157100319862366,
-                "bbox": [
-                    890.1707763671875,
-                    923.8699340820312,
-                    1222.37353515625,
-                    1366.9644775390625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.136475266441218,
-                "confidence": 0.9110305309295654,
-                "bbox": [
-                    2808.189697265625,
-                    1191.1976318359375,
-                    3056.219482421875,
-                    1387.5811767578125
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.136475266441218,
-                "confidence": 0.8665708899497986,
-                "bbox": [
-                    1414.139892578125,
-                    1144.1529541015625,
-                    1620.8182373046875,
-                    1306.87890625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.136475266441218,
-                "confidence": 0.7477917075157166,
-                "bbox": [
-                    1457.5406494140625,
-                    1051.8480224609375,
-                    1635.90380859375,
-                    1200.9666748046875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 8,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -2069,8 +1331,8 @@
                     1222.37353515625,
                     1366.9644775390625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -2151,8 +1413,8 @@
                     1222.37353515625,
                     1366.9644775390625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -2222,88 +1484,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.089335563819933,
-                "confidence": 0.9152144193649292,
-                "bbox": [
-                    883.9707641601562,
-                    927.6744995117188,
-                    1219.09228515625,
-                    1374.505615234375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.089335563819933,
-                "confidence": 0.8895649313926697,
-                "bbox": [
-                    2792.18896484375,
-                    1179.7978515625,
-                    3037.7685546875,
-                    1374.2642822265625
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.089335563819933,
-                "confidence": 0.8524648547172546,
-                "bbox": [
-                    1413.31103515625,
-                    1152.503173828125,
-                    1620.714599609375,
-                    1315.570556640625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.089335563819933,
-                "confidence": 0.6960811614990234,
-                "bbox": [
-                    1457.76513671875,
-                    1058.00927734375,
-                    1636.8975830078125,
-                    1208.0953369140625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 9,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -2315,8 +1495,8 @@
                     1219.09228515625,
                     1374.505615234375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -2397,8 +1577,8 @@
                     1219.09228515625,
                     1374.505615234375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -2468,88 +1648,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.03355944993031,
-                "confidence": 0.9149373769760132,
-                "bbox": [
-                    876.6919555664062,
-                    930.2062377929688,
-                    1215.6505126953125,
-                    1382.04833984375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.03355944993031,
-                "confidence": 0.89870685338974,
-                "bbox": [
-                    2777.77099609375,
-                    1171.4007568359375,
-                    3019.594970703125,
-                    1363.4686279296875
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.03355944993031,
-                "confidence": 0.8679221272468567,
-                "bbox": [
-                    1409.6982421875,
-                    1160.6639404296875,
-                    1619.9783935546875,
-                    1326.2342529296875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.03355944993031,
-                "confidence": 0.842343270778656,
-                "bbox": [
-                    1453.3665771484375,
-                    1064.1707763671875,
-                    1640.0498046875,
-                    1221.4134521484375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 10,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -2561,8 +1659,8 @@
                     1215.6505126953125,
                     1382.04833984375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -2643,8 +1741,8 @@
                     1215.6505126953125,
                     1382.04833984375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -2714,88 +1812,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.588029841536587,
-                "confidence": 0.9157930016517639,
-                "bbox": [
-                    868.28857421875,
-                    932.9642333984375,
-                    1210.8302001953125,
-                    1389.6265869140625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.588029841536587,
-                "confidence": 0.8889561295509338,
-                "bbox": [
-                    2762.50244140625,
-                    1163.0693359375,
-                    3000.05810546875,
-                    1351.5716552734375
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.588029841536587,
-                "confidence": 0.874710202217102,
-                "bbox": [
-                    1409.5552978515625,
-                    1171.3172607421875,
-                    1619.919921875,
-                    1336.86376953125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.588029841536587,
-                "confidence": 0.8016993999481201,
-                "bbox": [
-                    1452.41748046875,
-                    1071.1605224609375,
-                    1640.2325439453125,
-                    1229.8670654296875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 11,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -2807,8 +1823,8 @@
                     1210.8302001953125,
                     1389.6265869140625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -2889,8 +1905,8 @@
                     1210.8302001953125,
                     1389.6265869140625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -2960,88 +1976,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 10.713533016450967,
-                "confidence": 0.9205417633056641,
-                "bbox": [
-                    862.74462890625,
-                    937.1180419921875,
-                    1208.1988525390625,
-                    1397.186767578125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 10.713533016450967,
-                "confidence": 0.9004048109054565,
-                "bbox": [
-                    2748.385009765625,
-                    1154.4454345703125,
-                    2982.55126953125,
-                    1340.319091796875
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 10.713533016450967,
-                "confidence": 0.8734462261199951,
-                "bbox": [
-                    1404.7088623046875,
-                    1178.8822021484375,
-                    1620.4771728515625,
-                    1349.0321044921875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 10.713533016450967,
-                "confidence": 0.6313222050666809,
-                "bbox": [
-                    1450.7503662109375,
-                    1078.7275390625,
-                    1638.7958984375,
-                    1238.29833984375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 12,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -3053,8 +1987,8 @@
                     1208.1988525390625,
                     1397.186767578125
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -3135,8 +2069,8 @@
                     1208.1988525390625,
                     1397.186767578125
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -3206,88 +2140,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.960577876840919,
-                "confidence": 0.9268297553062439,
-                "bbox": [
-                    855.8341064453125,
-                    940.174560546875,
-                    1205.518310546875,
-                    1406.8712158203125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.960577876840919,
-                "confidence": 0.8968502283096313,
-                "bbox": [
-                    2734.6708984375,
-                    1144.546630859375,
-                    2966.46630859375,
-                    1328.7640380859375
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.960577876840919,
-                "confidence": 0.875143826007843,
-                "bbox": [
-                    1401.157958984375,
-                    1185.6798095703125,
-                    1620.95068359375,
-                    1359.4139404296875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.960577876840919,
-                "confidence": 0.6551299691200256,
-                "bbox": [
-                    1448.76416015625,
-                    1085.7633056640625,
-                    1639.400390625,
-                    1248.6767578125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 13,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -3299,8 +2151,8 @@
                     1205.518310546875,
                     1406.8712158203125
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -3381,8 +2233,8 @@
                     1205.518310546875,
                     1406.8712158203125
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -3452,88 +2304,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.464754030554495,
-                "confidence": 0.9259596467018127,
-                "bbox": [
-                    849.1929931640625,
-                    943.5814819335938,
-                    1202.2552490234375,
-                    1415.108154296875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.464754030554495,
-                "confidence": 0.879105806350708,
-                "bbox": [
-                    2720.2431640625,
-                    1136.43115234375,
-                    2947.971435546875,
-                    1317.8018798828125
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.464754030554495,
-                "confidence": 0.8786687850952148,
-                "bbox": [
-                    1396.9202880859375,
-                    1194.5989990234375,
-                    1621.1427001953125,
-                    1372.4151611328125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 11.464754030554495,
-                "confidence": 0.7668696641921997,
-                "bbox": [
-                    1446.725341796875,
-                    1093.9095458984375,
-                    1638.9332275390625,
-                    1259.022216796875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 14,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -3545,8 +2315,8 @@
                     1202.2552490234375,
                     1415.108154296875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -3627,8 +2397,8 @@
                     1202.2552490234375,
                     1415.108154296875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -3698,88 +2468,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.62454359066772,
-                "confidence": 0.923542320728302,
-                "bbox": [
-                    842.9341430664062,
-                    948.8531494140625,
-                    1198.6392822265625,
-                    1423.4683837890625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.62454359066772,
-                "confidence": 0.8904517292976379,
-                "bbox": [
-                    2706.356201171875,
-                    1127.5684814453125,
-                    2932.354736328125,
-                    1307.87939453125
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.62454359066772,
-                "confidence": 0.858444333076477,
-                "bbox": [
-                    1394.64208984375,
-                    1205.4744873046875,
-                    1621.089599609375,
-                    1385.4847412109375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.62454359066772,
-                "confidence": 0.834308385848999,
-                "bbox": [
-                    1445.57177734375,
-                    1100.2572021484375,
-                    1640.299560546875,
-                    1268.3140869140625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 15,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -3791,8 +2479,8 @@
                     1198.6392822265625,
                     1423.4683837890625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -3873,8 +2561,8 @@
                     1198.6392822265625,
                     1423.4683837890625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -3944,88 +2632,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.229493400563696,
-                "confidence": 0.9245160222053528,
-                "bbox": [
-                    836.4293823242188,
-                    953.1708374023438,
-                    1196.76806640625,
-                    1433.1409912109375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.229493400563696,
-                "confidence": 0.8772802352905273,
-                "bbox": [
-                    2693.587158203125,
-                    1120.1629638671875,
-                    2918.17431640625,
-                    1299.5262451171875
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.229493400563696,
-                "confidence": 0.880281388759613,
-                "bbox": [
-                    1390.964599609375,
-                    1215.918212890625,
-                    1620.97265625,
-                    1399.1553955078125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.229493400563696,
-                "confidence": 0.834231972694397,
-                "bbox": [
-                    1444.601318359375,
-                    1108.23876953125,
-                    1642.34521484375,
-                    1279.8486328125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 16,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -4037,8 +2643,8 @@
                     1196.76806640625,
                     1433.1409912109375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -4119,8 +2725,8 @@
                     1196.76806640625,
                     1433.1409912109375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -4190,88 +2796,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 13.49618002883629,
-                "confidence": 0.922294020652771,
-                "bbox": [
-                    828.6900634765625,
-                    957.8438720703125,
-                    1192.0479736328125,
-                    1441.4517822265625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 13.49618002883629,
-                "confidence": 0.8952785730361938,
-                "bbox": [
-                    2682.35205078125,
-                    1114.1719970703125,
-                    2900.4228515625,
-                    1288.76708984375
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 13.49618002883629,
-                "confidence": 0.8806634545326233,
-                "bbox": [
-                    1387.7735595703125,
-                    1225.9263916015625,
-                    1621.5469970703125,
-                    1412.5565185546875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 13.49618002883629,
-                "confidence": 0.7466437816619873,
-                "bbox": [
-                    1444.194091796875,
-                    1116.5780029296875,
-                    1644.165771484375,
-                    1291.1083984375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 17,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -4283,8 +2807,8 @@
                     1192.0479736328125,
                     1441.4517822265625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -4365,8 +2889,8 @@
                     1192.0479736328125,
                     1441.4517822265625
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -4436,88 +2960,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.358493392369295,
-                "confidence": 0.9196510314941406,
-                "bbox": [
-                    823.0084838867188,
-                    962.8541870117188,
-                    1189.5146484375,
-                    1450.7257080078125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.358493392369295,
-                "confidence": 0.8892595171928406,
-                "bbox": [
-                    2671.06103515625,
-                    1107.9169921875,
-                    2884.353515625,
-                    1278.735595703125
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.358493392369295,
-                "confidence": 0.8724307417869568,
-                "bbox": [
-                    1383.5838623046875,
-                    1235.4537353515625,
-                    1622.41748046875,
-                    1426.7191162109375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.358493392369295,
-                "confidence": 0.7749955654144287,
-                "bbox": [
-                    1438.7203369140625,
-                    1123.327392578125,
-                    1646.6771240234375,
-                    1306.31787109375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 18,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -4529,8 +2971,8 @@
                     1189.5146484375,
                     1450.7257080078125
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -4611,8 +3053,8 @@
                     1189.5146484375,
                     1450.7257080078125
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -4682,88 +3124,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 13.586294695640811,
-                "confidence": 0.923315167427063,
-                "bbox": [
-                    814.2186279296875,
-                    966.0986328125,
-                    1187.0496826171875,
-                    1461.67578125
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 13.586294695640811,
-                "confidence": 0.8987065553665161,
-                "bbox": [
-                    2658.8505859375,
-                    1100.646728515625,
-                    2868.665771484375,
-                    1268.8555908203125
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 13.586294695640811,
-                "confidence": 0.8731964826583862,
-                "bbox": [
-                    1380.5262451171875,
-                    1246.0780029296875,
-                    1621.3226318359375,
-                    1439.432373046875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 13.586294695640811,
-                "confidence": 0.8239359259605408,
-                "bbox": [
-                    1438.0667724609375,
-                    1132.5645751953125,
-                    1646.7928466796875,
-                    1317.6595458984375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 19,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -4775,8 +3135,8 @@
                     1187.0496826171875,
                     1461.67578125
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -4857,8 +3217,8 @@
                     1187.0496826171875,
                     1461.67578125
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -4928,88 +3288,6 @@
                 "class_id": 7,
                 "class_name": "truck",
                 "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.928989205130875,
-                "confidence": 0.9211375713348389,
-                "bbox": [
-                    807.0386962890625,
-                    970.53173828125,
-                    1183.6326904296875,
-                    1470.839599609375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.928989205130875,
-                "confidence": 0.8683324456214905,
-                "bbox": [
-                    2645.69189453125,
-                    1091.32373046875,
-                    2855.618896484375,
-                    1259.7342529296875
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.928989205130875,
-                "confidence": 0.8810840249061584,
-                "bbox": [
-                    1376.067626953125,
-                    1256.9100341796875,
-                    1619.9716796875,
-                    1453.153076171875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 12.928989205130875,
-                "confidence": 0.8478670716285706,
-                "bbox": [
-                    1436.1278076171875,
-                    1141.0511474609375,
-                    1647.2471923828125,
-                    1329.741943359375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 20,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
                 "lane": "Middle Lane",
                 "vehicle_color": "brown",
                 "stopped": false,
@@ -5021,8 +3299,8 @@
                     1183.6326904296875,
                     1470.839599609375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -5103,8 +3381,8 @@
                     1183.6326904296875,
                     1470.839599609375
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -5159,88 +3437,6 @@
                     1141.0511474609375,
                     1647.2471923828125,
                     1329.741943359375
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            }
-        ]
-    },
-    {
-        "frame_number": 21,
-        "congestion_level": 4,
-        "detections": [
-            {
-                "tracker_id": 1,
-                "class_id": 7,
-                "class_name": "truck",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 14.028828764888317,
-                "confidence": 0.9257851839065552,
-                "bbox": [
-                    799.04345703125,
-                    975.487548828125,
-                    1178.4130859375,
-                    1479.1219482421875
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 2,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 14.028828764888317,
-                "confidence": 0.8626658320426941,
-                "bbox": [
-                    2634.383544921875,
-                    1083.9791259765625,
-                    2841.874267578125,
-                    1250.9617919921875
-                ],
-                "entry_time": null,
-                "exit_time": null
-            },
-            {
-                "tracker_id": 3,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 14.028828764888317,
-                "confidence": 0.8819226026535034,
-                "bbox": [
-                    1370.60888671875,
-                    1267.9603271484375,
-                    1619.472900390625,
-                    1468.337890625
-                ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
-            },
-            {
-                "tracker_id": 4,
-                "class_id": 2,
-                "class_name": "car",
-                "direction": "Down",
-                "lane": "Left Lane",
-                "vehicle_color": "gray",
-                "stopped": false,
-                "speed": 14.028828764888317,
-                "confidence": 0.8430458307266235,
-                "bbox": [
-                    1433.91162109375,
-                    1149.68310546875,
-                    1645.0753173828125,
-                    1339.38525390625
                 ],
                 "entry_time": "2025-03-23 13:19:13",
                 "exit_time": "2025-03-23 13:19:13"
@@ -5267,8 +3463,8 @@
                     1178.4130859375,
                     1479.1219482421875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,
@@ -5349,8 +3545,8 @@
                     1178.4130859375,
                     1479.1219482421875
                 ],
-                "entry_time": "2025-03-23 13:19:13",
-                "exit_time": "2025-03-23 13:19:13"
+                "entry_time": null,
+                "exit_time": null
             },
             {
                 "tracker_id": 2,

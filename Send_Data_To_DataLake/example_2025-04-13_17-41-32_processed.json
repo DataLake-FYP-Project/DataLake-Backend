@@ -6,8 +6,8 @@
         "vehicle_color": "gray",
         "direction": "Down",
         "lane": "Middle Lane",
-        "average_confidence": 0.9172698936679147,
-        "average_speed": 12.613230537520964
+        "average_confidence": 0.9178089630113889,
+        "average_speed": 13.726661215875668
     },
     {
         "tracker_id": 2,
@@ -16,8 +16,8 @@
         "vehicle_color": "gray",
         "direction": "Down",
         "lane": "Middle Lane",
-        "average_confidence": 0.8897959942167456,
-        "average_speed": 12.613230537520964
+        "average_confidence": 0.889157678166481,
+        "average_speed": 13.726661215875668
     },
     {
         "tracker_id": 3,
@@ -26,8 +26,8 @@
         "vehicle_color": "gray",
         "direction": "Down",
         "lane": "Middle Lane",
-        "average_confidence": 0.8676683117042888,
-        "average_speed": 12.613230537520964
+        "average_confidence": 0.8684127616555724,
+        "average_speed": 13.726661215875668
     },
     {
         "tracker_id": 4,
@@ -36,7 +36,7 @@
         "vehicle_color": "gray",
         "direction": "Down",
         "lane": "Middle Lane",
-        "average_confidence": 0.7088475864041935,
-        "average_speed": 12.613230537520964
+        "average_confidence": 0.7190269758440044,
+        "average_speed": 13.726661215875668
     }
 ]

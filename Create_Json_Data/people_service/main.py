@@ -156,7 +156,7 @@ def analyze_person(frame, bbox, objects):
 
     return gender, age, carried_items if carried_items else "no objects"
 
-def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
+def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, restricted_points):
 
     total_count = 0
     entering_count = 0
@@ -174,9 +174,16 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     
     video_info = sv.VideoInfo.from_video_path(SOURCE_VIDEO_PATH)
 
-    restricted_area = np.array(points)
-    area1 = np.array([(265, 427), (294, 423), (478, 514), (433, 523)], np.int32)
-    area2 = np.array([(243, 446), (274, 437), (403, 510), (367, 521)], np.int32)
+    restricted_area = np.array(restricted_points)
+    area1 = np.array(exit_points)
+    area2 = np.array(entry_points)
+
+    if area1.size == 0:
+        print("🚫 Exit points are missing!")
+    if area2.size == 0:
+        print("🚫 Entry points are missing!")
+    if restricted_area.size == 0:
+        print("⚠️ Restricted area points are missing!")
 
 
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
@@ -371,32 +378,45 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 def upload_video():
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
-    
+
     file = request.files["file"]
     if file.filename == "":
         return jsonify({"error": "No selected file"}), 400
+
     points = request.form.get("points", None)
-    
+    print("points",points)
+
     if points:
         try:
             points = json.loads(points)
+
+            # 👇 Separate the 3 point types
+            entry_points = points.get("entry", [])
+            exit_points = points.get("exit", [])
+            restricted_points = points.get("restricted", [])
+            print("entry_points:", entry_points)
+            print("exit_points:", exit_points)
+            print("restricted_points:", restricted_points)
+
         except json.JSONDecodeError as e:
             return jsonify({"error": f"Invalid JSON in points: {e}"}), 400
     else:
-        points = []
+        entry_points = []
+        exit_points = []
+        restricted_points = []
 
     source_video_path = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(source_video_path)
 
     target_video_path = os.path.join(RESULTS_FOLDER, "processed_" + file.filename)
-    
+
     try:
         print(f"SOURCE_VIDEO_PATH: {source_video_path}")
         print(f"TARGET_VIDEO_PATH: {target_video_path}")
         print(f"FRAME_SAVE_DIR: {FRAME_SAVE_DIR}")
 
-
-        json_output_path = ModelRun(source_video_path, target_video_path, points)
+        # ✅ Pass separated point lists to your model
+        json_output_path = ModelRun(source_video_path, target_video_path, exit_points, entry_points, restricted_points)
         print(f"JSON Output Path: {json_output_path}")
 
     except Exception as e:
@@ -418,7 +438,6 @@ def upload_video():
         "json_output": json_output_path,
         "second_backend_response": response_data
     }), 200
-
 
 
 

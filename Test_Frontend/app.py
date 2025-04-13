@@ -45,29 +45,42 @@ def scale_polygon_points(polygon_points, original_width, original_height, new_wi
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
 
-def upload_video_and_points(video_file, points, video_type):
-    url = {
-        "People": "http://localhost:8011/upload_people",
-        "Vehicle": "http://localhost:8012/upload_vehicle"
-    }.get(video_type)
 
-    if not url:
-        st.error("Invalid video type selected.")
-        return
-
-    points_data = json.dumps(points)
-    video_file.seek(0)
-
-    files = {"file": (video_file.name, video_file, "video/mp4")}
-    data = {"points": points_data}
-
+def upload_video_and_points(video_file, points_data, video_type):
     try:
+        files = {"file": (video_file.name, video_file, "video/mp4")}
+
+        if video_type == "People":
+            for key in ["entry", "exit", "restricted"]:
+                if key not in points_data:
+                    points_data[key] = []
+            points = {
+                "entry": points_data["entry"],
+                "exit": points_data["exit"],
+                "restricted": points_data["restricted"]
+            }
+            url = "http://localhost:8011/upload_people"
+
+        elif video_type == "Vehicle":
+            if isinstance(points_data, list):
+                points = points_data  # If points_data is a list for vehicles
+            else:
+                print(f"Error: Expected points_data to be a list for Vehicle type, but got {type(points_data)}.")
+                return None
+            url = "http://localhost:8012/upload_vehicle"
+
+        else:
+            raise ValueError("Invalid video type")
+
+        data = {"points": json.dumps(points)}
         response = requests.post(url, files=files, data=data)
-        response.raise_for_status()
         return response
-    except requests.exceptions.RequestException as e:
-        st.error(f"Upload failed: {str(e)}")
-        return
+
+    except Exception as e:
+        print(f"Error uploading video: {str(e)}")
+        return None
+
+
 
 
 # Streamlit UI
@@ -78,35 +91,55 @@ video_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov", 
 if video_file:
     st.video(video_file)
 
-    if 'points' not in st.session_state:
-        st.session_state.points = []
-
     video_type = st.selectbox("Select Video Type", ["People", "Vehicle"])
+
+    if 'points_data' not in st.session_state:
+        st.session_state.points_data = {"Entry": [], "Exit": [], "Restricted": [], "Vehicle": []}
+
+    if video_type == "People":
+        option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
+    else:
+        option = "Vehicle"
 
     if st.button("Select Points on Video"):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
             tmp.write(video_file.read())
             tmp_path = tmp.name
 
-        points = select_points_on_video(tmp_path)
-        os.remove(tmp_path)  # Remove after selection
+        selected_points = select_points_on_video(tmp_path)
+        os.remove(tmp_path)
 
-        if points:
-            st.session_state.points = points
-            st.write(f"Selected points: {points}")
+        if selected_points:
+            st.session_state.points_data[option] = [list(point) for point in selected_points]
+            st.success(f"{option} points saved: {st.session_state.points_data[option]}")
         else:
             st.error("No points selected.")
 
     if st.button("Upload Video"):
-        points = st.session_state.points
-        if points:
+        if video_type == "People":
+            points_to_send = {
+                "entry": st.session_state.points_data["Entry"],
+                "exit": st.session_state.points_data["Exit"],
+                "restricted": st.session_state.points_data["Restricted"]
+            }
+            valid = all(points_to_send.values())
+            print("Valid ;", valid)
+            
+        else:
+            points_to_send = st.session_state.points_data["Vehicle"]
+            valid = bool(points_to_send)
+            
+        if valid:
             with st.spinner("Uploading..."):
-                response = upload_video_and_points(video_file, points, video_type)
-
+                print("points to send",points_to_send)
+                response = upload_video_and_points(video_file, points_to_send, video_type)
+                print("Respomse", response)
+                
             if response:
                 if response.status_code == 200:
-                    st.success("Video uploaded successfully!")
+                    st.success("Video uploaded and processed successfully!")
+                    st.json(response.json())  # optional: show returned data
                 else:
                     st.error(f"Upload failed: {response.status_code} - {response.text}")
         else:
-            st.warning("Please select points before uploading.")
+            st.warning("Please select all required points before uploading.")
