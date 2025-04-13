@@ -17,10 +17,7 @@ def upload_vehicle_json():
 
     filename = json_file.filename
     video_name = filename.split('.')[0]
-
-    # Ensure it starts with 'vehicle'
-    if not filename.lower().startswith("vehicle"):
-        return jsonify({"error": "Filename must start with 'vehicle'"}), 400
+    print("video name" ,video_name)
 
     json_folder_vehicle = "Vehicle_Json_Folder"
     os.makedirs(json_folder_vehicle, exist_ok=True)
@@ -51,10 +48,6 @@ def upload_people_json():
 
     filename = json_file.filename
     video_name = filename.split('.')[0]
-
-    # Ensure it starts with 'people'
-    if not filename.lower().startswith("people"):
-        return jsonify({"error": "Filename must start with 'people'"}), 400
 
     json_folder_people = "People_Json_Folder"
     os.makedirs(json_folder_people, exist_ok=True)

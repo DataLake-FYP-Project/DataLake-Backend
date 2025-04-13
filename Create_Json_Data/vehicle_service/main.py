@@ -277,7 +277,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 
     # Extract the video name (without extension) for the JSON filename
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
-    json_output_path = os.path.join(RESULTS_FOLDER, f"vehicle_{video_name}_frame_data.json")
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_{now}.json")
 
     # Open output video stream
     with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:

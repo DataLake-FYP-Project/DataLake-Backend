@@ -180,7 +180,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 
 
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
-    json_output_path = os.path.join(RESULTS_FOLDER, f"people_{video_name}_frame_data.json")
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_{now}.json")
     video_metadata = extract_video_metadata(SOURCE_VIDEO_PATH)
 
     # Get recording time from metadata or use current time as fallback
