@@ -175,8 +175,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
     video_info = sv.VideoInfo.from_video_path(SOURCE_VIDEO_PATH)
 
     restricted_area = np.array(restricted_points)
-    area1 = np.array(exit_points)
-    area2 = np.array(entry_points)
+    area1 = np.array(entry_points)  #near the door
+    area2 = np.array(exit_points)
 
     if area1.size == 0:
         print("🚫 Exit points are missing!")
@@ -345,8 +345,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
             cv2.putText(frame, f"Total: {total_count}", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-            cv2.putText(frame, f"Entering: {entering_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(frame, f"Exiting: {exiting_count}", (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(frame, f"Entering: {exiting_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(frame, f"Exiting: {entering_count}", (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
             cv2.putText(frame, f"Restricted Area: {restricted_area_count}", (50, 200),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
