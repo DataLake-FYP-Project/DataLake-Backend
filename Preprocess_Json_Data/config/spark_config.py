@@ -27,6 +27,7 @@ def create_spark_session(app_name=None):
     .config("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false") \
     .config("spark.sql.sources.commitProtocolClass", "org.apache.spark.sql.execution.datasources.SQLHadoopMapReduceCommitProtocol") \
     .config("mapreduce.fileoutputcommitter.algorithm.version", "2") \
+    .config("spark.sql.legacy.timeParserPolicy", "LEGACY") \
     .getOrCreate() 
 
 

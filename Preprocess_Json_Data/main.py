@@ -63,7 +63,8 @@ def process_video_data(spark, input_path, video_type):
                     "class_id": -1
                 }
             })
-            output_path = f"vehicle_detection/{os.path.splitext(input_path)[0]}/"
+            # Changed output path format
+            output_path = f"vehicle_detection/{os.path.splitext(os.path.basename(input_path))[0]}.json"
         else:
             processed_df = process_tracking_data(raw_df, {
                 "timestamp_format": "yyyy-MM-dd HH:mm:ss",
@@ -73,7 +74,8 @@ def process_video_data(spark, input_path, video_type):
                     "gender": "Unknown"
                 }
             })
-            output_path = f"people_detection/{os.path.splitext(input_path)[0]}/"
+            # Changed output path format
+            output_path = f"people_detection/{os.path.splitext(os.path.basename(input_path))[0]}.json"
         
         return processed_df, output_path
     except Exception as e:
@@ -83,15 +85,18 @@ def process_video_data(spark, input_path, video_type):
 def write_output_json(spark, df, output_path):
     """Write processed data to MinIO as JSON"""
     try:
+        # Ensure we're writing to the processed bucket with clean path
+        clean_path = output_path.lstrip('/')  # Remove any leading slashes
+        
         MinIOConnector(spark).write_json(
             df,
-            BUCKETS["processed"],
-            output_path
+            BUCKETS["processed"],  # This ensures it goes to the processed bucket
+            clean_path
         )
-        logging.info(f"Successfully wrote output to {output_path}")
+        logging.info(f"Successfully wrote output to processed/{clean_path}")
         return True
     except Exception as e:
-        logging.error(f"Failed to write output to {output_path}: {e}")
+        logging.error(f"Failed to write output to processed/{clean_path}: {e}")
         return False
 
 def main():

@@ -45,11 +45,41 @@ class MinIOConnector:
         s3_path = f"s3a://{bucket}/{path}"
         df.write.mode(mode).parquet(s3_path)
     
+    # Update the write_json method in minio_connector.py
     def write_json(self, df: DataFrame, bucket: str, path: str, mode: str = "overwrite"):
-        """Write DataFrame as JSON"""
+        """Write DataFrame as proper JSON array"""
         self._ensure_bucket_exists(bucket)
-        s3_path = f"s3a://{bucket}/{path}"
-        df.write.mode(mode).json(s3_path)
+        
+        # First write to a temporary location
+        temp_path = f"s3a://{bucket}/_temp_{path}"
+        df.write.mode(mode).json(temp_path)
+        
+        # Read the JSON files and combine into a single array
+        json_df = self.spark.read.json(temp_path)
+        json_data = json_df.toJSON().collect()
+        
+        # Create proper JSON array
+        json_array = "[" + ",\n".join(json_data) + "]"
+        
+        # Write the combined JSON to the final location
+        json_bytes = json_array.encode('utf-8')
+        json_stream = BytesIO(json_bytes)
+        
+        self.minio_client.put_object(
+            bucket,
+            path,
+            json_stream,
+            length=len(json_bytes),
+            content_type='application/json'
+        )
+        
+        # Clean up temporary files
+        try:
+            objects = self.minio_client.list_objects(bucket, prefix=f"_temp_{path}")
+            for obj in objects:
+                self.minio_client.remove_object(bucket, obj.object_name)
+        except S3Error as e:
+            logging.error(f"Error cleaning up temp files: {e}")
     
     def write_single_json(self, data: Dict[str, Any], bucket: str, path: str):
         """Write Python dict as single JSON file"""
