@@ -59,8 +59,9 @@ class MinIOConnector:
         json_data = json_df.toJSON().collect()
         
         # Create proper JSON array
-        json_array = "[" + ",\n".join(json_data) + "]"
-        
+        # json_array = "[" + ",\n".join(json_data) + "]"
+        json_array = "[\n" + ",\n".join([json.dumps(json.loads(row), indent=4) for row in json_data]) + "\n]"
+
         # Write the combined JSON to the final location
         json_bytes = json_array.encode('utf-8')
         json_stream = BytesIO(json_bytes)
@@ -80,6 +81,7 @@ class MinIOConnector:
                 self.minio_client.remove_object(bucket, obj.object_name)
         except S3Error as e:
             logging.error(f"Error cleaning up temp files: {e}")
+   
     
     def write_single_json(self, data: Dict[str, Any], bucket: str, path: str):
         """Write Python dict as single JSON file"""

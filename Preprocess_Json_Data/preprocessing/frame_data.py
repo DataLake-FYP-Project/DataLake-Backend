@@ -26,7 +26,10 @@ FRAME_DATA_SCHEMA = StructType([
             StructField("stopped", BooleanType(), True),
             StructField("speed", DoubleType(), True),
             StructField("entry_time", StringType(), True),
-            StructField("exit_time", StringType(), True)
+            StructField("exit_time", StringType(), True),
+            # Add any additional fields from raw data here
+            StructField("timestamp", StringType(), True),
+            StructField("vehicle_type", StringType(), True)
         ])
     ), True)
 ])
@@ -44,8 +47,11 @@ def process_frame_data(df: DataFrame, config: Optional[Dict] = None) -> DataFram
             "lane": "unknown",
             "vehicle_color": "unknown",
             "stopped": False,
-            "speed": 0.0
-        }
+            "speed": 0.0,
+            "entry_time": None,
+            "exit_time": None
+        },
+        "preserve_null_fields": ["entry_time", "exit_time"]  # Fields where null should be preserved
     }
     
     config = {**default_config, **(config or {})}
@@ -63,23 +69,17 @@ def process_frame_data(df: DataFrame, config: Optional[Dict] = None) -> DataFram
             .select(
                 col("frame_number"),
                 col("congestion_level"),
-                col("detection.tracker_id").alias("tracker_id"),
-                col("detection.class_id").alias("class_id"),
-                col("detection.class_name").alias("class_name"),
-                col("detection.confidence").alias("confidence"),
-                col("detection.bbox").alias("bbox"),
-                col("detection.direction").alias("direction"),
-                col("detection.lane").alias("lane"),
-                col("detection.vehicle_color").alias("vehicle_color"),
-                col("detection.stopped").alias("stopped"),
-                col("detection.speed").alias("speed"),
-                col("detection.entry_time").alias("entry_time"),
-                col("detection.exit_time").alias("exit_time")
+                # Include all detection fields
+                col("detection.*")  # This gets all fields from the detection struct
             )
         )
         
-        # Handle null values
-        processed_df = handle_null_values(processed_df, config["default_values"])
+        # Handle null values - only for fields that need defaults
+        for field, default_value in config["default_values"].items():
+            if field not in config["preserve_null_fields"]:
+                processed_df = processed_df.withColumn(
+                    field, 
+                    coalesce(col(field), lit(default_value)))
         
         # Filter by confidence threshold
         processed_df = filter_confidence(processed_df, config["confidence_threshold"])
@@ -87,52 +87,33 @@ def process_frame_data(df: DataFrame, config: Optional[Dict] = None) -> DataFram
         # Clean string columns
         processed_df = clean_string_columns(processed_df)
         
-        # Extract bbox coordinates
-        bbox_schema = ArrayType(DoubleType())
-        processed_df = (
-            processed_df
-            .withColumn("bbox", col("bbox").cast(bbox_schema))
-            .withColumn("bbox_x1", col("bbox")[0])
-            .withColumn("bbox_y1", col("bbox")[1])
-            .withColumn("bbox_x2", col("bbox")[2])
-            .withColumn("bbox_y2", col("bbox")[3])
-        )
-        
-        # Reconstruct the array of detections per frame
-        processed_df = (
-            processed_df
-            .groupBy("frame_number", "congestion_level")
-            .agg(
-                collect_list(
-                    struct(
-                        col("tracker_id"),
-                        col("class_id"),
-                        col("class_name"),
-                        col("confidence"),
-                        col("bbox"),
-                        col("bbox_x1"),
-                        col("bbox_y1"),
-                        col("bbox_x2"),
-                        col("bbox_y2"),
-                        col("direction"),
-                        col("lane"),
-                        col("vehicle_color"),
-                        col("stopped"),
-                        col("speed"),
-                        col("entry_time"),
-                        col("exit_time")
-                    )
-                ).alias("detections")
+        # Ensure bbox coordinates are properly extracted
+        if "bbox" in processed_df.columns:
+            processed_df = (
+                processed_df
+                .withColumn("bbox", col("bbox").cast(ArrayType(DoubleType())))
+                .withColumn("bbox_x1", col("bbox")[0])
+                .withColumn("bbox_y1", col("bbox")[1])
+                .withColumn("bbox_x2", col("bbox")[2])
+                .withColumn("bbox_y2", col("bbox")[3])
             )
-        )
         
-        # Validate output schema
-        for field in FRAME_DATA_SCHEMA.fields:
-            if field.name not in processed_df.columns:
-                processed_df = processed_df.withColumn(field.name, lit(None).cast(field.dataType))
-        
-        return processed_df.select([field.name for field in FRAME_DATA_SCHEMA.fields])
+            optional_fields = [
+                "tracker_id", "class_id", "class_name", "confidence", "bbox",
+                "bbox_x1", "bbox_y1", "bbox_x2", "bbox_y2", "direction", "lane",
+                "vehicle_color", "stopped", "speed", "entry_time", "exit_time",
+                "timestamp", "vehicle_type"
+            ]
+
+            existing_fields = [f for f in optional_fields if f in processed_df.columns]
+
+            columns_to_select = ["frame_number", "congestion_level"] + existing_fields
+
+            return processed_df.select(columns_to_select)
+
+
         
     except Exception as e:
         logging.error(f"Error processing frame data: {e}")
         raise
+
