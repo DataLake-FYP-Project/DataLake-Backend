@@ -1,0 +1,16 @@
+[
+    {
+        "tracker_id": 2,
+        "gender": "Man",
+        "age": 31,
+        "carrying": "no objects",
+        "confidence": 0.9201098084449768,
+        "entry_time": null,
+        "exit_time": "2025-04-09 16:44:20",
+        "entry_frame": null,
+        "exit_frame": 50,
+        "entered_restricted": false,
+        "restricted_entry_time": null,
+        "restricted_exit_time": null
+    }
+]

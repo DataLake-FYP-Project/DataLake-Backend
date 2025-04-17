@@ -1,0 +1,16 @@
+[
+    {
+        "tracker_id": 2,
+        "gender": "Unknown",
+        "age": "Unknown",
+        "carrying": "none",
+        "confidence": 0.9255308508872986,
+        "entry_time": null,
+        "exit_time": null,
+        "entry_frame": null,
+        "exit_frame": null,
+        "entered_restricted": false,
+        "restricted_entry_time": null,
+        "restricted_exit_time": null
+    }
+]

@@ -1,7 +1,8 @@
+import json
 from flask import Flask, request, jsonify
 import os
 from processing_vehicle import convert_json_format, vehicle_upload_to_minio, vehicle_upload_to_elasticsearch
-from processing_people import people_upload_to_elasticsearch, people_upload_to_minio
+from processing_people import convert_people_json_format, people_upload_to_elasticsearch, people_upload_to_minio
 
 
 app = Flask(__name__)
@@ -36,7 +37,6 @@ def upload_vehicle_json():
 
     return jsonify({"message": "Vehicle file uploaded and processed successfully"}), 200
 
-
 @app.route("/upload_2_people", methods=["POST"])
 def upload_people_json():
     if "json_file" not in request.files:
@@ -52,14 +52,19 @@ def upload_people_json():
     json_folder_people = "People_Json_Folder"
     os.makedirs(json_folder_people, exist_ok=True)
 
+    # Save uploaded file
     json_path = os.path.join(json_folder_people, filename)
     json_file.save(json_path)
 
-    # Upload original file only (twice to MinIO as per your earlier logic)
-    people_upload_to_minio(json_path, video_name)
-    people_upload_to_elasticsearch(json_path)
+    # 🔁 Convert original JSON into processed format
+    processed_json_path = os.path.join(json_folder_people, f"{video_name}_processed.json")
+    convert_people_json_format(json_path, processed_json_path)
 
-    return jsonify({"message": "People file uploaded successfully"}), 200
+    # Upload original (raw) file to MinIO and processed to Elasticsearch
+    people_upload_to_minio(json_path, video_name)
+    people_upload_to_elasticsearch(processed_json_path)
+
+    return jsonify({"message": "People file uploaded and processed successfully"}), 200
 
 
 if __name__ == "__main__":

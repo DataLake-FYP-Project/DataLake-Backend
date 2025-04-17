@@ -1,0 +1,50 @@
+{
+    "video_metadata": {
+        "filename": "uploads\\people_video - Trim.mp4",
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "format_long_name": "QuickTime / MOV",
+        "duration_seconds": 1.706646,
+        "size_bytes": 491502,
+        "bitrate": 2303943,
+        "creation_time": "2025-04-09T16:44:19.000000Z",
+        "encoder": null,
+        "video_codec": "h264",
+        "width": 960,
+        "height": 544,
+        "fps": 29.97,
+        "device_model": null,
+        "software": null,
+        "audio_codec": "aac",
+        "sample_rate": 48000,
+        "channels": 2,
+        "creation_time_utc": "2025-04-09 16:44:19 UTC",
+        "creation_time_local": "2025-04-09 22:14:19 Sri Lanka Standard Time",
+        "recording_time": "2025-04-09 22:14:19 Sri Lanka Standard Time"
+    },
+    "processing_time": "2025-04-17 12:17:52 UTC",
+    "summary": {
+        "total_people": 0,
+        "total_entering": 0,
+        "total_exiting": 0,
+        "restricted_area_entries": 0,
+        "restricted_people_ids": [],
+        "fps": 29.0,
+        "duration_seconds": 1.7586206896551724
+    },
+    "detections": {
+        "2": {
+            "tracker_id": 2,
+            "gender": "Unknown",
+            "age": "Unknown",
+            "carrying": "none",
+            "confidence": 0.8876214027404785,
+            "entry_time": null,
+            "exit_time": null,
+            "entry_frame": null,
+            "exit_frame": null,
+            "entered_restricted": false,
+            "restricted_entry_time": null,
+            "restricted_exit_time": null
+        }
+    }
+}

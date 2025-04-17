@@ -1,0 +1,42 @@
+[
+    {
+        "tracker_id": 1,
+        "class_id": 7,
+        "class_name": "truck",
+        "vehicle_color": "gray",
+        "direction": "Down",
+        "lane": "Middle Lane",
+        "average_confidence": 0.9172698936679147,
+        "average_speed": 16.410621575250723
+    },
+    {
+        "tracker_id": 2,
+        "class_id": 2,
+        "class_name": "car",
+        "vehicle_color": "gray",
+        "direction": "Down",
+        "lane": "Middle Lane",
+        "average_confidence": 0.8897959942167456,
+        "average_speed": 16.410621575250723
+    },
+    {
+        "tracker_id": 3,
+        "class_id": 2,
+        "class_name": "car",
+        "vehicle_color": "gray",
+        "direction": "Down",
+        "lane": "Middle Lane",
+        "average_confidence": 0.8676683117042888,
+        "average_speed": 16.410621575250723
+    },
+    {
+        "tracker_id": 4,
+        "class_id": 2,
+        "class_name": "car",
+        "vehicle_color": "gray",
+        "direction": "Down",
+        "lane": "Middle Lane",
+        "average_confidence": 0.7088475864041935,
+        "average_speed": 16.410621575250723
+    }
+]

@@ -14,6 +14,22 @@ BUCKET_NAME = 'people-data'
 ES_HOST = "http://localhost:9200"
 ES_INDEX = "datalake-people-data"
 
+def convert_people_json_format(input_path, output_path):
+    with open(input_path, 'r') as file:
+        data = json.load(file)
+
+    detections_dict = data.get("detections", {})
+    flattened_detections = []
+
+    for tracker_id, details in detections_dict.items():
+        details["tracker_id"] = int(tracker_id)  # make sure tracker_id is an integer
+        flattened_detections.append(details)
+
+    with open(output_path, 'w') as f:
+        json.dump(flattened_detections, f, indent=4)
+
+
+
 def people_upload_to_minio(file_path, video_name):
     s3 = boto3.client(
         's3',
@@ -33,6 +49,7 @@ def people_upload_to_elasticsearch(file_path):
     try:
         with open(file_path, "r") as file:
             data = json.load(file)
+
         es = Elasticsearch([ES_HOST])
         es.indices.create(index=ES_INDEX, ignore=400)
 
@@ -41,7 +58,8 @@ def people_upload_to_elasticsearch(file_path):
                 res = es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="vehicle_data_timestamp_pipeline")
                 print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
         else:
-            res = es.index(index=ES_INDEX, id=1, body=data, pipeline="add_timestamp")
+            res = es.index(index=ES_INDEX, id=1, body=data, pipeline="people_data_timestamp_pipeline")
             print(f"Single document uploaded to Elasticsearch: {res['result']}")
+
     except Exception as e:
         print(f"Error uploading to Elasticsearch: {e}")
