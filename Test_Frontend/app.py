@@ -62,11 +62,13 @@ def upload_video_and_points(video_file, points_data, video_type):
             url = "http://localhost:8011/upload_people"
 
         elif video_type == "Vehicle":
-            if isinstance(points_data, list):
-                points = points_data  # If points_data is a list for vehicles
-            else:
-                print(f"Error: Expected points_data to be a list for Vehicle type, but got {type(points_data)}.")
-                return None
+            for key in ["point", "red_light"]:
+                if key not in points_data:
+                    points_data[key] = []
+            points = {
+                "point": points_data["point"],
+                "red_light": points_data["red_light"],
+            }
             url = "http://localhost:8012/upload_vehicle"
 
         else:
@@ -99,7 +101,7 @@ if video_file:
     if video_type == "People":
         option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
     else:
-        option = "Vehicle"
+        option = st.radio("Select Point Type", ["point", "red_light"])
 
     if st.button("Select Points on Video"):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
@@ -123,11 +125,13 @@ if video_file:
                 "restricted": st.session_state.points_data["Restricted"]
             }
             valid = all(points_to_send.values())
-            print("Valid ;", valid)
             
         else:
-            points_to_send = st.session_state.points_data["Vehicle"]
-            valid = bool(points_to_send)
+            points_to_send = {
+                "point": st.session_state.points_data["point"],
+                "red_light": st.session_state.points_data["red_light"],
+            }
+            valid = all(points_to_send.values())
             
         if valid:
             with st.spinner("Uploading..."):

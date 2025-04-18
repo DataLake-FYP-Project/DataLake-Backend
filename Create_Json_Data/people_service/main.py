@@ -385,9 +385,6 @@ def upload_video():
             entry_points = points.get("entry", [])
             exit_points = points.get("exit", [])
             restricted_points = points.get("restricted", [])
-            print("entry_points:", entry_points)
-            print("exit_points:", exit_points)
-            print("restricted_points:", restricted_points)
 
         except json.JSONDecodeError as e:
             return jsonify({"error": f"Invalid JSON in points: {e}"}), 400

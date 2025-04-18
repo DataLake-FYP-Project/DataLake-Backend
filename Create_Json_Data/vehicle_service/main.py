@@ -223,16 +223,9 @@ def handle_tracker_ids(tracker_ids, id_map, id_counter):
     return updated_ids, id_map, id_counter
 
 # Red light violation detection
-def detect_crossing_box(frame):
-    gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    blur=cv2.GaussianBlur(gray,(5,5),0)
-    edges=cv2.Canny(blur,50,150)
-    cnts,_=cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-    boxes=[cv2.boundingRect(c) for c in cnts if cv2.boundingRect(c)[2]>cv2.boundingRect(c)[3]*3]
-    if not boxes:
-        return (200,430),(600,460)
-    x,y,w,h = max(boxes,key=lambda b:b[2])
-    return (x,y),(x+w,y+h)
+def detect_crossing_box(frame, red_light_points):
+    return red_light_points  
+
 
 def detect_light_color(frame,box):
     x1,y1,x2,y2=map(int,box)
@@ -250,12 +243,12 @@ def detect_light_color(frame,box):
     return "unknown"
 
 
-def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
+def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
     model_path = os.path.join("Model", "yolov8x.pt")
     model = YOLO(model_path)  
     model.fuse() 
 
-    SOURCE = np.array(points)
+    SOURCE = np.array(ex_points)
     TARGET_WIDTH = 25
     TARGET_HEIGHT = 250
 
@@ -271,9 +264,12 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 
     
     # Compute crossing box once
-    cap_tmp=cv2.VideoCapture(SOURCE_VIDEO_PATH)
-    _,first=cap_tmp.read(); cap_tmp.release()
-    crossing_box = detect_crossing_box(first)
+    cap_tmp = cv2.VideoCapture(SOURCE_VIDEO_PATH)
+    _, first = cap_tmp.read()
+    cap_tmp.release()
+
+    # Just return the 4 points
+    crossing_box = detect_crossing_box(first, red_light_points)
 
     box_annotator = sv.BoxAnnotator(
         thickness=4,
@@ -476,7 +472,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
             cv2.putText(frame,f"Light:{light.upper()}",(30,150),
                         cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,255),2)
             # Blue crossing box
-            cv2.rectangle(frame,crossing_box[0],crossing_box[1],(255,0,0),2)
+            pts = np.array(crossing_box, np.int32).reshape((-1, 1, 2))
+            cv2.polylines(frame, [pts], isClosed=True, color=(255, 0, 0), thickness=2)
             # cv2.imwrite(f"warped_frame_{frame_number:04d}.jpg", warped_frame)
             frame_path = os.path.join(FRAME_SAVE_DIR, f"frame_{frame_number:04d}.jpg")
             cv2.imwrite(frame_path, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
@@ -493,20 +490,28 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
 def upload_video():
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
-    
+
     file = request.files["file"]
     if file.filename == "":
         return jsonify({"error": "No selected file"}), 400
+
     points = request.form.get("points", None)
-    
+    print("points",points)
+
     if points:
         try:
             points = json.loads(points)
+
+            # 👇 Separate the 3 point types
+            ex_points = points.get("point", [])
+            red_light_points = points.get("red_light", [])
+
+
         except json.JSONDecodeError as e:
             return jsonify({"error": f"Invalid JSON in points: {e}"}), 400
     else:
-        points = []
-
+        ex_points = []
+        red_light_points = []
     source_video_path = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(source_video_path)
 
@@ -518,7 +523,7 @@ def upload_video():
         print(f"FRAME_SAVE_DIR: {FRAME_SAVE_DIR}")
 
 
-        json_output_path = ModelRun(source_video_path, target_video_path, points)
+        json_output_path = ModelRun(source_video_path, target_video_path, ex_points, red_light_points)
         print(f"JSON Output Path: {json_output_path}")
 
     except Exception as e:
