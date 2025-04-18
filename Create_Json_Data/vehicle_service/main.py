@@ -222,6 +222,34 @@ def handle_tracker_ids(tracker_ids, id_map, id_counter):
         updated_ids.append(id_map[tracker_id])
     return updated_ids, id_map, id_counter
 
+# Red light violation detection
+def detect_crossing_box(frame):
+    gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+    blur=cv2.GaussianBlur(gray,(5,5),0)
+    edges=cv2.Canny(blur,50,150)
+    cnts,_=cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    boxes=[cv2.boundingRect(c) for c in cnts if cv2.boundingRect(c)[2]>cv2.boundingRect(c)[3]*3]
+    if not boxes:
+        return (200,430),(600,460)
+    x,y,w,h = max(boxes,key=lambda b:b[2])
+    return (x,y),(x+w,y+h)
+
+def detect_light_color(frame,box):
+    x1,y1,x2,y2=map(int,box)
+    roi=frame[y1:y2,x1:x2]
+    if roi.size==0: return "unknown"
+    hsv=cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
+    r1=cv2.inRange(hsv,(0,70,50),(10,255,255))
+    r2=cv2.inRange(hsv,(160,70,50),(180,255,255))
+    g=cv2.inRange(hsv,(40,40,40),(80,255,255))
+    y=cv2.inRange(hsv,(20,100,100),(30,255,255))
+    rc, gc, yc = cv2.countNonZero(r1|r2), cv2.countNonZero(g), cv2.countNonZero(y)
+    if rc>gc and rc>yc and rc>50: return "red"
+    if gc>rc and gc>yc and gc>50: return "green"
+    if yc>rc and yc>gc and yc>50: return "yellow"
+    return "unknown"
+
+
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     model_path = os.path.join("Model", "yolov8x.pt")
     model = YOLO(model_path)  
@@ -241,6 +269,12 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     # Compute perspective transformation matrix
     perspective_transform = cv2.getPerspectiveTransform(SOURCE.astype(np.float32), TARGET.astype(np.float32))
 
+    
+    # Compute crossing box once
+    cap_tmp=cv2.VideoCapture(SOURCE_VIDEO_PATH)
+    _,first=cap_tmp.read(); cap_tmp.release()
+    crossing_box = detect_crossing_box(first)
+
     box_annotator = sv.BoxAnnotator(
         thickness=4,
         text_thickness=4,
@@ -258,6 +292,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
     frame_data_list = []  # To store frame data
     vehicle_positions = {}
     vehicle_times = {}
+    red_violators=set()
+    id_map,id_ctr={},1
 
     # Create directory for saving frames
     os.makedirs(FRAME_SAVE_DIR, exist_ok=True)
@@ -292,7 +328,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                 persist=True
             )
         ):
-            # Extract frame and detections
             frame = result.orig_img
             detections = sv.Detections.from_yolov8(result)
             video_metadata = extract_video_metadata(SOURCE_VIDEO_PATH)
@@ -314,22 +349,38 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
             else:
                 VIDEO_START_TIME = datetime.now()
 
-            # Handle object IDs (tracker IDs)
             if result.boxes.id is not None:
-        
+
                 updated_tracker_ids, id_map, id_counter = handle_tracker_ids(result.boxes.id.cpu().numpy().astype(int), id_map, id_counter)
                 detections.tracker_id = updated_tracker_ids
-            
-            # Check for vehicles crossing the line
+
+                    # Traffic light detection
+                light="unknown"
+                if result.boxes.id is not None:
+                    for box,cls in zip(result.boxes.xyxy,result.boxes.cls):
+                        if model.model.names[int(cls)]=='traffic light':
+                            light=detect_light_color(frame,box)
+                            cv2.rectangle(frame,tuple(map(int,box[:2])),tuple(map(int,box[2:])),
+                                        (0,0,255) if light=='red' else (0,255,0),2)
+                            break
+
+                # Remap tracker IDs
+                if result.boxes.id is not None:
+                    tracker_ids=result.boxes.id.cpu().numpy().astype(int); upd=[]
+                    for t in tracker_ids:
+                        if t not in id_map: id_map[t]=id_ctr; id_ctr+=1
+                        upd.append(id_map[t])
+                    detections.tracker_id=upd
+
             for bbox, confidence, class_id, tracker_id in detections:
                 if tracker_id is None:
                     continue
                 tracker_id = int(tracker_id)
                 bbox = [float(coord) for coord in bbox]
-                center_x = (bbox[0] + bbox[2]) / 2 # Center X of the bounding box
-                center_y = (bbox[1] + bbox[3]) / 2  # Center Y of the bounding box
+                center_x = (bbox[0] + bbox[2]) / 2
+                center_y = (bbox[1] + bbox[3]) / 2
 
-                
+
                 if tracker_id not in crossing_tracker:
                     crossing_tracker[tracker_id] = {'crossed': False, 'last_position': bbox[1]}
                 vehicle_color = get_exact_vehicle_color(bbox, frame)
@@ -337,39 +388,36 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                 direction = get_vehicle_direction(center_x, center_y, tracker_id, vehicle_positions)
                 lane = get_lane(center_x, left_lane_end, right_lane_start)
 
-                # Update vehicle position
                 vehicle_positions[tracker_id] = (center_x, center_y)
-                
-                # If vehicle is detected for the first time, initialize it in the tracker
                 if tracker_id not in crossing_tracker:
                     crossing_tracker[tracker_id] = {'crossed': False, 'last_position': center_y}
 
-                # Check if vehicle is crossing the line
                 if not crossing_tracker[tracker_id]['crossed']:
-                    # Vehicle is crossing the line from below
                     if center_y > line_y_position and crossing_tracker[tracker_id]['last_position'] <= line_y_position:
                         vehicle_crossings['entered'] += 1
                         crossing_tracker[tracker_id]['crossed'] = True  # Mark as crossed
-                    # Vehicle is crossing the line from above
                     elif center_y < line_y_position and crossing_tracker[tracker_id]['last_position'] >= line_y_position:
                         vehicle_crossings['exited'] += 1
                         crossing_tracker[tracker_id]['crossed'] = True  # Mark as crossed
 
-                # Update the vehicle's last position
                 crossing_tracker[tracker_id]['last_position'] = center_y
-
-                # Draw the crossing line on the frame
                 cv2.line(frame, (0, line_y_position), (video_info.width, line_y_position), (0, 255, 0), 2)
-
-                # Add entry and exit counts to the frame
                 cv2.putText(frame, f"Entered: {vehicle_crossings['entered']}", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
                 cv2.putText(frame, f"Exited: {vehicle_crossings['exited']}", (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        
+
                 congestion_level = calculate_congestion_level(detections)
                 speed = calculate_speed(center_x, center_y, tracker_id, frame_number)
                 stopped = bool(is_stopped(speed))
-        
-                # Only draw if the vehicle is inside the polygon
+
+                # --- NEW VIOLATION: ENTERING the blue box while red ---
+                inside = (crossing_box[0][0] <= center_x <= crossing_box[1][0]
+                        and crossing_box[0][1] <= center_y <= crossing_box[1][1])
+                violation = False
+                if inside and light=='red' and tracker_id not in red_violators:
+                    violation = True
+                    red_violators.add(tracker_id)
+                crossing_tracker[tracker_id]['inside'] = inside
+
                 if is_in_target_polygon(center_x, center_y, SOURCE):
                     if tracker_id not in vehicle_times:
                         vehicle_times[tracker_id] = {"entry": frame_number, "exit": frame_number}
@@ -386,24 +434,24 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                                 ),
                     labels=[label]
                     )
-                    
-        
-                # Collect frame data for JSON with traffic congestion level and vehicle color
+
                     frame_data = {
                                 "frame_number": frame_number,
                                 "congestion_level": congestion_level,  # Add congestion level
+                                "traffic_light":light,
                                 "detections": [
                                     {
-                                        "tracker_id": int(tracker_id),  # Convert to Python int
-                                        "class_id": int(class_id),      # Convert to Python int
+                                        "tracker_id": int(tracker_id),
+                                        "class_id": int(class_id),
                                         "class_name": model.names[class_id],
                                         "direction": direction,
                                         "lane": lane,
                                         "vehicle_color": vehicle_color,
                                         "stopped": stopped,
-                                        "speed" : speed,
-                                        "confidence": float(confidence),  # Convert to Python float
-                                        "bbox": [float(coord) for coord in bbox],  # Convert bbox to list of floats
+                                        "confidence": float(confidence),
+                                        "bbox": [float(coord) for coord in bbox],
+                                        "Speed_kmh":speed,
+                                        "Red light violation":violation,
                                         "entry_time": (
                         (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
                         .strftime("%Y-%m-%d %H:%M:%S")
@@ -419,23 +467,19 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, points):
                                 ]
                             }
                     frame_data_list.append(frame_data)
-                
+                    
 
 
                 
-            # Draw the source polygon
             cv2.polylines(frame, [SOURCE.astype(np.int32)], isClosed=True, color=(0, 255, 0), thickness=2)
-
-            # Apply perspective transformation
             warped_frame = cv2.warpPerspective(frame, perspective_transform, (TARGET_WIDTH, TARGET_HEIGHT))
+            cv2.putText(frame,f"Light:{light.upper()}",(30,150),
+                        cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,255),2)
+            # Blue crossing box
+            cv2.rectangle(frame,crossing_box[0],crossing_box[1],(255,0,0),2)
             # cv2.imwrite(f"warped_frame_{frame_number:04d}.jpg", warped_frame)
-
-            # Save current frame to disk
             frame_path = os.path.join(FRAME_SAVE_DIR, f"frame_{frame_number:04d}.jpg")
             cv2.imwrite(frame_path, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-                
-
-            # Write annotated frame to the output video
             sink.write_frame(frame)
 
     # Save frame data to a JSON file
