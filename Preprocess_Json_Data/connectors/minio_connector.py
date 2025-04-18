@@ -42,25 +42,26 @@ class MinIOConnector:
                 .option("mode", "PERMISSIVE")
                 .json(s3_path))
     
+
     def write_json(self, df: DataFrame, bucket: str, path: str, mode: str = "overwrite"):
-        """Write DataFrame as proper JSON array"""
+        """Write DataFrame as proper JSON array to MinIO"""
         self.ensure_bucket_exists(bucket)
-        
-        # First write to a temporary location
+
+        # Step 1: Write to a temporary location in MinIO (as partitioned JSON files)
         temp_path = f"s3a://{bucket}/_temp_{path}"
         df.write.mode(mode).json(temp_path)
-        
-        # Read the JSON files and combine into a single array
-        json_df = self.spark.read.json(temp_path)
-        json_data = json_df.toJSON().collect()
-        
-        # Create proper JSON array
-        json_array = "[\n" + ",\n".join([json.dumps(json.loads(row), indent=4) for row in json_data]) + "\n]"
 
-        # Write the combined JSON to the final location
+        # Step 2: Read and collect JSON rows from temp path
+        json_df = self.spark.read.json(temp_path)
+        json_rows = json_df.toJSON().collect()  # list of valid JSON strings
+
+        # Step 3: Convert to a proper JSON array (without re-dumping strings!)
+        json_array = "[\n" + ",\n".join(json_rows) + "\n]"
+
+        # Step 4: Write the combined array as a single object to MinIO
         json_bytes = json_array.encode('utf-8')
         json_stream = BytesIO(json_bytes)
-        
+
         self.minio_client.put_object(
             bucket,
             path,
@@ -68,19 +69,40 @@ class MinIOConnector:
             length=len(json_bytes),
             content_type='application/json'
         )
-        
-        # Clean up temporary files
+
+        # Step 5: Clean up temporary files
         try:
             objects = self.minio_client.list_objects(bucket, prefix=f"_temp_{path}")
             for obj in objects:
                 self.minio_client.remove_object(bucket, obj.object_name)
         except S3Error as e:
             logging.error(f"Error cleaning up temp files: {e}")
+
    
+
     def write_single_json(self, data: Dict[str, Any], bucket: str, path: str):
-        """Write Python dict as single JSON file"""
+        """Write Python dict as single formatted JSON file"""
         self.ensure_bucket_exists(bucket)
-        json_bytes = json.dumps(data).encode('utf-8')
+
+        # Pretty-print the dict into JSON with indentation
+        json_str = json.dumps(data, indent=4, ensure_ascii=False)
+        json_bytes = json_str.encode('utf-8')
+        json_stream = BytesIO(json_bytes)
+
+        self.minio_client.put_object(
+            bucket,
+            path,
+            json_stream,
+            length=len(json_bytes),
+            content_type='application/json'
+        )
+
+    
+
+    def write_json_string(self, json_str: str, bucket: str, path: str):
+        """Write a JSON string directly to MinIO"""
+        self.ensure_bucket_exists(bucket)
+        json_bytes = json_str.encode('utf-8')
         json_stream = BytesIO(json_bytes)
         
         self.minio_client.put_object(
@@ -90,6 +112,7 @@ class MinIOConnector:
             length=len(json_bytes),
             content_type='application/json'
         )
+    
     
     def list_json_files(self, bucket: str, folder: str = "") -> List[str]:
         """

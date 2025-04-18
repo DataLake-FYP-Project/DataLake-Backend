@@ -13,7 +13,8 @@ MINIO_CONFIG = {
 
 BUCKETS = {
     "raw": os.getenv("RAW_BUCKET"),
-    "processed": os.getenv("PROCESSED_BUCKET")
+    "processed": os.getenv("PROCESSED_BUCKET"),
+    "refine":os.getenv("REFINED_BUCKET") 
 }
 
 
