@@ -1,146 +1,123 @@
-from pyspark.sql.functions import col, explode, struct, collect_list, to_json, from_json, array, lit
+from pyspark.sql.functions import col, explode, struct, collect_list, array, lit, coalesce
 from pyspark.sql.types import *
-from pyspark.sql.functions import coalesce, array
-from pyspark.sql.window import Window
-from pyspark.sql.functions import row_number
+from preprocessing.common import *
 
-
-def process_people_json_data(df, options):
+def process_people_json_data(df):
     if "frame_detections" not in df.columns:
         print("Column 'frame_detections' not found in the input DataFrame. Skipping processing.")
         return df
 
-    # Detection schema
-    detection_schema = StructType([
-        StructField("tracker_id", LongType()),
-        StructField("class_id", LongType()),
-        StructField("class_name", StringType()),
-        StructField("confidence", DoubleType()),
-        StructField("bbox", ArrayType(DoubleType())),
-        StructField("in_area1", BooleanType()),
-        StructField("in_area2", BooleanType()),
-        StructField("in_restricted_area", BooleanType()),
-        StructField("gender", StringType()),
-        StructField("age", StringType()),
-        StructField("carrying", StringType()),
-        StructField("mask_status", StringType()),
-        StructField("mask_confidence", DoubleType()),
-        StructField("entry_time", StringType()),
-        StructField("exit_time", StringType()),
-        StructField("first_seen_frame", LongType()),
-        StructField("last_seen_frame", LongType()),
-        StructField("entered_restricted", BooleanType())
-    ])
+    # Configuration with default values
+    default_config = {
+        "default_values": {
+            "confidence": 0.0,
+            "tracker_id": -1,
+            "class_id": -1,
+            "gender": "unknown",
+            "age":-1,
+            "carrying": "none",
+            "mask_status": "unknown",
+            "mask_confidence": 0.0,
+            "in_restricted_area": False,
+            "entry_time": "2101-01-29 17:53:46",
+            "exit_time": "2101-01-29 17:53:46"
+        },
+        "timestamp_fields": ["timestamp", "entry_time", "exit_time"],
+        "preserve_null_fields": ["entry_time", "exit_time"]
+    }
+    config = default_config | {}
 
-    frame_schema = StructType([
-        StructField("frame_number", LongType()),
-        StructField("timestamp", StringType()),
-        StructField("detections", ArrayType(detection_schema))
-    ])
-
-    # Step 1: Explode each frame
+    # Step 1: Explode frame_detections array
     exploded = df.withColumn("frame", explode(col("frame_detections")))
 
-    # Step 2: Extract frame fields
-    exploded = exploded.select(
+    # Step 2: Process frame-level fields
+    frame_fields = exploded.select(
         col("video_metadata"),
         col("summary"),
         col("processing_time"),
-        col("frame.frame_number").alias("frame_number"),
-        col("frame.timestamp").alias("timestamp"),
+        col("frame.frame_number"),
+        col("frame.timestamp"),
         col("frame.detections")
     )
 
-    # Step 3: Explode detections within each frame (may be empty)
-    exploded_detections = exploded.withColumn("detection", explode("detections")).select(
+    # Step 3: Explode detections and apply preprocessing
+    processed_detections = frame_fields.withColumn("detection", explode("detections")).select(
         "video_metadata", "summary", "processing_time", "frame_number", "timestamp",
-        col("detection.tracker_id"),
-        col("detection.class_id"),
-        col("detection.class_name"),
-        col("detection.confidence"),
-        col("detection.bbox").getItem(0).alias("bbox_x1"),
-        col("detection.bbox").getItem(1).alias("bbox_y1"),
-        col("detection.bbox").getItem(2).alias("bbox_x2"),
-        col("detection.bbox").getItem(3).alias("bbox_y2"),
-        col("detection.in_area1"),
-        col("detection.in_area2"),
-        col("detection.in_restricted_area"),
-        col("detection.gender"),
-        col("detection.age"),
-        col("detection.carrying"),
-        col("detection.mask_status"),
-        col("detection.mask_confidence"),
-        col("detection.entry_time"),
-        col("detection.exit_time"),
-        col("detection.first_seen_frame"),
-        col("detection.last_seen_frame"),
-        col("detection.entered_restricted")
-    ).filter(col("confidence") > options.get("confidence_threshold", 0.7))
-
-    # Step 4: Re-group detections back into frames
-    regrouped_detections = exploded_detections.groupBy(
-        "video_metadata", "summary", "processing_time", "frame_number", "timestamp"
-    ).agg(
-        collect_list(
-            struct(
-                "tracker_id",
-                "class_id",
-                "class_name",
-                "confidence",
-                struct("bbox_x1", "bbox_y1", "bbox_x2", "bbox_y2").alias("bbox"),
-                "in_area1",
-                "in_area2",
-                "in_restricted_area",
-                "gender",
-                "age",
-                "carrying",
-                "mask_status",
-                "mask_confidence",
-                "entry_time",
-                "exit_time",
-                "first_seen_frame",
-                "last_seen_frame",
-                "entered_restricted"
-            )
-        ).alias("detections")
+        col("detection.*")
     )
 
-    # Step 5: Join with original exploded frames to retain frames with empty detections
-    all_frames = exploded.select(
+    # Apply common preprocessing
+    processed_detections = clean_string_columns(processed_detections)
+    processed_detections = handle_null_values(processed_detections, config["default_values"])
+    processed_detections = convert_timestamps(processed_detections, config["timestamp_fields"])
+
+    # Extract bbox coordinates while keeping original bbox array
+    processed_detections = processed_detections.withColumn(
+        "bbox", col("bbox").cast(ArrayType(DoubleType()))
+    ).withColumn("bbox_x1", col("bbox")[0]) \
+     .withColumn("bbox_y1", col("bbox")[1]) \
+     .withColumn("bbox_x2", col("bbox")[2]) \
+     .withColumn("bbox_y2", col("bbox")[3])
+
+    # Step 4: Reconstruct detections with original structure plus new fields
+    reconstructed_detections = processed_detections.select(
+        "video_metadata", "summary", "processing_time", "frame_number", "timestamp",
+        struct(
+            col("tracker_id"),
+            col("class_id"),
+            col("class_name"),
+            col("confidence"),
+            col("bbox"),
+            col("bbox_x1"),
+            col("bbox_y1"),
+            col("bbox_x2"),
+            col("bbox_y2"),
+            col("in_restricted_area"),
+            col("gender"),
+            col("age"),
+            col("carrying"),
+            col("mask_status"),
+            col("mask_confidence"),
+            col("entry_time"),
+            col("exit_time"),
+            col("first_seen_frame"),
+            col("last_seen_frame")
+        ).alias("detection")
+    )
+
+    # Step 5: Regroup detections by frame
+    grouped_by_frame = reconstructed_detections.groupBy(
         "video_metadata", "summary", "processing_time", "frame_number", "timestamp"
-    ).dropDuplicates()
+    ).agg(
+        collect_list("detection").alias("detections")
+    )
+
+    # Step 6: Join with all frames to preserve empty detections
+    all_frames = frame_fields.select(
+        "video_metadata", "summary", "processing_time", "frame_number", "timestamp"
+    ).distinct()
 
     final_frames = all_frames.join(
-        regrouped_detections,
+        grouped_by_frame,
         on=["video_metadata", "summary", "processing_time", "frame_number", "timestamp"],
         how="left"
     ).withColumn(
         "detections", coalesce(col("detections"), array())
     )
 
-
-
-    # Ensure frames are ordered before grouping
-    ordered_frames = final_frames.orderBy("frame_number").select(
-        "video_metadata",
-        "summary",
-        "processing_time",
-        struct(
-            col("frame_number"),
-            col("timestamp"),
-            col("detections")
-        ).alias("frame_struct")
-    )
-
-    # Re-group all frames and construct top-level object manually
-    result_df = ordered_frames.groupBy("video_metadata", "summary", "processing_time").agg(
-        collect_list("frame_struct").alias("frame_detections")
+    # Step 7: Reconstruct the original JSON structure
+    result_df = final_frames.orderBy("frame_number").groupBy(
+        "video_metadata", "summary", "processing_time"
+    ).agg(
+        collect_list(
+            struct(
+                col("frame_number"),
+                col("timestamp"),
+                col("detections")
+            )
+        ).alias("frame_detections")
     ).select(
-        col("video_metadata"),
-        col("summary"),
-        col("processing_time"),
-        col("frame_detections")
+        "video_metadata", "summary", "processing_time", "frame_detections"
     )
-
 
     return result_df

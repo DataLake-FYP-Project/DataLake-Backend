@@ -43,16 +43,3 @@ def convert_timestamps(df: DataFrame, timestamp_cols: list, format: str = "yyyy-
                 to_timestamp(col(col_name), format)
             )
     return df
-
-def filter_confidence(df: DataFrame, threshold: float = 0.7, confidence_col: str = "confidence") -> DataFrame:
-    """Filter records below confidence threshold"""
-    if confidence_col in df.columns:
-        return df.filter(col(confidence_col) >= threshold)
-    return df
-
-def add_processing_metadata(df: DataFrame) -> DataFrame:
-    """Add processing metadata columns"""
-    return (df
-            .withColumn("processing_timestamp", current_timestamp())
-            .withColumn("processing_id", md5(current_timestamp().cast("string")))
-    )

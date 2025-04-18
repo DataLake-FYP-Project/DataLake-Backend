@@ -28,6 +28,22 @@ def create_spark_session(app_name=None):
     .config("spark.sql.sources.commitProtocolClass", "org.apache.spark.sql.execution.datasources.SQLHadoopMapReduceCommitProtocol") \
     .config("mapreduce.fileoutputcommitter.algorithm.version", "2") \
     .config("spark.sql.legacy.timeParserPolicy", "LEGACY") \
+    .config("spark.executor.memory", "4g") \
+    .config("spark.driver.memory", "4g") \
+    .config("spark.python.worker.memory", "2g") \
+    .config("spark.sql.execution.arrow.pyspark.enabled", "true") \
+    .config("spark.sql.execution.arrow.pyspark.fallback.enabled", "true") \
+    .config("spark.executor.memory", "4g") \
+    .config("spark.driver.memory", "4g") \
+    .config("spark.python.worker.memory", "2g") \
+    .config("spark.sql.execution.arrow.pyspark.enabled", "true") \
+    .config("spark.sql.shuffle.partitions", "100") \
+    .config("spark.default.parallelism", "100") \
+    .config("spark.memory.fraction", "0.8") \
+    .config("spark.memory.storageFraction", "0.3") \
+    .config("spark.executor.heartbeatInterval", "60s") \
+    .config("spark.network.timeout", "300s") \
+    .config("spark.sql.execution.pyspark.udf.simplifiedTraceback.enabled", "false") \
     .getOrCreate() 
 
 
