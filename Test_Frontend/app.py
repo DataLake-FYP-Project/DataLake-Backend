@@ -48,32 +48,29 @@ def scale_polygon_points(polygon_points, original_width, original_height, new_wi
 
 def upload_video_and_points(video_file, points_data, video_type):
     try:
+        # Prepare video file
         files = {"file": (video_file.name, video_file, "video/mp4")}
 
+        # Prepare points based on video type
         if video_type == "People":
-            for key in ["entry", "exit", "restricted"]:
-                if key not in points_data:
-                    points_data[key] = []
             points = {
-                "entry": points_data["entry"],
-                "exit": points_data["exit"],
-                "restricted": points_data["restricted"]
+                "entry": points_data.get("entry", []),
+                "exit": points_data.get("exit", []),
+                "restricted": points_data.get("restricted", [])
             }
             url = "http://localhost:8011/upload_people"
 
         elif video_type == "Vehicle":
-            for key in ["point", "red_light"]:
-                if key not in points_data:
-                    points_data[key] = []
             points = {
-                "point": points_data["point"],
-                "red_light": points_data["red_light"],
+                "point": points_data.get("point", []),
+                "red_light": points_data.get("red_light", [])  # optional
             }
             url = "http://localhost:8012/upload_vehicle"
 
         else:
             raise ValueError("Invalid video type")
 
+        # Send request
         data = {"points": json.dumps(points)}
         response = requests.post(url, files=files, data=data)
         return response
@@ -120,19 +117,20 @@ if video_file:
     if st.button("Upload Video"):
         if video_type == "People":
             points_to_send = {
-                "entry": st.session_state.points_data["Entry"],
-                "exit": st.session_state.points_data["Exit"],
-                "restricted": st.session_state.points_data["Restricted"]
+                "entry": st.session_state.points_data.get("Entry"),
+                "exit": st.session_state.points_data.get("Exit"),
+                "restricted": st.session_state.points_data.get("Restricted")
             }
             valid = all(points_to_send.values())
-            
         else:
             points_to_send = {
-                "point": st.session_state.points_data["point"],
-                "red_light": st.session_state.points_data["red_light"],
+                "point": st.session_state.points_data.get("point"),
+                "red_light": st.session_state.points_data.get("red_light", None)
             }
-            valid = all(points_to_send.values())
-            
+            valid = bool(points_to_send["point"])
+            # if not valid:
+                # st.error("Please select a point before uploading the video.")
+
         if valid:
             with st.spinner("Uploading..."):
                 print("points to send",points_to_send)

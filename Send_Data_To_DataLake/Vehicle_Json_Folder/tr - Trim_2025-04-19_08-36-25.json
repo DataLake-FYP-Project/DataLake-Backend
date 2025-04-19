@@ -1,0 +1,5407 @@
+[
+    {
+        "frame_number": 11,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8267604112625122,
+                "bbox": [
+                    1681.59814453125,
+                    180.40467834472656,
+                    1755.703125,
+                    370.33319091796875
+                ],
+                "Speed_kmh": 10.504066393104662,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.9046323895454407,
+                "bbox": [
+                    908.2238159179688,
+                    779.1067504882812,
+                    1590.2271728515625,
+                    1051.9368896484375
+                ],
+                "Speed_kmh": 10.504066393104662,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 12,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8253114819526672,
+                "bbox": [
+                    1681.7298583984375,
+                    180.59666442871094,
+                    1755.76513671875,
+                    370.3121032714844
+                ],
+                "Speed_kmh": 3.703210534601062,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.9038883447647095,
+                "bbox": [
+                    908.7335205078125,
+                    774.1864624023438,
+                    1591.2694091796875,
+                    1052.1697998046875
+                ],
+                "Speed_kmh": 3.703210534601062,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 13,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8247902989387512,
+                "bbox": [
+                    1681.5919189453125,
+                    180.33993530273438,
+                    1755.7550048828125,
+                    370.28143310546875
+                ],
+                "Speed_kmh": 12.693700000042314,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.9109203219413757,
+                "bbox": [
+                    897.453857421875,
+                    757.271240234375,
+                    1605.580810546875,
+                    1052.433837890625
+                ],
+                "Speed_kmh": 12.693700000042314,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 14,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8200876712799072,
+                "bbox": [
+                    1681.593017578125,
+                    180.14036560058594,
+                    1755.8165283203125,
+                    370.3171691894531
+                ],
+                "Speed_kmh": 4.577598382026359,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.9124159216880798,
+                "bbox": [
+                    899.2214965820312,
+                    751.132080078125,
+                    1604.9256591796875,
+                    1052.57177734375
+                ],
+                "Speed_kmh": 4.577598382026359,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 15,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8232168555259705,
+                "bbox": [
+                    1681.57861328125,
+                    180.16607666015625,
+                    1755.8101806640625,
+                    370.1878356933594
+                ],
+                "Speed_kmh": 1.1242838727907163,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.9122485518455505,
+                "bbox": [
+                    905.721435546875,
+                    749.318115234375,
+                    1598.679443359375,
+                    1052.9083251953125
+                ],
+                "Speed_kmh": 1.1242838727907163,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 16,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8181233406066895,
+                "bbox": [
+                    1681.6522216796875,
+                    180.26199340820312,
+                    1755.7880859375,
+                    369.8468322753906
+                ],
+                "Speed_kmh": 8.850842765275207,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.9080495238304138,
+                "bbox": [
+                    907.74169921875,
+                    739.40380859375,
+                    1600.9951171875,
+                    1051.846923828125
+                ],
+                "Speed_kmh": 8.850842765275207,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 17,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8190617561340332,
+                "bbox": [
+                    1681.621826171875,
+                    180.5320281982422,
+                    1755.6846923828125,
+                    369.8455810546875
+                ],
+                "Speed_kmh": 16.298622968257067,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.9132660627365112,
+                "bbox": [
+                    899.42626953125,
+                    718.2130737304688,
+                    1616.898193359375,
+                    1052.673828125
+                ],
+                "Speed_kmh": 16.298622968257067,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 18,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8227983713150024,
+                "bbox": [
+                    1681.624755859375,
+                    180.59962463378906,
+                    1755.6888427734375,
+                    369.924560546875
+                ],
+                "Speed_kmh": 6.298774108821448,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.9147034287452698,
+                "bbox": [
+                    904.2510375976562,
+                    710.2050170898438,
+                    1614.9351806640625,
+                    1052.7861328125
+                ],
+                "Speed_kmh": 6.298774108821448,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 19,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.8234084844589233,
+                "bbox": [
+                    1681.697265625,
+                    180.60275268554688,
+                    1755.793701171875,
+                    369.8902587890625
+                ],
+                "Speed_kmh": 1.8068270716600687,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "gray",
+                "stopped": false,
+                "confidence": 0.916093111038208,
+                "bbox": [
+                    913.0641479492188,
+                    707.523681640625,
+                    1606.947265625,
+                    1053.2041015625
+                ],
+                "Speed_kmh": 1.8068270716600687,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 20,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8255668878555298,
+                "bbox": [
+                    1681.752685546875,
+                    180.5891571044922,
+                    1755.9541015625,
+                    370.00775146484375
+                ],
+                "Speed_kmh": 8.409353475225174,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9156308770179749,
+                "bbox": [
+                    917.7183227539062,
+                    697.4161987304688,
+                    1606.988037109375,
+                    1053.12939453125
+                ],
+                "Speed_kmh": 8.409353475225174,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 21,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8292033076286316,
+                "bbox": [
+                    1681.730712890625,
+                    180.7354736328125,
+                    1755.9107666015625,
+                    370.0220642089844
+                ],
+                "Speed_kmh": 3.1828793977770364,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9162400960922241,
+                "bbox": [
+                    926.3418579101562,
+                    693.4215698242188,
+                    1600.4273681640625,
+                    1053.415283203125
+                ],
+                "Speed_kmh": 3.1828793977770364,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 22,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8268948197364807,
+                "bbox": [
+                    1681.770751953125,
+                    180.825927734375,
+                    1755.96435546875,
+                    370.0892333984375
+                ],
+                "Speed_kmh": 0.8585586459376539,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9169855713844299,
+                "bbox": [
+                    937.0787963867188,
+                    692.7421875,
+                    1590.1187744140625,
+                    1053.0330810546875
+                ],
+                "Speed_kmh": 0.8585586459376539,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 23,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8221583962440491,
+                "bbox": [
+                    1681.87255859375,
+                    181.06085205078125,
+                    1756.0025634765625,
+                    370.066162109375
+                ],
+                "Speed_kmh": 13.668943349971045,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9179691672325134,
+                "bbox": [
+                    938.3613891601562,
+                    676.3257446289062,
+                    1595.875732421875,
+                    1052.638671875
+                ],
+                "Speed_kmh": 13.668943349971045,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 24,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8234862089157104,
+                "bbox": [
+                    1681.8856201171875,
+                    181.0256805419922,
+                    1756.0394287109375,
+                    370.03582763671875
+                ],
+                "Speed_kmh": 5.467113136913201,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.917228102684021,
+                "bbox": [
+                    946.2415161132812,
+                    670.1276245117188,
+                    1590.5516357421875,
+                    1052.0101318359375
+                ],
+                "Speed_kmh": 5.467113136913201,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 25,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.824249804019928,
+                "bbox": [
+                    1681.8917236328125,
+                    180.9639892578125,
+                    1756.0850830078125,
+                    370.0342712402344
+                ],
+                "Speed_kmh": 1.9679126049577083,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9180406928062439,
+                "bbox": [
+                    955.84326171875,
+                    668.0377807617188,
+                    1581.93603515625,
+                    1051.66845703125
+                ],
+                "Speed_kmh": 1.9679126049577083,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 26,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8241942524909973,
+                "bbox": [
+                    1681.8857421875,
+                    180.8908233642578,
+                    1756.1180419921875,
+                    370.03009033203125
+                ],
+                "Speed_kmh": 13.60326342381439,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9120460152626038,
+                "bbox": [
+                    968.0791625976562,
+                    659.21044921875,
+                    1574.5513916015625,
+                    1043.0189208984375
+                ],
+                "Speed_kmh": 13.60326342381439,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 27,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8249049782752991,
+                "bbox": [
+                    1681.9310302734375,
+                    180.92913818359375,
+                    1756.147705078125,
+                    370.0174255371094
+                ],
+                "Speed_kmh": 5.24054243300703,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9126468300819397,
+                "bbox": [
+                    978.4066162109375,
+                    656.0693969726562,
+                    1565.9705810546875,
+                    1039.3944091796875
+                ],
+                "Speed_kmh": 5.24054243300703,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 28,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8276459574699402,
+                "bbox": [
+                    1681.9840087890625,
+                    181.10000610351562,
+                    1756.083251953125,
+                    369.8658142089844
+                ],
+                "Speed_kmh": 1.6708240393535352,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9132723212242126,
+                "bbox": [
+                    987.2595825195312,
+                    655.212890625,
+                    1557.570068359375,
+                    1038.069580078125
+                ],
+                "Speed_kmh": 1.6708240393535352,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 29,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8292897939682007,
+                "bbox": [
+                    1681.989990234375,
+                    181.02743530273438,
+                    1756.0899658203125,
+                    369.8009948730469
+                ],
+                "Speed_kmh": 27.840015535463063,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9298158288002014,
+                "bbox": [
+                    1002.8700561523438,
+                    639.9112548828125,
+                    1549.5997314453125,
+                    1017.0459594726562
+                ],
+                "Speed_kmh": 27.840015535463063,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:49"
+            }
+        ]
+    },
+    {
+        "frame_number": 30,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8292571902275085,
+                "bbox": [
+                    1681.994384765625,
+                    181.00035095214844,
+                    1756.09326171875,
+                    369.7745056152344
+                ],
+                "Speed_kmh": 10.218942541113877,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9296947717666626,
+                "bbox": [
+                    1012.606201171875,
+                    634.3047485351562,
+                    1542.55126953125,
+                    1009.294921875
+                ],
+                "Speed_kmh": 10.218942541113877,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 31,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8279282450675964,
+                "bbox": [
+                    1681.953125,
+                    180.9696502685547,
+                    1756.078125,
+                    369.7984313964844
+                ],
+                "Speed_kmh": 24.68447994865123,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Middle Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9282010793685913,
+                "bbox": [
+                    1026.4136962890625,
+                    621.942626953125,
+                    1533.338134765625,
+                    989.066650390625
+                ],
+                "Speed_kmh": 24.68447994865123,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 32,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8278409838676453,
+                "bbox": [
+                    1681.9090576171875,
+                    181.03018188476562,
+                    1755.990234375,
+                    369.7801513671875
+                ],
+                "Speed_kmh": 9.43078289330409,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.928455114364624,
+                "bbox": [
+                    1035.2164306640625,
+                    617.6043090820312,
+                    1526.3408203125,
+                    980.9608764648438
+                ],
+                "Speed_kmh": 9.43078289330409,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 33,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8285112977027893,
+                "bbox": [
+                    1681.922119140625,
+                    181.08021545410156,
+                    1756.003662109375,
+                    369.89984130859375
+                ],
+                "Speed_kmh": 3.038877766567057,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9288967251777649,
+                "bbox": [
+                    1041.433837890625,
+                    616.2972412109375,
+                    1521.2406005859375,
+                    978.3731689453125
+                ],
+                "Speed_kmh": 3.038877766567057,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 34,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8309378623962402,
+                "bbox": [
+                    1681.9970703125,
+                    181.06883239746094,
+                    1756.0472412109375,
+                    369.8205871582031
+                ],
+                "Speed_kmh": 42.43640253288788,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9174456000328064,
+                "bbox": [
+                    1044.270263671875,
+                    583.0341186523438,
+                    1526.4112548828125,
+                    955.6238403320312
+                ],
+                "Speed_kmh": 42.43640253288788,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 35,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8309698104858398,
+                "bbox": [
+                    1682.002197265625,
+                    180.50387573242188,
+                    1756.1175537109375,
+                    369.6195983886719
+                ],
+                "Speed_kmh": 15.398776037869048,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.918574333190918,
+                "bbox": [
+                    1048.377685546875,
+                    570.8473510742188,
+                    1525.0889892578125,
+                    947.4686889648438
+                ],
+                "Speed_kmh": 15.398776037869048,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 36,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8306995034217834,
+                "bbox": [
+                    1682.0294189453125,
+                    180.246826171875,
+                    1756.137939453125,
+                    369.493896484375
+                ],
+                "Speed_kmh": 5.2401520179508925,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9168661236763,
+                "bbox": [
+                    1053.3316650390625,
+                    567.1556396484375,
+                    1521.0880126953125,
+                    944.2388305664062
+                ],
+                "Speed_kmh": 5.2401520179508925,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 37,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8328433632850647,
+                "bbox": [
+                    1681.921142578125,
+                    179.88088989257812,
+                    1756.119873046875,
+                    369.5643615722656
+                ],
+                "Speed_kmh": 13.693735776754682,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9287831783294678,
+                "bbox": [
+                    1065.756591796875,
+                    563.8226928710938,
+                    1512.4202880859375,
+                    929.7042236328125
+                ],
+                "Speed_kmh": 13.693735776754682,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 38,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8365750908851624,
+                "bbox": [
+                    1682.0013427734375,
+                    180.06149291992188,
+                    1756.0701904296875,
+                    369.5491943359375
+                ],
+                "Speed_kmh": 4.4969709912711044,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9296325445175171,
+                "bbox": [
+                    1072.2091064453125,
+                    563.02880859375,
+                    1507.1900634765625,
+                    924.6280517578125
+                ],
+                "Speed_kmh": 4.4969709912711044,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 39,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8366195559501648,
+                "bbox": [
+                    1681.970947265625,
+                    180.0283966064453,
+                    1756.05908203125,
+                    369.679443359375
+                ],
+                "Speed_kmh": 1.25116365488769,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9290100932121277,
+                "bbox": [
+                    1076.2991943359375,
+                    563.0924682617188,
+                    1503.3509521484375,
+                    922.9151611328125
+                ],
+                "Speed_kmh": 1.25116365488769,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 40,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8377866744995117,
+                "bbox": [
+                    1682.214111328125,
+                    180.33619689941406,
+                    1756.1080322265625,
+                    369.5978088378906
+                ],
+                "Speed_kmh": 21.37749953874261,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9239987134933472,
+                "bbox": [
+                    1092.456298828125,
+                    558.8329467773438,
+                    1493.4583740234375,
+                    899.3682861328125
+                ],
+                "Speed_kmh": 21.37749953874261,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 41,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.834260880947113,
+                "bbox": [
+                    1682.2127685546875,
+                    180.4534454345703,
+                    1756.078857421875,
+                    369.6965637207031
+                ],
+                "Speed_kmh": 27.184901034327233,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9328349828720093,
+                "bbox": [
+                    1103.104736328125,
+                    546.2545776367188,
+                    1488.890625,
+                    876.2138061523438
+                ],
+                "Speed_kmh": 27.184901034327233,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 42,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8332712054252625,
+                "bbox": [
+                    1682.17578125,
+                    180.5701446533203,
+                    1755.9866943359375,
+                    369.72283935546875
+                ],
+                "Speed_kmh": 9.36902479725054,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9328700304031372,
+                "bbox": [
+                    1107.4725341796875,
+                    541.9189453125,
+                    1486.494140625,
+                    868.2139282226562
+                ],
+                "Speed_kmh": 9.36902479725054,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 43,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8335422873497009,
+                "bbox": [
+                    1682.1484375,
+                    180.4251251220703,
+                    1756.0244140625,
+                    369.80950927734375
+                ],
+                "Speed_kmh": 3.2163948709450167,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9324323534965515,
+                "bbox": [
+                    1109.7030029296875,
+                    540.4644775390625,
+                    1484.9749755859375,
+                    865.4392700195312
+                ],
+                "Speed_kmh": 3.2163948709450167,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 44,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8337260484695435,
+                "bbox": [
+                    1682.1676025390625,
+                    180.29727172851562,
+                    1756.0882568359375,
+                    369.8489074707031
+                ],
+                "Speed_kmh": 25.509903882538946,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9311985373497009,
+                "bbox": [
+                    1117.4830322265625,
+                    526.7691650390625,
+                    1483.91064453125,
+                    845.7909545898438
+                ],
+                "Speed_kmh": 25.509903882538946,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 45,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8344886898994446,
+                "bbox": [
+                    1682.2421875,
+                    180.30433654785156,
+                    1756.14404296875,
+                    369.8420104980469
+                ],
+                "Speed_kmh": 27.32053433052571,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9325772523880005,
+                "bbox": [
+                    1123.5767822265625,
+                    511.2066650390625,
+                    1482.3514404296875,
+                    825.2094116210938
+                ],
+                "Speed_kmh": 27.32053433052571,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 46,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8351024985313416,
+                "bbox": [
+                    1682.2930908203125,
+                    180.29217529296875,
+                    1756.1724853515625,
+                    369.7854919433594
+                ],
+                "Speed_kmh": 9.68539160495389,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9329372644424438,
+                "bbox": [
+                    1126.333251953125,
+                    505.7757568359375,
+                    1481.213134765625,
+                    817.8282470703125
+                ],
+                "Speed_kmh": 9.68539160495389,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 47,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8355308771133423,
+                "bbox": [
+                    1682.381591796875,
+                    180.4918975830078,
+                    1756.1541748046875,
+                    369.71270751953125
+                ],
+                "Speed_kmh": 25.935370803605828,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9263771176338196,
+                "bbox": [
+                    1133.31787109375,
+                    491.40283203125,
+                    1480.705810546875,
+                    798.2327270507812
+                ],
+                "Speed_kmh": 25.935370803605828,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 48,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8371582627296448,
+                "bbox": [
+                    1682.41650390625,
+                    180.42137145996094,
+                    1756.19189453125,
+                    369.7074890136719
+                ],
+                "Speed_kmh": 8.942516631522471,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9263202548027039,
+                "bbox": [
+                    1136.189697265625,
+                    486.41943359375,
+                    1480.216064453125,
+                    791.5331420898438
+                ],
+                "Speed_kmh": 8.942516631522471,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 49,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8388041257858276,
+                "bbox": [
+                    1682.38671875,
+                    180.3515625,
+                    1756.1826171875,
+                    369.7486572265625
+                ],
+                "Speed_kmh": 2.5554599686048878,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9268814325332642,
+                "bbox": [
+                    1137.3245849609375,
+                    484.8581237792969,
+                    1479.8050537109375,
+                    789.7649536132812
+                ],
+                "Speed_kmh": 2.5554599686048878,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 50,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8365522623062134,
+                "bbox": [
+                    1682.331298828125,
+                    180.38746643066406,
+                    1756.0931396484375,
+                    369.7026672363281
+                ],
+                "Speed_kmh": 17.712341115651494,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9390884041786194,
+                "bbox": [
+                    1141.8970947265625,
+                    475.08123779296875,
+                    1479.0279541015625,
+                    776.2323608398438
+                ],
+                "Speed_kmh": 17.712341115651494,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 51,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8364108800888062,
+                "bbox": [
+                    1682.321044921875,
+                    180.4098358154297,
+                    1756.071533203125,
+                    369.6957702636719
+                ],
+                "Speed_kmh": 5.981142001660482,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9397226572036743,
+                "bbox": [
+                    1143.7734375,
+                    471.7968444824219,
+                    1478.4212646484375,
+                    771.6436157226562
+                ],
+                "Speed_kmh": 5.981142001660482,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 52,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8362897038459778,
+                "bbox": [
+                    1682.318115234375,
+                    180.36917114257812,
+                    1756.0845947265625,
+                    369.6617126464844
+                ],
+                "Speed_kmh": 1.4936578089734718,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9392654895782471,
+                "bbox": [
+                    1144.5318603515625,
+                    470.8670959472656,
+                    1478.1044921875,
+                    770.6314086914062
+                ],
+                "Speed_kmh": 1.4936578089734718,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 53,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8353351950645447,
+                "bbox": [
+                    1682.3131103515625,
+                    180.41729736328125,
+                    1756.0882568359375,
+                    369.675048828125
+                ],
+                "Speed_kmh": 28.678723174013125,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9206276535987854,
+                "bbox": [
+                    1152.588134765625,
+                    456.409423828125,
+                    1475.974853515625,
+                    747.3128662109375
+                ],
+                "Speed_kmh": 28.678723174013125,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 54,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8343107104301453,
+                "bbox": [
+                    1682.3038330078125,
+                    180.38951110839844,
+                    1756.125244140625,
+                    369.6995849609375
+                ],
+                "Speed_kmh": 22.27896984245574,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.926887571811676,
+                "bbox": [
+                    1157.3148193359375,
+                    443.6091003417969,
+                    1475.728271484375,
+                    730.7476806640625
+                ],
+                "Speed_kmh": 22.27896984245574,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 55,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8342757821083069,
+                "bbox": [
+                    1682.2950439453125,
+                    180.36927795410156,
+                    1756.14990234375,
+                    369.7054138183594
+                ],
+                "Speed_kmh": 7.650262978754691,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9273203015327454,
+                "bbox": [
+                    1159.162841796875,
+                    439.1645202636719,
+                    1475.544921875,
+                    725.128662109375
+                ],
+                "Speed_kmh": 7.650262978754691,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 56,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.834652304649353,
+                "bbox": [
+                    1682.3621826171875,
+                    180.38214111328125,
+                    1756.220703125,
+                    369.7335510253906
+                ],
+                "Speed_kmh": 2.29394512352358,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9264984726905823,
+                "bbox": [
+                    1159.8956298828125,
+                    437.839599609375,
+                    1475.2047119140625,
+                    723.4202880859375
+                ],
+                "Speed_kmh": 2.29394512352358,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 57,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8357064127922058,
+                "bbox": [
+                    1682.369384765625,
+                    180.5835418701172,
+                    1756.189697265625,
+                    369.78436279296875
+                ],
+                "Speed_kmh": 27.390407814741117,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9311391115188599,
+                "bbox": [
+                    1166.765625,
+                    423.6719665527344,
+                    1473.1693115234375,
+                    701.3887939453125
+                ],
+                "Speed_kmh": 27.390407814741117,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 58,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8360086679458618,
+                "bbox": [
+                    1682.39990234375,
+                    180.65292358398438,
+                    1756.2147216796875,
+                    369.7992858886719
+                ],
+                "Speed_kmh": 9.646270893398116,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9315723776817322,
+                "bbox": [
+                    1169.3204345703125,
+                    418.768310546875,
+                    1472.2847900390625,
+                    693.5396728515625
+                ],
+                "Speed_kmh": 9.646270893398116,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 59,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8358139395713806,
+                "bbox": [
+                    1682.3753662109375,
+                    180.6829833984375,
+                    1756.18994140625,
+                    369.8152770996094
+                ],
+                "Speed_kmh": 3.116098996248055,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9317532181739807,
+                "bbox": [
+                    1170.1937255859375,
+                    417.1807861328125,
+                    1471.9560546875,
+                    691.0082397460938
+                ],
+                "Speed_kmh": 3.116098996248055,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:50"
+            }
+        ]
+    },
+    {
+        "frame_number": 60,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8368213772773743,
+                "bbox": [
+                    1682.474365234375,
+                    180.7032012939453,
+                    1756.2794189453125,
+                    369.90118408203125
+                ],
+                "Speed_kmh": 0.6514004072614479,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9313389658927917,
+                "bbox": [
+                    1170.4412841796875,
+                    416.86309814453125,
+                    1471.8016357421875,
+                    690.46240234375
+                ],
+                "Speed_kmh": 0.6514004072614479,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 61,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.838171660900116,
+                "bbox": [
+                    1682.5009765625,
+                    180.70228576660156,
+                    1756.2418212890625,
+                    369.8600769042969
+                ],
+                "Speed_kmh": 16.8865143733863,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.925650417804718,
+                "bbox": [
+                    1175.4012451171875,
+                    408.5149841308594,
+                    1471.170166015625,
+                    676.7151489257812
+                ],
+                "Speed_kmh": 16.8865143733863,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 62,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8382229804992676,
+                "bbox": [
+                    1682.520751953125,
+                    180.67779541015625,
+                    1756.217041015625,
+                    369.8408508300781
+                ],
+                "Speed_kmh": 5.703477333258036,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9260745048522949,
+                "bbox": [
+                    1176.994873046875,
+                    405.7384948730469,
+                    1470.9110107421875,
+                    672.0050048828125
+                ],
+                "Speed_kmh": 5.703477333258036,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 63,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8383052349090576,
+                "bbox": [
+                    1682.538330078125,
+                    180.69252014160156,
+                    1756.1785888671875,
+                    369.8283996582031
+                ],
+                "Speed_kmh": 1.6505627508700706,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9257691502571106,
+                "bbox": [
+                    1177.32568359375,
+                    404.95721435546875,
+                    1470.8199462890625,
+                    670.5986328125
+                ],
+                "Speed_kmh": 1.6505627508700706,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 64,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8380417227745056,
+                "bbox": [
+                    1682.53955078125,
+                    180.42298889160156,
+                    1756.275634765625,
+                    369.9418029785156
+                ],
+                "Speed_kmh": 21.961571117665965,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9247724413871765,
+                "bbox": [
+                    1182.1507568359375,
+                    393.1073913574219,
+                    1469.9080810546875,
+                    653.4290161132812
+                ],
+                "Speed_kmh": 21.961571117665965,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 65,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8371921181678772,
+                "bbox": [
+                    1682.5887451171875,
+                    180.84130859375,
+                    1756.1497802734375,
+                    369.8216247558594
+                ],
+                "Speed_kmh": 7.674129778481711,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9233044981956482,
+                "bbox": [
+                    1183.8466796875,
+                    388.8797302246094,
+                    1469.888427734375,
+                    647.562744140625
+                ],
+                "Speed_kmh": 7.674129778481711,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 66,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8403648138046265,
+                "bbox": [
+                    1682.640625,
+                    180.6536102294922,
+                    1756.2335205078125,
+                    369.75238037109375
+                ],
+                "Speed_kmh": 19.255487491488747,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9179863333702087,
+                "bbox": [
+                    1188.4317626953125,
+                    379.1613464355469,
+                    1468.2276611328125,
+                    631.7742309570312
+                ],
+                "Speed_kmh": 19.255487491488747,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 67,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8405099511146545,
+                "bbox": [
+                    1682.6993408203125,
+                    180.77796936035156,
+                    1756.2325439453125,
+                    369.7679748535156
+                ],
+                "Speed_kmh": 6.545109236023897,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9186568856239319,
+                "bbox": [
+                    1189.8492431640625,
+                    375.7837829589844,
+                    1467.8857421875,
+                    626.4915161132812
+                ],
+                "Speed_kmh": 6.545109236023897,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 68,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8391481041908264,
+                "bbox": [
+                    1682.7454833984375,
+                    180.61083984375,
+                    1756.292236328125,
+                    369.7001037597656
+                ],
+                "Speed_kmh": 1.615683065743851,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9187033772468567,
+                "bbox": [
+                    1190.0198974609375,
+                    374.8104553222656,
+                    1468.1429443359375,
+                    625.353515625
+                ],
+                "Speed_kmh": 1.615683065743851,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 69,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8377318978309631,
+                "bbox": [
+                    1682.65185546875,
+                    180.4437713623047,
+                    1756.223388671875,
+                    369.6578674316406
+                ],
+                "Speed_kmh": 0.3214504509103846,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9192199110984802,
+                "bbox": [
+                    1190.02685546875,
+                    374.6642150878906,
+                    1468.388671875,
+                    625.153564453125
+                ],
+                "Speed_kmh": 0.3214504509103846,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 70,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8391185998916626,
+                "bbox": [
+                    1682.6103515625,
+                    180.38694763183594,
+                    1756.1688232421875,
+                    369.60333251953125
+                ],
+                "Speed_kmh": 0.3114476309743477,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9186072945594788,
+                "bbox": [
+                    1189.803955078125,
+                    374.8446350097656,
+                    1468.44677734375,
+                    625.3543090820312
+                ],
+                "Speed_kmh": 0.3114476309743477,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 71,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8368276357650757,
+                "bbox": [
+                    1682.60400390625,
+                    180.25926208496094,
+                    1756.1551513671875,
+                    369.5364074707031
+                ],
+                "Speed_kmh": 22.346628841417708,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9126469492912292,
+                "bbox": [
+                    1194.1717529296875,
+                    362.6160888671875,
+                    1467.41748046875,
+                    607.9749755859375
+                ],
+                "Speed_kmh": 22.346628841417708,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 72,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8379113078117371,
+                "bbox": [
+                    1682.618896484375,
+                    180.21087646484375,
+                    1756.1470947265625,
+                    369.508544921875
+                ],
+                "Speed_kmh": 21.49133315805966,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9166172742843628,
+                "bbox": [
+                    1199.0347900390625,
+                    351.00677490234375,
+                    1466.87060546875,
+                    591.256103515625
+                ],
+                "Speed_kmh": 21.49133315805966,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 73,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8384546637535095,
+                "bbox": [
+                    1682.634765625,
+                    180.21414184570312,
+                    1756.1317138671875,
+                    369.4997863769531
+                ],
+                "Speed_kmh": 7.7952368089212545,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9177026748657227,
+                "bbox": [
+                    1200.801513671875,
+                    346.8335266113281,
+                    1466.7845458984375,
+                    585.1724853515625
+                ],
+                "Speed_kmh": 7.7952368089212545,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 74,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8359876871109009,
+                "bbox": [
+                    1682.7034912109375,
+                    180.41299438476562,
+                    1756.060546875,
+                    369.32745361328125
+                ],
+                "Speed_kmh": 2.558765242604183,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9173935651779175,
+                "bbox": [
+                    1201.3492431640625,
+                    345.5377502441406,
+                    1466.72705078125,
+                    583.0919799804688
+                ],
+                "Speed_kmh": 2.558765242604183,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 75,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8367878794670105,
+                "bbox": [
+                    1682.7327880859375,
+                    180.60369873046875,
+                    1755.9871826171875,
+                    369.2411804199219
+                ],
+                "Speed_kmh": 19.194199596961635,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9124183058738708,
+                "bbox": [
+                    1203.8065185546875,
+                    333.42340087890625,
+                    1467.704833984375,
+                    569.8456420898438
+                ],
+                "Speed_kmh": 19.194199596961635,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 76,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8363429307937622,
+                "bbox": [
+                    1682.736328125,
+                    180.65806579589844,
+                    1755.9771728515625,
+                    369.2679443359375
+                ],
+                "Speed_kmh": 6.644692315566466,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9126137495040894,
+                "bbox": [
+                    1204.6968994140625,
+                    329.18402099609375,
+                    1468.076171875,
+                    565.3157348632812
+                ],
+                "Speed_kmh": 6.644692315566466,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 77,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8362662196159363,
+                "bbox": [
+                    1682.681884765625,
+                    180.63455200195312,
+                    1755.9246826171875,
+                    369.27301025390625
+                ],
+                "Speed_kmh": 16.281811406991945,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9096161127090454,
+                "bbox": [
+                    1207.587158203125,
+                    319.48974609375,
+                    1468.4871826171875,
+                    553.5534057617188
+                ],
+                "Speed_kmh": 16.281811406991945,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 78,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.835975170135498,
+                "bbox": [
+                    1682.6527099609375,
+                    180.62464904785156,
+                    1755.901123046875,
+                    369.2938537597656
+                ],
+                "Speed_kmh": 5.661135166271202,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9085548520088196,
+                "bbox": [
+                    1208.5076904296875,
+                    315.99859619140625,
+                    1468.6815185546875,
+                    549.5791625976562
+                ],
+                "Speed_kmh": 5.661135166271202,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 79,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.83555668592453,
+                "bbox": [
+                    1682.652099609375,
+                    180.64744567871094,
+                    1755.89306640625,
+                    369.31103515625
+                ],
+                "Speed_kmh": 1.6136095322783708,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9097004532814026,
+                "bbox": [
+                    1208.9893798828125,
+                    315.1036682128906,
+                    1468.701416015625,
+                    548.3818969726562
+                ],
+                "Speed_kmh": 1.6136095322783708,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 80,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8328156471252441,
+                "bbox": [
+                    1682.6351318359375,
+                    180.79373168945312,
+                    1755.828125,
+                    369.24468994140625
+                ],
+                "Speed_kmh": 0.3766211461687005,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9100534915924072,
+                "bbox": [
+                    1209.427001953125,
+                    315.1550598144531,
+                    1468.691650390625,
+                    548.067626953125
+                ],
+                "Speed_kmh": 0.3766211461687005,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 81,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8343368768692017,
+                "bbox": [
+                    1682.562744140625,
+                    180.49807739257812,
+                    1755.9466552734375,
+                    369.4752197265625
+                ],
+                "Speed_kmh": 0.37895216245823526,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9099164605140686,
+                "bbox": [
+                    1209.610107421875,
+                    315.5333557128906,
+                    1468.5704345703125,
+                    548.1907958984375
+                ],
+                "Speed_kmh": 0.37895216245823526,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 82,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8369407057762146,
+                "bbox": [
+                    1682.494140625,
+                    180.39344787597656,
+                    1755.897705078125,
+                    369.46453857421875
+                ],
+                "Speed_kmh": 0.534036840634158,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9098061323165894,
+                "bbox": [
+                    1209.6119384765625,
+                    315.9158630371094,
+                    1468.48681640625,
+                    548.515625
+                ],
+                "Speed_kmh": 0.534036840634158,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 83,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8367748260498047,
+                "bbox": [
+                    1682.4521484375,
+                    180.41323852539062,
+                    1755.84912109375,
+                    369.5089111328125
+                ],
+                "Speed_kmh": 18.41659599234981,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9085637927055359,
+                "bbox": [
+                    1214.9547119140625,
+                    306.7217102050781,
+                    1467.6461181640625,
+                    533.570556640625
+                ],
+                "Speed_kmh": 18.41659599234981,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 84,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8350685238838196,
+                "bbox": [
+                    1682.3687744140625,
+                    180.3452911376953,
+                    1755.81640625,
+                    369.5537109375
+                ],
+                "Speed_kmh": 6.452644949787619,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9068655371665955,
+                "bbox": [
+                    1217.04931640625,
+                    303.5845031738281,
+                    1467.617919921875,
+                    528.3560791015625
+                ],
+                "Speed_kmh": 6.452644949787619,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 85,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8330051898956299,
+                "bbox": [
+                    1682.3148193359375,
+                    180.32913208007812,
+                    1755.800537109375,
+                    369.59466552734375
+                ],
+                "Speed_kmh": 16.702377248764837,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.901880145072937,
+                "bbox": [
+                    1220.2171630859375,
+                    294.3585510253906,
+                    1466.940673828125,
+                    515.451904296875
+                ],
+                "Speed_kmh": 16.702377248764837,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 86,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8313646912574768,
+                "bbox": [
+                    1682.4490966796875,
+                    180.30364990234375,
+                    1755.9422607421875,
+                    369.62298583984375
+                ],
+                "Speed_kmh": 5.918517582945309,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9027549028396606,
+                "bbox": [
+                    1221.4132080078125,
+                    291.2147521972656,
+                    1466.6868896484375,
+                    510.76080322265625
+                ],
+                "Speed_kmh": 5.918517582945309,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 87,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.83319091796875,
+                "bbox": [
+                    1682.53759765625,
+                    180.4146270751953,
+                    1755.9112548828125,
+                    369.3429870605469
+                ],
+                "Speed_kmh": 1.7654261332000396,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9026343822479248,
+                "bbox": [
+                    1221.8067626953125,
+                    290.3462829589844,
+                    1466.6712646484375,
+                    509.305908203125
+                ],
+                "Speed_kmh": 1.7654261332000396,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 88,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8381125926971436,
+                "bbox": [
+                    1682.453857421875,
+                    180.49989318847656,
+                    1755.9197998046875,
+                    369.6408996582031
+                ],
+                "Speed_kmh": 0.494715289784904,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.901287317276001,
+                "bbox": [
+                    1221.674072265625,
+                    289.8869323730469,
+                    1467.0003662109375,
+                    509.13555908203125
+                ],
+                "Speed_kmh": 0.494715289784904,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 89,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8372370600700378,
+                "bbox": [
+                    1682.58447265625,
+                    180.55673217773438,
+                    1755.99658203125,
+                    369.56768798828125
+                ],
+                "Speed_kmh": 18.341874523566414,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9084652066230774,
+                "bbox": [
+                    1226.136474609375,
+                    279.8841247558594,
+                    1467.09619140625,
+                    495.111083984375
+                ],
+                "Speed_kmh": 18.341874523566414,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:51"
+            }
+        ]
+    },
+    {
+        "frame_number": 90,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8370326161384583,
+                "bbox": [
+                    1682.6102294921875,
+                    180.34744262695312,
+                    1756.06884765625,
+                    369.51348876953125
+                ],
+                "Speed_kmh": 6.264231368723385,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9090251922607422,
+                "bbox": [
+                    1227.7943115234375,
+                    276.6025085449219,
+                    1467.0892333984375,
+                    490.2051696777344
+                ],
+                "Speed_kmh": 6.264231368723385,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 91,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8366481065750122,
+                "bbox": [
+                    1682.626220703125,
+                    180.2320556640625,
+                    1756.0985107421875,
+                    369.5063171386719
+                ],
+                "Speed_kmh": 12.914404859423469,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.902476966381073,
+                "bbox": [
+                    1230.1876220703125,
+                    268.85260009765625,
+                    1467.8037109375,
+                    481.0186462402344
+                ],
+                "Speed_kmh": 12.914404859423469,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 92,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8371424674987793,
+                "bbox": [
+                    1682.6202392578125,
+                    180.23948669433594,
+                    1756.072021484375,
+                    369.5089416503906
+                ],
+                "Speed_kmh": 4.560848111271873,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9070271849632263,
+                "bbox": [
+                    1230.8853759765625,
+                    266.0323791503906,
+                    1467.94580078125,
+                    477.8160095214844
+                ],
+                "Speed_kmh": 4.560848111271873,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 93,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8375141620635986,
+                "bbox": [
+                    1682.6173095703125,
+                    180.22251892089844,
+                    1756.0535888671875,
+                    369.4806213378906
+                ],
+                "Speed_kmh": 1.3643683408044376,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9069122076034546,
+                "bbox": [
+                    1231.0240478515625,
+                    265.15240478515625,
+                    1467.938720703125,
+                    476.881591796875
+                ],
+                "Speed_kmh": 1.3643683408044376,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 94,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8396472930908203,
+                "bbox": [
+                    1682.5841064453125,
+                    180.1077117919922,
+                    1756.086669921875,
+                    369.5898742675781
+                ],
+                "Speed_kmh": 17.310173661386454,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9071885347366333,
+                "bbox": [
+                    1235.5880126953125,
+                    255.99803161621094,
+                    1467.5535888671875,
+                    463.3371887207031
+                ],
+                "Speed_kmh": 17.310173661386454,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 95,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8383435606956482,
+                "bbox": [
+                    1682.2755126953125,
+                    179.58447265625,
+                    1756.04833984375,
+                    369.85491943359375
+                ],
+                "Speed_kmh": 5.440950532164258,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9079649448394775,
+                "bbox": [
+                    1236.5809326171875,
+                    252.82427978515625,
+                    1467.4705810546875,
+                    459.3136291503906
+                ],
+                "Speed_kmh": 5.440950532164258,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 96,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8370680809020996,
+                "bbox": [
+                    1682.11767578125,
+                    179.40545654296875,
+                    1755.96630859375,
+                    369.912353515625
+                ],
+                "Speed_kmh": 2.2684668700179613,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9073397517204285,
+                "bbox": [
+                    1237.419677734375,
+                    251.75643920898438,
+                    1467.3612060546875,
+                    457.44610595703125
+                ],
+                "Speed_kmh": 2.2684668700179613,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 97,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8384677171707153,
+                "bbox": [
+                    1682.21826171875,
+                    179.98727416992188,
+                    1755.796142578125,
+                    369.7698974609375
+                ],
+                "Speed_kmh": 0.47359799548671067,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9070650935173035,
+                "bbox": [
+                    1237.5089111328125,
+                    251.54771423339844,
+                    1467.2056884765625,
+                    457.02685546875
+                ],
+                "Speed_kmh": 0.47359799548671067,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 98,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.838976263999939,
+                "bbox": [
+                    1682.237548828125,
+                    180.03285217285156,
+                    1755.7718505859375,
+                    369.74041748046875
+                ],
+                "Speed_kmh": 12.484089627473047,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9146767854690552,
+                "bbox": [
+                    1240.118896484375,
+                    244.952392578125,
+                    1466.35546875,
+                    447.07000732421875
+                ],
+                "Speed_kmh": 12.484089627473047,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 99,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8386442065238953,
+                "bbox": [
+                    1682.2711181640625,
+                    180.38845825195312,
+                    1755.6666259765625,
+                    369.7484130859375
+                ],
+                "Speed_kmh": 4.475946027174307,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9147853255271912,
+                "bbox": [
+                    1240.9908447265625,
+                    242.62249755859375,
+                    1466.0799560546875,
+                    443.46185302734375
+                ],
+                "Speed_kmh": 4.475946027174307,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 100,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8408339619636536,
+                "bbox": [
+                    1682.32275390625,
+                    180.46734619140625,
+                    1755.6549072265625,
+                    369.6973571777344
+                ],
+                "Speed_kmh": 1.4479712165769332,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.91457599401474,
+                "bbox": [
+                    1241.246337890625,
+                    241.87484741210938,
+                    1466.1346435546875,
+                    442.303955078125
+                ],
+                "Speed_kmh": 1.4479712165769332,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 101,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8380374908447266,
+                "bbox": [
+                    1682.452392578125,
+                    180.89585876464844,
+                    1755.5865478515625,
+                    369.6004638671875
+                ],
+                "Speed_kmh": 0.1966285700755943,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9152156710624695,
+                "bbox": [
+                    1241.0382080078125,
+                    241.68167114257812,
+                    1466.2879638671875,
+                    442.2407531738281
+                ],
+                "Speed_kmh": 0.1966285700755943,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 102,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8384179472923279,
+                "bbox": [
+                    1682.4720458984375,
+                    181.12716674804688,
+                    1755.510498046875,
+                    369.53302001953125
+                ],
+                "Speed_kmh": 0.14917869164563544,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.915939211845398,
+                "bbox": [
+                    1240.884033203125,
+                    241.7316436767578,
+                    1466.42431640625,
+                    442.3888854980469
+                ],
+                "Speed_kmh": 0.14917869164563544,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 103,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8344405293464661,
+                "bbox": [
+                    1682.431640625,
+                    181.2357635498047,
+                    1755.441650390625,
+                    369.5742492675781
+                ],
+                "Speed_kmh": 0.28918020489977764,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9161056280136108,
+                "bbox": [
+                    1240.80615234375,
+                    241.91339111328125,
+                    1466.5357666015625,
+                    442.59124755859375
+                ],
+                "Speed_kmh": 0.28918020489977764,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 104,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8342323303222656,
+                "bbox": [
+                    1682.4931640625,
+                    181.68116760253906,
+                    1755.3668212890625,
+                    369.6053771972656
+                ],
+                "Speed_kmh": 0.19031823041805299,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.916304349899292,
+                "bbox": [
+                    1240.7130126953125,
+                    242.06088256835938,
+                    1466.568115234375,
+                    442.69012451171875
+                ],
+                "Speed_kmh": 0.19031823041805299,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 105,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8338967561721802,
+                "bbox": [
+                    1682.4927978515625,
+                    181.8386688232422,
+                    1755.334716796875,
+                    369.6161804199219
+                ],
+                "Speed_kmh": 0.2876750994785665,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9164164662361145,
+                "bbox": [
+                    1240.554443359375,
+                    242.20462036132812,
+                    1466.6622314453125,
+                    442.92449951171875
+                ],
+                "Speed_kmh": 0.2876750994785665,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 106,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8334601521492004,
+                "bbox": [
+                    1682.49169921875,
+                    181.8803253173828,
+                    1755.3427734375,
+                    369.620849609375
+                ],
+                "Speed_kmh": 0.25661515133360147,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9164019823074341,
+                "bbox": [
+                    1240.4061279296875,
+                    242.32167053222656,
+                    1466.7626953125,
+                    443.146240234375
+                ],
+                "Speed_kmh": 0.25661515133360147,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 107,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8304101228713989,
+                "bbox": [
+                    1682.5025634765625,
+                    181.74099731445312,
+                    1755.44873046875,
+                    369.6875305175781
+                ],
+                "Speed_kmh": 0.3408185035198483,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9166123270988464,
+                "bbox": [
+                    1240.3773193359375,
+                    242.5524444580078,
+                    1466.841552734375,
+                    443.36712646484375
+                ],
+                "Speed_kmh": 0.3408185035198483,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 108,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8355545401573181,
+                "bbox": [
+                    1682.4967041015625,
+                    181.7311553955078,
+                    1755.503173828125,
+                    369.8915710449219
+                ],
+                "Speed_kmh": 0.4217997189809671,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9160357117652893,
+                "bbox": [
+                    1240.1793212890625,
+                    242.67825317382812,
+                    1467.050048828125,
+                    443.8036193847656
+                ],
+                "Speed_kmh": 0.4217997189809671,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 109,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8337997794151306,
+                "bbox": [
+                    1682.4976806640625,
+                    181.6681365966797,
+                    1755.5250244140625,
+                    369.9329833984375
+                ],
+                "Speed_kmh": 0.22761346558329337,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9165788888931274,
+                "bbox": [
+                    1240.0633544921875,
+                    242.7916259765625,
+                    1467.0572509765625,
+                    443.97357177734375
+                ],
+                "Speed_kmh": 0.22761346558329337,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 110,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8336013555526733,
+                "bbox": [
+                    1682.5040283203125,
+                    181.6385498046875,
+                    1755.5294189453125,
+                    369.944091796875
+                ],
+                "Speed_kmh": 0.1620432582155442,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9165247082710266,
+                "bbox": [
+                    1239.9896240234375,
+                    242.87989807128906,
+                    1467.073486328125,
+                    444.09356689453125
+                ],
+                "Speed_kmh": 0.1620432582155442,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 111,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8335382342338562,
+                "bbox": [
+                    1682.508056640625,
+                    181.61685180664062,
+                    1755.52734375,
+                    369.9464416503906
+                ],
+                "Speed_kmh": 0.1340637250449156,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9165241122245789,
+                "bbox": [
+                    1239.92333984375,
+                    242.9496612548828,
+                    1467.0904541015625,
+                    444.19561767578125
+                ],
+                "Speed_kmh": 0.1340637250449156,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 112,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8336694836616516,
+                "bbox": [
+                    1682.5137939453125,
+                    181.6021270751953,
+                    1755.5234375,
+                    369.9459533691406
+                ],
+                "Speed_kmh": 0.1343146251270297,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9164679646492004,
+                "bbox": [
+                    1239.8626708984375,
+                    243.01681518554688,
+                    1467.1163330078125,
+                    444.30413818359375
+                ],
+                "Speed_kmh": 0.1343146251270297,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 113,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8326898217201233,
+                "bbox": [
+                    1682.5615234375,
+                    181.76531982421875,
+                    1755.5020751953125,
+                    369.94287109375
+                ],
+                "Speed_kmh": 0.14062471734331453,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Down",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9163370132446289,
+                "bbox": [
+                    1239.8062744140625,
+                    243.09165954589844,
+                    1467.1168212890625,
+                    444.40826416015625
+                ],
+                "Speed_kmh": 0.14062471734331453,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 114,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8339001536369324,
+                "bbox": [
+                    1682.52490234375,
+                    181.72146606445312,
+                    1755.4564208984375,
+                    369.841064453125
+                ],
+                "Speed_kmh": 16.3164508021708,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9055432081222534,
+                "bbox": [
+                    1244.1705322265625,
+                    234.58384704589844,
+                    1466.5908203125,
+                    431.5020751953125
+                ],
+                "Speed_kmh": 16.3164508021708,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 115,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8332717418670654,
+                "bbox": [
+                    1682.468994140625,
+                    181.44308471679688,
+                    1755.523193359375,
+                    369.9108581542969
+                ],
+                "Speed_kmh": 6.143533158514003,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9027004837989807,
+                "bbox": [
+                    1245.72021484375,
+                    231.33755493164062,
+                    1466.385498046875,
+                    426.6680603027344
+                ],
+                "Speed_kmh": 6.143533158514003,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 116,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8325245976448059,
+                "bbox": [
+                    1682.4803466796875,
+                    181.4889373779297,
+                    1755.496826171875,
+                    369.85272216796875
+                ],
+                "Speed_kmh": 12.731842083748978,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9030071496963501,
+                "bbox": [
+                    1247.7645263671875,
+                    223.5703887939453,
+                    1466.8983154296875,
+                    417.65313720703125
+                ],
+                "Speed_kmh": 12.731842083748978,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 117,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8334007859230042,
+                "bbox": [
+                    1682.560302734375,
+                    181.67083740234375,
+                    1755.5089111328125,
+                    369.7631530761719
+                ],
+                "Speed_kmh": 4.561209901713607,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9028147459030151,
+                "bbox": [
+                    1248.4261474609375,
+                    220.7137451171875,
+                    1467.06005859375,
+                    414.4841613769531
+                ],
+                "Speed_kmh": 4.561209901713607,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 118,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8312134742736816,
+                "bbox": [
+                    1682.54150390625,
+                    181.35971069335938,
+                    1755.703125,
+                    369.9186706542969
+                ],
+                "Speed_kmh": 17.311196765481828,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9069398641586304,
+                "bbox": [
+                    1252.9500732421875,
+                    211.5127716064453,
+                    1466.8189697265625,
+                    401.0043640136719
+                ],
+                "Speed_kmh": 17.311196765481828,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 119,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8375309705734253,
+                "bbox": [
+                    1682.6103515625,
+                    181.14566040039062,
+                    1755.83837890625,
+                    369.8408203125
+                ],
+                "Speed_kmh": 6.60429128682616,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9068009853363037,
+                "bbox": [
+                    1254.6138916015625,
+                    208.0807342529297,
+                    1466.48388671875,
+                    395.73150634765625
+                ],
+                "Speed_kmh": 6.60429128682616,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:52"
+            }
+        ]
+    },
+    {
+        "frame_number": 120,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8306776881217957,
+                "bbox": [
+                    1682.580810546875,
+                    181.07090759277344,
+                    1755.8380126953125,
+                    369.7855224609375
+                ],
+                "Speed_kmh": 2.0426715962861155,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9076312780380249,
+                "bbox": [
+                    1255.14697265625,
+                    206.9808807373047,
+                    1466.5318603515625,
+                    394.1705017089844
+                ],
+                "Speed_kmh": 2.0426715962861155,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:53"
+            }
+        ]
+    },
+    {
+        "frame_number": 121,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8331804871559143,
+                "bbox": [
+                    1682.60400390625,
+                    181.04270935058594,
+                    1755.863037109375,
+                    369.6836853027344
+                ],
+                "Speed_kmh": 9.476603386883069,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9108880758285522,
+                "bbox": [
+                    1256.86328125,
+                    201.33140563964844,
+                    1466.7818603515625,
+                    387.33843994140625
+                ],
+                "Speed_kmh": 9.476603386883069,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:53"
+            }
+        ]
+    },
+    {
+        "frame_number": 122,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8350874781608582,
+                "bbox": [
+                    1682.5672607421875,
+                    181.072509765625,
+                    1755.832763671875,
+                    369.677490234375
+                ],
+                "Speed_kmh": 3.0595537753530344,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9118667840957642,
+                "bbox": [
+                    1257.60546875,
+                    199.3712921142578,
+                    1467.308837890625,
+                    385.4216003417969
+                ],
+                "Speed_kmh": 3.0595537753530344,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:53"
+            }
+        ]
+    },
+    {
+        "frame_number": 123,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8364744186401367,
+                "bbox": [
+                    1682.536865234375,
+                    180.87420654296875,
+                    1755.8841552734375,
+                    369.6875
+                ],
+                "Speed_kmh": 1.1156288717493161,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.9109429121017456,
+                "bbox": [
+                    1257.5799560546875,
+                    198.67376708984375,
+                    1467.02783203125,
+                    384.6635437011719
+                ],
+                "Speed_kmh": 1.1156288717493161,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:53"
+            }
+        ]
+    },
+    {
+        "frame_number": 124,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8334805965423584,
+                "bbox": [
+                    1682.4920654296875,
+                    180.9578094482422,
+                    1755.899658203125,
+                    369.8298034667969
+                ],
+                "Speed_kmh": 17.52403965721423,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8969159126281738,
+                "bbox": [
+                    1262.2410888671875,
+                    189.6296844482422,
+                    1466.0843505859375,
+                    370.639892578125
+                ],
+                "Speed_kmh": 17.52403965721423,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:53"
+            }
+        ]
+    },
+    {
+        "frame_number": 125,
+        "congestion_level": 2,
+        "traffic_light": "red",
+        "detections": [
+            {
+                "tracker_id": 1,
+                "class_id": 9,
+                "class_name": "traffic light",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8392382264137268,
+                "bbox": [
+                    1682.4749755859375,
+                    180.76962280273438,
+                    1755.9598388671875,
+                    369.6921691894531
+                ],
+                "Speed_kmh": 6.304049997796807,
+                "Red light violation": false,
+                "entry_time": null,
+                "exit_time": null
+            },
+            {
+                "tracker_id": 2,
+                "class_id": 2,
+                "class_name": "car",
+                "direction": "Up",
+                "lane": "Right Lane",
+                "vehicle_color": "brown",
+                "stopped": false,
+                "confidence": 0.8965288400650024,
+                "bbox": [
+                    1264.151123046875,
+                    186.53285217285156,
+                    1465.7003173828125,
+                    365.47100830078125
+                ],
+                "Speed_kmh": 6.304049997796807,
+                "Red light violation": false,
+                "entry_time": "2025-04-19 02:32:49",
+                "exit_time": "2025-04-19 02:32:53"
+            }
+        ]
+    }
+]

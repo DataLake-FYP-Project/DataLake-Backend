@@ -263,13 +263,14 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
     perspective_transform = cv2.getPerspectiveTransform(SOURCE.astype(np.float32), TARGET.astype(np.float32))
 
     
-    # Compute crossing box once
-    cap_tmp = cv2.VideoCapture(SOURCE_VIDEO_PATH)
-    _, first = cap_tmp.read()
-    cap_tmp.release()
+    crossing_box = None
+    if red_light_points:
+        cap_tmp = cv2.VideoCapture(SOURCE_VIDEO_PATH)
+        _, first = cap_tmp.read()
+        cap_tmp.release()
 
-    # Just return the 4 points
-    crossing_box = detect_crossing_box(first, red_light_points)
+        # Just return the 4 points
+        crossing_box = detect_crossing_box(first, red_light_points)
 
     box_annotator = sv.BoxAnnotator(
         thickness=4,
@@ -406,13 +407,17 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                 stopped = bool(is_stopped(speed))
 
                 # --- NEW VIOLATION: ENTERING the blue box while red ---
-                inside = (crossing_box[0][0] <= center_x <= crossing_box[1][0]
-                        and crossing_box[0][1] <= center_y <= crossing_box[1][1])
                 violation = False
-                if inside and light=='red' and tracker_id not in red_violators:
-                    violation = True
-                    red_violators.add(tracker_id)
-                crossing_tracker[tracker_id]['inside'] = inside
+                if crossing_box is not None:
+                    inside = (crossing_box[0][0] <= center_x <= crossing_box[1][0]
+                            and crossing_box[0][1] <= center_y <= crossing_box[1][1])
+                    
+                    if inside and light == 'red' and tracker_id not in red_violators:
+                        violation = True
+                        red_violators.add(tracker_id)
+                    crossing_tracker[tracker_id]['inside'] = inside
+                else:
+                    crossing_tracker[tracker_id]['inside'] = False
 
                 if is_in_target_polygon(center_x, center_y, SOURCE):
                     if tracker_id not in vehicle_times:
@@ -471,9 +476,9 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
             warped_frame = cv2.warpPerspective(frame, perspective_transform, (TARGET_WIDTH, TARGET_HEIGHT))
             cv2.putText(frame,f"Light:{light.upper()}",(30,150),
                         cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,255),2)
-            # Blue crossing box
-            pts = np.array(crossing_box, np.int32).reshape((-1, 1, 2))
-            cv2.polylines(frame, [pts], isClosed=True, color=(255, 0, 0), thickness=2)
+            if crossing_box is not None:
+                pts = np.array(crossing_box, np.int32).reshape((-1, 1, 2))
+                cv2.polylines(frame, [pts], isClosed=True, color=(255, 0, 0), thickness=2)
             # cv2.imwrite(f"warped_frame_{frame_number:04d}.jpg", warped_frame)
             frame_path = os.path.join(FRAME_SAVE_DIR, f"frame_{frame_number:04d}.jpg")
             cv2.imwrite(frame_path, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
