@@ -178,28 +178,16 @@ class PeopleProcessor:
                 restricted_entry_time = restricted_timestamps[i]
                 break
 
-        # Calculate bbox size statistics
-        bbox_sizes = []
-        for bbox in (row["bbox_list"] or []):
-            try:
-                if len(bbox) >= 4 and all(isinstance(x, (int, float)) for x in bbox):
-                    width = bbox[2] - bbox[0]
-                    height = bbox[3] - bbox[1]
-                    bbox_sizes.append(width * height)
-            except:
-                continue
-
-        avg_bbox_size = sum(bbox_sizes)/len(bbox_sizes) if bbox_sizes else 0.0
 
         return tid, {
             "age": age,
             "gender": gender,
             "carrying": carrying,
+            "confidence_avg": float(row["confidence_avg"] or 0.0),
             "mask_status": mask_status,
             "mask_confidence_avg": float(row["mask_confidence_avg"] or 0.0),
             "entered_restricted_area": restricted_entry_time is not None,
             "restricted_area_entry_time": restricted_entry_time.isoformat() if restricted_entry_time else None,
-            "confidence_avg": float(row["confidence_avg"] or 0.0),
             "first_detection": row["first_detection"].isoformat(),
             "last_detection": row["last_detection"].isoformat(),
             "duration_seconds": float((row["last_detection"] - row["first_detection"]).total_seconds()),
