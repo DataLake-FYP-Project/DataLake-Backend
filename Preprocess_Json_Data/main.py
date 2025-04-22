@@ -22,10 +22,10 @@ def process_video_data(spark, input_path, video_type):
         
         if video_type.lower() == "vehicle":
             processed_df = process_frame_data(raw_df)
-            output_path = f"vehicle_detection/{os.path.splitext(os.path.basename(input_path))[0]}.json"
+            output_path = f"vehicle_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         else:
             processed_df = process_people_json_data(raw_df)
-            output_path = f"people_detection/{os.path.splitext(os.path.basename(input_path))[0]}.json"
+            output_path = f"people_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         
         return processed_df, output_path
     except Exception as e:
