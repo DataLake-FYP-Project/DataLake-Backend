@@ -1,13 +1,9 @@
-import json
 from collections import Counter
-from datetime import datetime, timezone
 from pathlib import Path
 import sys
 
 sys.path.append(str(Path(__file__).parent.parent))
 from connectors.minio_connector import MinIOConnector
-from config.spark_config import create_spark_session
-from config.minio_config import BUCKETS
 from pyspark.sql import functions as F
 from pyspark.sql.functions import col, min as spark_min, max as spark_max, avg, count, collect_list
 
@@ -17,68 +13,27 @@ class PeopleProcessor:
         self.spark = spark
         self.minio = MinIOConnector(spark)
 
-    def process_files(self, input_bucket: str, output_bucket: str):
-        files = self.minio.list_json_files(input_bucket, "people_detection/")
-        for file in files:
-            print(f"\nProcessing {file}...")
-            try:
-                df = self.minio.read_json(input_bucket, f"people_detection/{file}")
-
-                if "frame_detections" in df.columns:
-                    df = self._process_frame_detections_format(df)
-                elif "detections" in df.columns:
-                    df = self._process_flat_detections_format(df)
-                else:
-                    print(f"Skipping {file} - unknown format")
-                    continue
-
-                # Convert timestamps with proper timezone handling
-                df = df.withColumn("timestamp", 
-                    F.to_timestamp(F.regexp_replace("timestamp", r"\+05:30$", ""))
-                )
-                
-                if "frame_timestamp" in df.columns:
-                    df = df.withColumn("frame_timestamp", 
-                        F.to_timestamp(F.regexp_replace("frame_timestamp", r"\+05:30$", ""))
-                    )
-
-                # Group by tracker_id and collect all relevant information
-                grouped = df.groupBy("tracker_id").agg(
-                    spark_min("timestamp").alias("first_detection"),
-                    spark_max("timestamp").alias("last_detection"),
-                    count("timestamp").alias("frame_count"),
-                    avg("confidence").alias("confidence_avg"),
-                    collect_list("age").alias("age_list"),
-                    collect_list("gender").alias("gender_list"),
-                    collect_list("carrying").alias("carrying_list"),
-                    collect_list("mask_status").alias("mask_status_list"),
-                    avg("mask_confidence").alias("mask_confidence_avg"),
-                    collect_list("in_restricted_area").alias("restricted_area_list"),
-                    collect_list(col("timestamp").alias("restricted_timestamps")).alias("restricted_timestamps"),
-                    collect_list("bbox").alias("bbox_list"),
-                    collect_list("frame_number").alias("frame_numbers"),
-                    collect_list("confidence").alias("confidence_list")
-                )
-
-                enriched_data = dict(sorted([self._enrich_person(row) for row in grouped.collect()], 
-                                         key=lambda x: int(x[0])))
-
-                output = {
-                    "source_file": file,
-                    "processing_date": datetime.now(timezone.utc).isoformat(),
-                    "people_count": len(enriched_data),
-                    "people": enriched_data
-                }
-
-                out_path = f"refine_{file}"
-                self.minio.write_single_json(output, output_bucket, out_path)
-                print(f"Successfully processed {len(enriched_data)} people in {file}")
-
-            except Exception as e:
-                print(f"Error processing file {file}: {str(e)}")
-                continue
+    def _group_data(self, df):
+        """Group people detection data by tracker_id"""
+        return df.groupBy("tracker_id").agg(
+            spark_min("timestamp").alias("first_detection"),
+            spark_max("timestamp").alias("last_detection"),
+            count("timestamp").alias("frame_count"),
+            avg("confidence").alias("confidence_avg"),
+            collect_list("age").alias("age_list"),
+            collect_list("gender").alias("gender_list"),
+            collect_list("carrying").alias("carrying_list"),
+            collect_list("mask_status").alias("mask_status_list"),
+            avg("mask_confidence").alias("mask_confidence_avg"),
+            collect_list("in_restricted_area").alias("restricted_area_list"),
+            collect_list(col("timestamp").alias("restricted_timestamps")).alias("restricted_timestamps"),
+            collect_list("bbox").alias("bbox_list"),
+            collect_list("frame_number").alias("frame_numbers"),
+            collect_list("confidence").alias("confidence_list")
+        )
 
     def _process_frame_detections_format(self, df):
+        """Process frame detections format"""
         return df.select(
             F.explode("frame_detections").alias("frame_detection")
         ).select(
@@ -105,13 +60,10 @@ class PeopleProcessor:
         ).filter(F.col("tracker_id").isNotNull())
 
     def _process_flat_detections_format(self, df):
-        # Get all the field names from the detections struct
+        """Process flat detections format"""
         detection_fields = [f.name for f in df.schema["detections"].dataType.fields]
-        
-        # Create an array of all detection structs
         detections_expr = F.array([F.col(f"detections.{field}") for field in detection_fields])
         
-        # Explode the array to get one row per detection
         return df.select(
             F.explode(detections_expr).alias("detection")
         ).select(
@@ -152,9 +104,9 @@ class PeopleProcessor:
         )
 
     def _enrich_person(self, row):
+        """Enrich person data with aggregated information"""
         tid = str(row["tracker_id"])
         
-        # Get most frequent values for categorical attributes
         def get_most_frequent(lst):
             if not lst:
                 return "Unknown"
@@ -168,7 +120,6 @@ class PeopleProcessor:
         mask_status = get_most_frequent(row["mask_status_list"])
         carrying = get_most_frequent(row["carrying_list"])
 
-        # Check if person entered restricted area and get first entry time
         restricted_entry_time = None
         restricted_areas = row["restricted_area_list"] or []
         restricted_timestamps = row["restricted_timestamps"] or []
@@ -177,7 +128,6 @@ class PeopleProcessor:
             if is_restricted and i < len(restricted_timestamps):
                 restricted_entry_time = restricted_timestamps[i]
                 break
-
 
         return tid, {
             "age": age,
@@ -193,9 +143,3 @@ class PeopleProcessor:
             "duration_seconds": float((row["last_detection"] - row["first_detection"]).total_seconds()),
             "frame_count": int(row["frame_count"])
         }
-
-if __name__ == '__main__':
-    spark = create_spark_session()
-    processor = PeopleProcessor(spark)
-    processor.process_files(BUCKETS["processed"], BUCKETS["refine"])
-    spark.stop()
