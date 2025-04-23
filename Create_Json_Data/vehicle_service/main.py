@@ -243,6 +243,12 @@ def detect_light_color(frame,box):
     return "unknown"
 
 
+def get_y_on_line(x, x1, y1, x2, y2):
+    if x2 == x1:
+        return float('inf')  # avoid division by zero
+    slope = (y2 - y1) / (x2 - x1)
+    return y1 + slope * (x - x1)
+
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
     model_path = os.path.join("Model", "yolov8x.pt")
     model = YOLO(model_path)  
@@ -251,6 +257,13 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
     SOURCE = np.array(ex_points)
     TARGET_WIDTH = 25
     TARGET_HEIGHT = 250
+
+    LINE_POINTS = np.array([
+        [2298, 803],
+        [-550, 2159]
+    ])
+    x1, y1 = LINE_POINTS[0]
+    x2, y2 = LINE_POINTS[1]
 
     TARGET = np.array([
         [0, 0],
@@ -262,7 +275,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
     # Compute perspective transformation matrix
     perspective_transform = cv2.getPerspectiveTransform(SOURCE.astype(np.float32), TARGET.astype(np.float32))
 
-    
     crossing_box = None
     if red_light_points:
         cap_tmp = cv2.VideoCapture(SOURCE_VIDEO_PATH)
@@ -291,6 +303,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
     vehicle_times = {}
     red_violators=set()
     id_map,id_ctr={},1
+    violation_times = {}
+    line_violation_times = {}
 
     # Create directory for saving frames
     os.makedirs(FRAME_SAVE_DIR, exist_ok=True)
@@ -386,9 +400,10 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                 lane = get_lane(center_x, left_lane_end, right_lane_start)
 
                 vehicle_positions[tracker_id] = (center_x, center_y)
-                if tracker_id not in crossing_tracker:
-                    crossing_tracker[tracker_id] = {'crossed': False, 'last_position': center_y}
-
+                if 'last_position_new' not in crossing_tracker[tracker_id]:
+                    crossing_tracker[tracker_id]['last_position_new'] = center_y
+                
+                # 🚥 Original line crossing logic
                 if not crossing_tracker[tracker_id]['crossed']:
                     if center_y > line_y_position and crossing_tracker[tracker_id]['last_position'] <= line_y_position:
                         vehicle_crossings['entered'] += 1
@@ -396,8 +411,28 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                     elif center_y < line_y_position and crossing_tracker[tracker_id]['last_position'] >= line_y_position:
                         vehicle_crossings['exited'] += 1
                         crossing_tracker[tracker_id]['crossed'] = True  # Mark as crossed
-
+                        
+                tracker_id_int = int(tracker_id)
+                line_y_at_center = get_y_on_line(center_x, x1, y1, x2, y2)
+                line_crossing = False
+                if (center_y > line_y_at_center and crossing_tracker[tracker_id]['last_position_new'] <= line_y_at_center) or \
+                (center_y < line_y_at_center and crossing_tracker[tracker_id]['last_position_new'] >= line_y_at_center):
+                    line_crossing = True
+                    if line_crossing and tracker_id_int not in line_violation_times:
+                        line_violation_times[tracker_id_int] = frame_number
+                
+                # ✅ Update last positions for next frame
                 crossing_tracker[tracker_id]['last_position'] = center_y
+                crossing_tracker[tracker_id]['last_position_new'] = center_y
+
+                violation_frame = line_violation_times.get(tracker_id_int)
+                if line_crossing and violation_frame is not None:
+                    line_violation_time = (
+                        VIDEO_START_TIME + timedelta(seconds=violation_frame / FPS)
+                    ).strftime("%Y-%m-%d %H:%M:%S")
+                else:
+                    line_violation_time = None
+
                 cv2.line(frame, (0, line_y_position), (video_info.width, line_y_position), (0, 255, 0), 2)
                 cv2.putText(frame, f"Entered: {vehicle_crossings['entered']}", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
                 cv2.putText(frame, f"Exited: {vehicle_crossings['exited']}", (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
@@ -408,6 +443,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
 
                 # --- NEW VIOLATION: ENTERING the blue box while red ---
                 violation = False
+                red_violation_time = None
                 if crossing_box is not None:
                     inside = (crossing_box[0][0] <= center_x <= crossing_box[1][0]
                             and crossing_box[0][1] <= center_y <= crossing_box[1][1])
@@ -415,9 +451,16 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                     if inside and light == 'red' and tracker_id not in red_violators:
                         violation = True
                         red_violators.add(tracker_id)
+                        if tracker_id_int not in violation_times:
+                            violation_times[tracker_id_int] = frame_number
+
                     crossing_tracker[tracker_id]['inside'] = inside
-                else:
-                    crossing_tracker[tracker_id]['inside'] = False
+
+                    red_violation_frame = violation_times.get(tracker_id_int)
+                    if violation and red_violation_frame is not None:
+                        red_violation_time = (
+                            VIDEO_START_TIME + timedelta(seconds=red_violation_frame / FPS)
+                        ).strftime("%Y-%m-%d %H:%M:%S")
 
                 if is_in_target_polygon(center_x, center_y, SOURCE):
                     if tracker_id not in vehicle_times:
@@ -437,37 +480,40 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                     )
 
                     frame_data = {
-                                "frame_number": frame_number,
-                                "congestion_level": congestion_level,  # Add congestion level
-                                "traffic_light":light,
-                                "detections": [
-                                    {
-                                        "tracker_id": int(tracker_id),
-                                        "class_id": int(class_id),
-                                        "class_name": model.names[class_id],
-                                        "direction": direction,
-                                        "lane": lane,
-                                        "vehicle_color": vehicle_color,
-                                        "stopped": stopped,
-                                        "confidence": float(confidence),
-                                        "bbox": [float(coord) for coord in bbox],
-                                        "Speed_kmh":speed,
-                                        "Red light violation":violation,
-                                        "entry_time": (
-                        (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
-                        .strftime("%Y-%m-%d %H:%M:%S")
-                        if vehicle_times.get(int(tracker_id)) else None
-                    ),
-                    "exit_time": (
-                        (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("exit", 0) / FPS))
-                        .strftime("%Y-%m-%d %H:%M:%S")
-                        if vehicle_times.get(int(tracker_id)) else None
-                    )
-                                    }
-                                    for bbox, confidence, class_id, tracker_id in detections
-                                ]
-                            }
-                    frame_data_list.append(frame_data)
+                            "frame_number": frame_number,
+                            "congestion_level": congestion_level,  # Add congestion level
+                            "traffic_light":light,
+                            "detections": [
+                                {
+                                    "tracker_id": int(tracker_id),
+                                    "confidence": float(confidence),
+                                    "bbox": [float(coord) for coord in bbox],
+                                    "class_id": int(class_id),
+                                    "vehicle_type": model.names[class_id],
+                                    "vehicle_direction": direction,
+                                    "vehicle_lane": lane,
+                                    "vehicle_color": vehicle_color,
+                                    "stopped": stopped,
+                                    "vehicle_speed":speed,
+                                    "red_light_violation":violation,
+                                    "red_light_violation_time": red_violation_time,                        
+                                    "line_crossing": line_crossing,
+                                    "line_crossing_violation_time": line_violation_time,
+                                    "vehicle_entry_time": (
+                    (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("entry", 0) / FPS))
+                    .strftime("%Y-%m-%d %H:%M:%S")
+                    if vehicle_times.get(int(tracker_id)) else None
+                ),
+                "vehicle_exit_time": (
+                    (VIDEO_START_TIME + timedelta(seconds=vehicle_times.get(int(tracker_id), {}).get("exit", 0) / FPS))
+                    .strftime("%Y-%m-%d %H:%M:%S")
+                    if vehicle_times.get(int(tracker_id)) else None
+                )
+                                }
+                                for bbox, confidence, class_id, tracker_id in detections
+                            ]
+                        }
+                frame_data_list.append(frame_data)
                     
 
 

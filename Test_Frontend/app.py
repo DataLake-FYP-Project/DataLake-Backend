@@ -45,7 +45,6 @@ def scale_polygon_points(polygon_points, original_width, original_height, new_wi
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
 
-
 def upload_video_and_points(video_file, points_data, video_type):
     try:
         # Prepare video file
@@ -80,20 +79,22 @@ def upload_video_and_points(video_file, points_data, video_type):
         return None
 
 
-
-
 # Streamlit UI
 st.title("Video Uploader with Points Selection")
 
 video_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov", "mkv"])
 
+# Initialize session state
+if 'points_data' not in st.session_state:
+    st.session_state.points_data = {
+        "Entry": [], "Exit": [], "Restricted": [],
+        "point": [], "red_light": []
+    }
+
 if video_file:
     st.video(video_file)
 
     video_type = st.selectbox("Select Video Type", ["People", "Vehicle"])
-
-    if 'points_data' not in st.session_state:
-        st.session_state.points_data = {"Entry": [], "Exit": [], "Restricted": [], "Vehicle": []}
 
     if video_type == "People":
         option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
@@ -114,6 +115,13 @@ if video_file:
         else:
             st.error("No points selected.")
 
+    if st.button("Clear All Points"):
+        st.session_state.points_data = {
+            "Entry": [], "Exit": [], "Restricted": [],
+            "point": [], "red_light": []
+        }
+        st.success("All points cleared.")
+
     if st.button("Upload Video"):
         if video_type == "People":
             points_to_send = {
@@ -123,24 +131,23 @@ if video_file:
             }
             valid = all(points_to_send.values())
         else:
+            # Red light reset logic – only send if user has selected
+            red_light_selected = bool(st.session_state.points_data.get("red_light"))
             points_to_send = {
                 "point": st.session_state.points_data.get("point"),
-                "red_light": st.session_state.points_data.get("red_light", None)
+                "red_light": st.session_state.points_data.get("red_light") if red_light_selected else []
             }
             valid = bool(points_to_send["point"])
-            # if not valid:
-                # st.error("Please select a point before uploading the video.")
 
         if valid:
             with st.spinner("Uploading..."):
-                print("points to send",points_to_send)
+                print("Points to send:", points_to_send)
                 response = upload_video_and_points(video_file, points_to_send, video_type)
-                print("Respomse", response)
-                
+
             if response:
                 if response.status_code == 200:
                     st.success("Video uploaded and processed successfully!")
-                    st.json(response.json())  # optional: show returned data
+                    st.json(response.json())
                 else:
                     st.error(f"Upload failed: {response.status_code} - {response.text}")
         else:
