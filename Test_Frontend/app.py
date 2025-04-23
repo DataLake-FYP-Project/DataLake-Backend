@@ -5,9 +5,8 @@ import cv2
 import tempfile
 import os
 
-
 # Function to capture points on the video
-def select_points_on_video(video_path, new_width=640, new_height=480):
+def select_points_on_video(video_path, num_points=4, new_width=640, new_height=480):
     cap = cv2.VideoCapture(video_path)
     ret, frame = cap.read()
     if not ret:
@@ -21,16 +20,16 @@ def select_points_on_video(video_path, new_width=640, new_height=480):
     points = []
 
     def click_event(event, x, y, flags, param):
-        if event == cv2.EVENT_LBUTTONDOWN and len(points) < 4:
+        if event == cv2.EVENT_LBUTTONDOWN and len(points) < num_points:
             points.append((x, y))
             print(f"Point {len(points)}: ({x}, {y})")
-            if len(points) == 4:
+            if len(points) == num_points:
                 cv2.destroyAllWindows()
 
     cv2.imshow("Click to Select Points", frame_resized)
     cv2.setMouseCallback("Click to Select Points", click_event)
 
-    while len(points) < 4:
+    while len(points) < num_points:
         cv2.waitKey(1)
 
     cv2.destroyAllWindows()
@@ -38,19 +37,15 @@ def select_points_on_video(video_path, new_width=640, new_height=480):
 
     return scale_polygon_points(points, original_width, original_height, new_width, new_height)
 
-
 def scale_polygon_points(polygon_points, original_width, original_height, new_width, new_height):
     scale_x = original_width / new_width
     scale_y = original_height / new_height
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
-
 def upload_video_and_points(video_file, points_data, video_type):
     try:
-        # Prepare video file
         files = {"file": (video_file.name, video_file, "video/mp4")}
 
-        # Prepare points based on video type
         if video_type == "People":
             points = {
                 "entry": points_data.get("entry", []),
@@ -62,14 +57,14 @@ def upload_video_and_points(video_file, points_data, video_type):
         elif video_type == "Vehicle":
             points = {
                 "point": points_data.get("point", []),
-                "red_light": points_data.get("red_light", [])  # optional
+                "red_light": points_data.get("red_light", []),
+                "line_points": points_data.get("line_points", [])
             }
             url = "http://localhost:8012/upload_vehicle"
 
         else:
             raise ValueError("Invalid video type")
 
-        # Send request
         data = {"points": json.dumps(points)}
         response = requests.post(url, files=files, data=data)
         return response
@@ -77,7 +72,6 @@ def upload_video_and_points(video_file, points_data, video_type):
     except Exception as e:
         print(f"Error uploading video: {str(e)}")
         return None
-
 
 # Streamlit UI
 st.title("Video Uploader with Points Selection")
@@ -88,7 +82,7 @@ video_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov", 
 if 'points_data' not in st.session_state:
     st.session_state.points_data = {
         "Entry": [], "Exit": [], "Restricted": [],
-        "point": [], "red_light": []
+        "point": [], "red_light": [], "line_points": []
     }
 
 if video_file:
@@ -99,14 +93,16 @@ if video_file:
     if video_type == "People":
         option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
     else:
-        option = st.radio("Select Point Type", ["point", "red_light"])
+        option = st.radio("Select Point Type", ["point", "red_light", "line_points"])
 
     if st.button("Select Points on Video"):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
             tmp.write(video_file.read())
             tmp_path = tmp.name
 
-        selected_points = select_points_on_video(tmp_path)
+        # Set number of points for selection
+        num_points = 2 if option == "line_points" else 4
+        selected_points = select_points_on_video(tmp_path, num_points=num_points)
         os.remove(tmp_path)
 
         if selected_points:
@@ -118,7 +114,7 @@ if video_file:
     if st.button("Clear All Points"):
         st.session_state.points_data = {
             "Entry": [], "Exit": [], "Restricted": [],
-            "point": [], "red_light": []
+            "point": [], "red_light": [], "line_points": []
         }
         st.success("All points cleared.")
 
@@ -130,14 +126,19 @@ if video_file:
                 "restricted": st.session_state.points_data.get("Restricted")
             }
             valid = all(points_to_send.values())
+
         else:
-            # Red light reset logic – only send if user has selected
+            point_selected = bool(st.session_state.points_data.get("point"))
+            line_selected = bool(st.session_state.points_data.get("line_points"))
             red_light_selected = bool(st.session_state.points_data.get("red_light"))
+
             points_to_send = {
-                "point": st.session_state.points_data.get("point"),
-                "red_light": st.session_state.points_data.get("red_light") if red_light_selected else []
+                "point": st.session_state.points_data.get("point") if point_selected else [],
+                "red_light": st.session_state.points_data.get("red_light") if red_light_selected else [],
+                "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
-            valid = bool(points_to_send["point"])
+
+            valid = point_selected or line_selected
 
         if valid:
             with st.spinner("Uploading..."):

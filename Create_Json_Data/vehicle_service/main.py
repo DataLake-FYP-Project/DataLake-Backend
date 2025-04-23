@@ -10,6 +10,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 import ffmpeg
 from datetime import datetime, timedelta, timezone
+from shapely.geometry import LineString, Point
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
@@ -245,11 +246,11 @@ def detect_light_color(frame,box):
 
 def get_y_on_line(x, x1, y1, x2, y2):
     if x2 == x1:
-        return float('inf')  # avoid division by zero
+        return (y1 + y2) / 2  # or simply y1 or y2
     slope = (y2 - y1) / (x2 - x1)
     return y1 + slope * (x - x1)
 
-def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
+def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, line_points):
     model_path = os.path.join("Model", "yolov8x.pt")
     model = YOLO(model_path)  
     model.fuse() 
@@ -258,12 +259,11 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
     TARGET_WIDTH = 25
     TARGET_HEIGHT = 250
 
-    LINE_POINTS = np.array([
-        [2298, 803],
-        [-550, 2159]
-    ])
+    LINE_POINTS = np.array(line_points)
     x1, y1 = LINE_POINTS[0]
     x2, y2 = LINE_POINTS[1]
+    line = LineString([(x1, y1), (x2, y2)])
+    threshold =  5.0  # Adjust as needed
 
     TARGET = np.array([
         [0, 0],
@@ -383,6 +383,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                         upd.append(id_map[t])
                     detections.tracker_id=upd
 
+            frame_detections = {}
             for bbox, confidence, class_id, tracker_id in detections:
                 if tracker_id is None:
                     continue
@@ -400,8 +401,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                 lane = get_lane(center_x, left_lane_end, right_lane_start)
 
                 vehicle_positions[tracker_id] = (center_x, center_y)
-                if 'last_position_new' not in crossing_tracker[tracker_id]:
-                    crossing_tracker[tracker_id]['last_position_new'] = center_y
                 
                 # 🚥 Original line crossing logic
                 if not crossing_tracker[tracker_id]['crossed']:
@@ -413,27 +412,10 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                         crossing_tracker[tracker_id]['crossed'] = True  # Mark as crossed
                         
                 tracker_id_int = int(tracker_id)
-                line_y_at_center = get_y_on_line(center_x, x1, y1, x2, y2)
-                line_crossing = False
-                if (center_y > line_y_at_center and crossing_tracker[tracker_id]['last_position_new'] <= line_y_at_center) or \
-                (center_y < line_y_at_center and crossing_tracker[tracker_id]['last_position_new'] >= line_y_at_center):
-                    line_crossing = True
-                    if line_crossing and tracker_id_int not in line_violation_times:
-                        line_violation_times[tracker_id_int] = frame_number
-                
-                # ✅ Update last positions for next frame
                 crossing_tracker[tracker_id]['last_position'] = center_y
-                crossing_tracker[tracker_id]['last_position_new'] = center_y
-
-                violation_frame = line_violation_times.get(tracker_id_int)
-                if line_crossing and violation_frame is not None:
-                    line_violation_time = (
-                        VIDEO_START_TIME + timedelta(seconds=violation_frame / FPS)
-                    ).strftime("%Y-%m-%d %H:%M:%S")
-                else:
-                    line_violation_time = None
 
                 cv2.line(frame, (0, line_y_position), (video_info.width, line_y_position), (0, 255, 0), 2)
+                cv2.line(frame, (x1, y1), (x2, y2), (0, 0, 255), 4)
                 cv2.putText(frame, f"Entered: {vehicle_crossings['entered']}", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
                 cv2.putText(frame, f"Exited: {vehicle_crossings['exited']}", (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
@@ -462,6 +444,24 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                             VIDEO_START_TIME + timedelta(seconds=red_violation_frame / FPS)
                         ).strftime("%Y-%m-%d %H:%M:%S")
 
+                center_point = Point(center_x, center_y)
+                bbox_width = bbox[2] - bbox[0]
+                distance = center_point.distance(line)
+                line_crossing = distance <= (bbox_width / 2)
+
+                # Store frame number for first violation
+                if line_crossing and tracker_id not in line_violation_times:
+                    line_violation_times[tracker_id] = frame_number
+
+                # Calculate line crossing violation time
+                violation_frame = line_violation_times.get(tracker_id)
+                if line_crossing and violation_frame is not None:
+                    line_violation_time = (
+                        VIDEO_START_TIME + timedelta(seconds=violation_frame / FPS)
+                    ).strftime("%Y-%m-%d %H:%M:%S")
+                else:
+                    line_violation_time = None
+
                 if is_in_target_polygon(center_x, center_y, SOURCE):
                     if tracker_id not in vehicle_times:
                         vehicle_times[tracker_id] = {"entry": frame_number, "exit": frame_number}
@@ -478,14 +478,30 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                                 ),
                     labels=[label]
                     )
+                    line_crossing = False
+                    line_violation_time = None
 
-                    frame_data = {
-                            "frame_number": frame_number,
-                            "congestion_level": congestion_level,  # Add congestion level
-                            "traffic_light":light,
-                            "detections": [
-                                {
-                                    "tracker_id": int(tracker_id),
+                    center_point = Point(center_x, center_y)
+                    bbox_width = bbox[2] - bbox[0]
+                    distance = center_point.distance(line)
+                    line_crossing = distance <= (bbox_width / 2)
+
+                    # Store frame number for first violation
+                    if line_crossing and tracker_id not in line_violation_times:
+                        line_violation_times[tracker_id] = frame_number
+
+                    # Calculate line crossing violation time
+                    violation_frame = line_violation_times.get(tracker_id)
+                    if line_crossing and violation_frame is not None:
+                        line_violation_time = (
+                            VIDEO_START_TIME + timedelta(seconds=violation_frame / FPS)
+                        ).strftime("%Y-%m-%d %H:%M:%S")
+                    else:
+                        line_violation_time = None
+
+                    if tracker_id not in frame_detections:
+                        frame_detections[tracker_id] = {
+                            "tracker_id": int(tracker_id),
                                     "confidence": float(confidence),
                                     "bbox": [float(coord) for coord in bbox],
                                     "class_id": int(class_id),
@@ -509,13 +525,22 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points):
                     .strftime("%Y-%m-%d %H:%M:%S")
                     if vehicle_times.get(int(tracker_id)) else None
                 )
-                                }
-                                for bbox, confidence, class_id, tracker_id in detections
-                            ]
                         }
-                frame_data_list.append(frame_data)
-                    
+                    else:
+                        # Update the existing entry if needed (e.g., in case of multiple detections per tracker)
+                        frame_detections[tracker_id].update({
+                            "confidence": max(frame_detections[tracker_id]["confidence"], confidence),
+                            "vehicle_speed": max(frame_detections[tracker_id]["vehicle_speed"], speed),
+                            # Add other updates as needed
+                        })
 
+            frame_data = {
+                "frame_number": frame_number,
+                "congestion_level": congestion_level,
+                "traffic_light": light,
+                "detections": list(frame_detections.values())
+            }           
+            frame_data_list.append(frame_data)
 
                 
             cv2.polylines(frame, [SOURCE.astype(np.int32)], isClosed=True, color=(0, 255, 0), thickness=2)
@@ -556,6 +581,7 @@ def upload_video():
             # 👇 Separate the 3 point types
             ex_points = points.get("point", [])
             red_light_points = points.get("red_light", [])
+            line_points = points.get("line_points", [])
 
 
         except json.JSONDecodeError as e:
@@ -574,7 +600,7 @@ def upload_video():
         print(f"FRAME_SAVE_DIR: {FRAME_SAVE_DIR}")
 
 
-        json_output_path = ModelRun(source_video_path, target_video_path, ex_points, red_light_points)
+        json_output_path = ModelRun(source_video_path, target_video_path, ex_points, red_light_points, line_points)
         print(f"JSON Output Path: {json_output_path}")
 
     except Exception as e:
