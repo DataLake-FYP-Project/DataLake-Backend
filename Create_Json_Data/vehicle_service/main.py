@@ -244,12 +244,6 @@ def detect_light_color(frame,box):
     return "unknown"
 
 
-def get_y_on_line(x, x1, y1, x2, y2):
-    if x2 == x1:
-        return (y1 + y2) / 2  # or simply y1 or y2
-    slope = (y2 - y1) / (x2 - x1)
-    return y1 + slope * (x - x1)
-
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, line_points):
     model_path = os.path.join("Model", "yolov8x.pt")
     model = YOLO(model_path)  
@@ -263,7 +257,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, 
     x1, y1 = LINE_POINTS[0]
     x2, y2 = LINE_POINTS[1]
     line = LineString([(x1, y1), (x2, y2)])
-    threshold =  5.0  # Adjust as needed
 
     TARGET = np.array([
         [0, 0],
@@ -443,24 +436,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, 
                         red_violation_time = (
                             VIDEO_START_TIME + timedelta(seconds=red_violation_frame / FPS)
                         ).strftime("%Y-%m-%d %H:%M:%S")
-
-                center_point = Point(center_x, center_y)
-                bbox_width = bbox[2] - bbox[0]
-                distance = center_point.distance(line)
-                line_crossing = distance <= (bbox_width / 2)
-
-                # Store frame number for first violation
-                if line_crossing and tracker_id not in line_violation_times:
-                    line_violation_times[tracker_id] = frame_number
-
-                # Calculate line crossing violation time
-                violation_frame = line_violation_times.get(tracker_id)
-                if line_crossing and violation_frame is not None:
-                    line_violation_time = (
-                        VIDEO_START_TIME + timedelta(seconds=violation_frame / FPS)
-                    ).strftime("%Y-%m-%d %H:%M:%S")
-                else:
-                    line_violation_time = None
 
                 if is_in_target_polygon(center_x, center_y, SOURCE):
                     if tracker_id not in vehicle_times:

@@ -56,7 +56,7 @@ def upload_video_and_points(video_file, points_data, video_type):
 
         elif video_type == "Vehicle":
             points = {
-                "point": points_data.get("point", []),
+                "Area": points_data.get("Area", []),
                 "red_light": points_data.get("red_light", []),
                 "line_points": points_data.get("line_points", [])
             }
@@ -82,7 +82,7 @@ video_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov", 
 if 'points_data' not in st.session_state:
     st.session_state.points_data = {
         "Entry": [], "Exit": [], "Restricted": [],
-        "point": [], "red_light": [], "line_points": []
+        "Area": [], "red_light": [], "line_points": []
     }
 
 if video_file:
@@ -93,7 +93,7 @@ if video_file:
     if video_type == "People":
         option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
     else:
-        option = st.radio("Select Point Type", ["point", "red_light", "line_points"])
+        option = st.radio("Select Point Type", ["Area", "red_light", "line_points"])
 
     if st.button("Select Points on Video"):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
@@ -114,7 +114,7 @@ if video_file:
     if st.button("Clear All Points"):
         st.session_state.points_data = {
             "Entry": [], "Exit": [], "Restricted": [],
-            "point": [], "red_light": [], "line_points": []
+            "Area": [], "red_light": [], "line_points": []
         }
         st.success("All points cleared.")
 
@@ -128,12 +128,12 @@ if video_file:
             valid = all(points_to_send.values())
 
         else:
-            point_selected = bool(st.session_state.points_data.get("point"))
+            point_selected = bool(st.session_state.points_data.get("Area"))
             line_selected = bool(st.session_state.points_data.get("line_points"))
             red_light_selected = bool(st.session_state.points_data.get("red_light"))
 
             points_to_send = {
-                "point": st.session_state.points_data.get("point") if point_selected else [],
+                "Area": st.session_state.points_data.get("point") if point_selected else [],
                 "red_light": st.session_state.points_data.get("red_light") if red_light_selected else [],
                 "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
