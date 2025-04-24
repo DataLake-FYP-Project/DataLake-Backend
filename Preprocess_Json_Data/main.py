@@ -1,3 +1,4 @@
+from preprocessing.advanced_preprocessing import CombinedProcessor
 from config.spark_config import create_spark_session
 from config.minio_config import BUCKETS
 from connectors.minio_connector import MinIOConnector
@@ -61,7 +62,7 @@ def main():
             logging.warning("No vehicle detection files found in raw bucket")
         if not people_files:
             logging.warning("No people detection files found in raw bucket")
-
+        print("\n=== Starting Basic Preprocessing=== ")
         # Process vehicle files
         for vehicle_file in vehicle_files:
             try:
@@ -82,7 +83,16 @@ def main():
             except Exception as e:
                 logging.error(f"Error processing people file {people_file}: {e}")
 
-        logging.info("Processing completed")
+        logging.info("Basic Processing completed")
+        print("\n=== Starting Advanced Preprocessing=== ")
+        try:
+            processor = CombinedProcessor(spark)
+            processor.process_all(BUCKETS["processed"], BUCKETS["refine"])
+            logging.info("Advanced preprocessing completed successfully")
+        except Exception as e:
+            logging.error(f"Error during advanced preprocessing: {e}")
+
+        print("\n=== All processing stages completed=== ")
     except Exception as e:
         logging.error(f"Fatal error in processing pipeline: {e}")
     finally:

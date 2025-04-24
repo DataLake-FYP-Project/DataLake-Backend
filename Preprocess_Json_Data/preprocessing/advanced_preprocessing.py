@@ -1,10 +1,11 @@
+import logging
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
-from advanced_preprocessing_people import PeopleProcessor
-from advanced_preprocessing_vehicle import VehicleProcessor
+from preprocessing.advanced_preprocessing_people import PeopleProcessor
+from preprocessing.advanced_preprocessing_vehicle import VehicleProcessor
 from config.spark_config import create_spark_session
 from config.minio_config import BUCKETS
 from pyspark.sql import functions as F
@@ -30,7 +31,7 @@ class CombinedProcessor:
     
     def _process_file(self, processor, input_bucket, output_bucket, file, prefix):
         """Common file processing logic"""
-        print(f"\nProcessing {file}...")
+        logging.info(f"\nProcessing {file}...")
         try:
             df = processor.minio.read_json(input_bucket, f"{prefix}/{file}")
             
@@ -40,7 +41,7 @@ class CombinedProcessor:
                 elif "detections" in df.columns:
                     processed_df = processor._process_flat_detections_format(df)
                 else:
-                    print(f"Skipping {file} - unknown format")
+                    logging.info(f"Skipping {file} - unknown format")
                     return None
             else:  # VehicleProcessor
                 processed_df = processor._process_vehicle_format(df)
@@ -57,12 +58,11 @@ class CombinedProcessor:
             
             return processed_df
         except Exception as e:
-            print(f"Error processing file {file}: {str(e)}")
+            logging.info(f"Error processing file {file}: {str(e)}")
             return None
     
     def process_all(self, input_bucket: str, output_bucket: str):
         """Process both people and vehicle detection files with error handling"""
-        print("\nStarting combined processing...")
         start_time = datetime.now(timezone.utc)
         
         # Process people detections
@@ -82,10 +82,10 @@ class CombinedProcessor:
                     })
                     out_path = f"people_detection/refine_{file}"
                     self._write_output(output_bucket, out_path, output)
-                    print(f"Successfully processed {len(enriched_data)} people in {file}")
+                    logging.info(f"Successfully processed {len(enriched_data)} people in {file}")
         except Exception as e:
-            print(f"\nERROR in people processing: {str(e)}")
-            print("Continuing with vehicle processing...")
+            logging.info(f"\nERROR in people processing: {str(e)}")
+            logging.info("Continuing with vehicle processing...")
         
         # Process vehicle detections
         print("\n=== Processing Vehicle Detections ===")
@@ -104,14 +104,14 @@ class CombinedProcessor:
                     })
                     out_path = f"vehicle_detection/refine_{file}"
                     self._write_output(output_bucket, out_path, output)
-                    print(f"Successfully processed {len(enriched_data)} vehicles in {file}")
+                    logging.info(f"Successfully processed {len(enriched_data)} vehicles in {file}")
         except Exception as e:
-            print(f"\nERROR in vehicle processing: {str(e)}")
-            print("Processing completed with errors")
+            logging.info(f"\nERROR in vehicle processing: {str(e)}")
+            logging.info("Processing completed with errors")
         
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
-        print(f"\nCombined processing completed in {duration:.2f} seconds")
+        logging.info(f"\nCombined processing completed in {duration:.2f} seconds")
 
 if __name__ == '__main__':
     spark = create_spark_session()
@@ -119,6 +119,6 @@ if __name__ == '__main__':
         processor = CombinedProcessor(spark)
         processor.process_all(BUCKETS["processed"], BUCKETS["refine"])
     except Exception as e:
-        print(f"Fatal error in combined processing: {str(e)}")
+        logging.info(f"Fatal error in combined processing: {str(e)}")
     finally:
         spark.stop()
