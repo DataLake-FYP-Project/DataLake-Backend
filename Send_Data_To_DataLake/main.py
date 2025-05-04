@@ -1,11 +1,13 @@
 import json
 from flask import Flask, request, jsonify
 import os
+
+# from Preprocess_Json_Data.main import spark_preprocessing
 from processing_vehicle import convert_json_format, vehicle_upload_to_minio, vehicle_upload_to_elasticsearch
 from processing_people import convert_people_json_format, people_upload_to_elasticsearch, people_upload_to_minio
 
-
 app = Flask(__name__)
+
 
 @app.route("/upload_2_vehicle", methods=["POST"])
 def upload_vehicle_json():
@@ -18,7 +20,7 @@ def upload_vehicle_json():
 
     filename = json_file.filename
     video_name = filename.split('.')[0]
-    print("video name" ,video_name)
+    print("video name", video_name)
 
     json_folder_vehicle = "Vehicle_Json_Folder"
     os.makedirs(json_folder_vehicle, exist_ok=True)
@@ -28,16 +30,17 @@ def upload_vehicle_json():
 
     vehicle_upload_to_minio(json_path, video_name)
 
+    # spark_preprocessing(filename)
     # Process JSON
-    processed_json = f"{video_name}_processed.json"
-    convert_json_format(json_path, processed_json)
+    # processed_json = f"{video_name}_processed.json"
+    # convert_json_format(json_path, processed_json)
 
     # Upload both original and processed
-
-    vehicle_upload_to_minio(processed_json, video_name)
-    vehicle_upload_to_elasticsearch(processed_json)
+    # vehicle_upload_to_minio(processed_json, video_name)
+    # vehicle_upload_to_elasticsearch(processed_json)
 
     return jsonify({"message": "Vehicle file uploaded and processed successfully"}), 200
+
 
 @app.route("/upload_2_people", methods=["POST"])
 def upload_people_json():

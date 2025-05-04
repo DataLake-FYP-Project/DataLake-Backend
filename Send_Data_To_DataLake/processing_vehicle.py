@@ -97,7 +97,7 @@ def vehicle_upload_to_minio(file_path, video_name):
         aws_secret_access_key=SECRET_KEY,
     )
     try:
-        folder_path = f"vehicle_detection/{video_name}/"
+        folder_path = f"vehicle_detection/"
         s3_key = f"{folder_path}{os.path.basename(file_path)}"
         s3.upload_file(file_path, BUCKET_NAME, s3_key)
         print(f"JSON File uploaded to MinIO: s3://{BUCKET_NAME}/{s3_key}")
