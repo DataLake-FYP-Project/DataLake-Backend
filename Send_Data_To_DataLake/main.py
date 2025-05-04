@@ -26,12 +26,14 @@ def upload_vehicle_json():
     json_path = os.path.join(json_folder_vehicle, filename)
     json_file.save(json_path)
 
+    vehicle_upload_to_minio(json_path, video_name)
+
     # Process JSON
     processed_json = f"{video_name}_processed.json"
     convert_json_format(json_path, processed_json)
 
     # Upload both original and processed
-    vehicle_upload_to_minio(json_path, video_name)
+
     vehicle_upload_to_minio(processed_json, video_name)
     vehicle_upload_to_elasticsearch(processed_json)
 

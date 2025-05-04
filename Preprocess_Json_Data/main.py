@@ -11,7 +11,7 @@ from preprocessing.frame_data_people_detection import process_people_json_data
 # Load environment variables
 load_dotenv()
 
-def process_video_data(spark, input_path, video_type):
+def process_video_data(spark, input_path, video_type,processed_json):
     """Process video data and return processed DataFrame with output path"""
     minio_conn = MinIOConnector(spark)
     
@@ -23,10 +23,10 @@ def process_video_data(spark, input_path, video_type):
         
         if video_type.lower() == "vehicle":
             processed_df = process_frame_data(raw_df)
-            output_path = f"vehicle_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
+            output_path = f"vehicle_detection/{processed_json}"
         else:
             processed_df = process_people_json_data(raw_df)
-            output_path = f"people_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
+            output_path = f"people_detection/{processed_json}"
         
         return processed_df, output_path
     except Exception as e:
@@ -43,7 +43,7 @@ def write_output_json(spark, df, output_path):
         logging.error(f"Failed to write output to processed/{clean_path}: {e}")
         return False
 
-def main():
+def spark_preprocessing(processed_json):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
     spark = create_spark_session()
@@ -67,7 +67,7 @@ def main():
         for vehicle_file in vehicle_files:
             try:
                 logging.info(f"Processing vehicle file: {vehicle_file}")
-                vehicle_df, vehicle_path = process_video_data(spark, vehicle_file, "vehicle")
+                vehicle_df, vehicle_path = process_video_data(spark, vehicle_file, "vehicle", processed_json)
                 if not write_output_json(spark, vehicle_df, vehicle_path):
                     logging.error(f"Failed to process vehicle file: {vehicle_file}")
             except Exception as e:
@@ -77,7 +77,7 @@ def main():
         for people_file in people_files:
             try:
                 logging.info(f"Processing people file: {people_file}")
-                people_df, people_path = process_video_data(spark, people_file, "people")
+                people_df, people_path = process_video_data(spark, people_file, "people",processed_json)
                 if not write_output_json(spark, people_df, people_path):
                     logging.error(f"Failed to process people file: {people_file}")
             except Exception as e:
@@ -98,6 +98,3 @@ def main():
     finally:
         spark.stop()
         logging.info("Spark session stopped")
-
-if __name__ == "__main__":
-    main()
