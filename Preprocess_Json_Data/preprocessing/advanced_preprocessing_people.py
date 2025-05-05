@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 
 sys.path.append(str(Path(__file__).parent.parent))
-from connectors.minio_connector import MinIOConnector
+from ..connectors.minio_connector import MinIOConnector
 from pyspark.sql import functions as F
 from pyspark.sql.functions import col, min as spark_min, max as spark_max, avg, count, collect_list
 

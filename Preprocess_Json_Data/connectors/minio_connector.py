@@ -6,7 +6,8 @@ from typing import Dict, Any, List
 from minio import Minio
 from minio.error import S3Error
 from io import BytesIO
-from config.minio_config import MINIO_CONFIG, BUCKETS
+from ..config.minio_config import MINIO_CONFIG, BUCKETS
+
 
 
 class MinIOConnector:

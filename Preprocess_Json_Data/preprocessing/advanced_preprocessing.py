@@ -4,15 +4,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
-from preprocessing.advanced_preprocessing_people import PeopleProcessor
-from preprocessing.advanced_preprocessing_vehicle import VehicleProcessor
-from config.spark_config import create_spark_session
-from config.minio_config import BUCKETS
+from .advanced_preprocessing_people import PeopleProcessor
+from .advanced_preprocessing_vehicle import VehicleProcessor
+from ..config.spark_config import create_spark_session
+from ..config.minio_config import BUCKETS
 from pyspark.sql import functions as F
 
 
 class CombinedProcessor:
-    def __init__(self, spark):
+    def __init__(self, spark, detection_type):
         self.spark = spark
         self.people_processor = PeopleProcessor(spark)
         self.vehicle_processor = VehicleProcessor(spark)
@@ -62,69 +62,72 @@ class CombinedProcessor:
             logging.info(f"Error processing file {file}: {str(e)}")
             return None
 
-    def process_all(self, input_bucket: str, output_bucket: str):
+    def process_all(self, input_bucket: str, output_bucket: str, detection_type):
         """Process both people and vehicle detection files with error handling"""
         start_time = datetime.now(timezone.utc)
 
-        # Process people detections
-        print("\n=== Processing People Detections ===")
-        try:
-            people_files = self.people_processor.minio.list_json_files(input_bucket, "people_detection/")
-            for file in people_files:
-                processed_df = self._process_file(self.people_processor, input_bucket, output_bucket, file,
-                                                  "people_detection")
-                if processed_df:
-                    grouped = self.people_processor._group_data(processed_df)
-                    enriched_data = dict(
-                        sorted([self.people_processor._enrich_person(row) for row in grouped.collect()],
-                               key=lambda x: int(x[0])))
-                    output = self._get_common_output_structure(file)
-                    output.update({
-                        "people_count": len(enriched_data),
-                        "people": enriched_data
-                    })
-                    out_path = f"people_detection/refine_{file}"
-                    self._write_output(output_bucket, out_path, output)
-                    logging.info(f"Successfully processed {len(enriched_data)} people in {file}")
-        except Exception as e:
-            logging.info(f"\nERROR in people processing: {str(e)}")
-            logging.info("Continuing with vehicle processing...")
+        if detection_type == "People":
+            # Process people detections
+            print("\n=== Processing People Detections ===")
+            try:
+                people_files = self.people_processor.minio.list_json_files(input_bucket, "people_detection/")
+                for file in people_files:
+                    processed_df = self._process_file(self.people_processor, input_bucket, output_bucket, file,
+                                                      "people_detection")
+                    if processed_df:
+                        grouped = self.people_processor._group_data(processed_df)
+                        enriched_data = dict(
+                            sorted([self.people_processor._enrich_person(row) for row in grouped.collect()],
+                                   key=lambda x: int(x[0])))
+                        output = self._get_common_output_structure(file)
+                        output.update({
+                            "people_count": len(enriched_data),
+                            "people": enriched_data
+                        })
+                        out_path = f"people_detection/refine_{file}"
+                        self._write_output(output_bucket, out_path, output)
+                        logging.info(f"Successfully processed {len(enriched_data)} people in {file}")
+            except Exception as e:
+                logging.info(f"\nERROR in people processing: {str(e)}")
+                logging.info("Continuing with vehicle processing...")
 
-        # Process vehicle detections
-        print("\n=== Processing Vehicle Detections ===")
-        try:
-            vehicle_files = self.vehicle_processor.minio.list_json_files(input_bucket, "vehicle_detection/")
-            for file in vehicle_files:
-                processed_df = self._process_file(self.vehicle_processor, input_bucket, output_bucket, file,
-                                                  "vehicle_detection")
-                if processed_df:
-                    grouped = self.vehicle_processor._group_data(processed_df)
-                    enriched_data = dict(
-                        sorted([self.vehicle_processor._enrich_vehicle(row) for row in grouped.collect()],
-                               key=lambda x: int(x[0])))
-                    output = self._get_common_output_structure(file)
-                    output.update({
-                        "vehicle_count": len(enriched_data),
-                        "vehicles": enriched_data
-                    })
-                    out_path = f"vehicle_detection/refine_{file}"
-                    self._write_output(output_bucket, out_path, output)
-                    logging.info(f"Successfully processed {len(enriched_data)} vehicles in {file}")
-        except Exception as e:
-            logging.info(f"\nERROR in vehicle processing: {str(e)}")
-            logging.info("Processing completed with errors")
+        elif detection_type == "Vehicle":
+            # Process vehicle detections
+            print("\n=== Processing Vehicle Detections ===")
+            try:
+                vehicle_files = self.vehicle_processor.minio.list_json_files(input_bucket, "vehicle_detection/")
+                for file in vehicle_files:
+                    processed_df = self._process_file(self.vehicle_processor, input_bucket, output_bucket, file,
+                                                      "vehicle_detection")
+                    if processed_df:
+                        grouped = self.vehicle_processor._group_data(processed_df)
+                        enriched_data = dict(
+                            sorted([self.vehicle_processor._enrich_vehicle(row) for row in grouped.collect()],
+                                   key=lambda x: int(x[0])))
+                        output = self._get_common_output_structure(file)
+                        output.update({
+                            "vehicle_count": len(enriched_data),
+                            "vehicles": enriched_data
+                        })
+                        out_path = f"vehicle_detection/refine_{file}"
+                        self._write_output(output_bucket, out_path, output)
+                        logging.info(f"Successfully processed {len(enriched_data)} vehicles in {file}")
+            except Exception as e:
+                logging.info(f"\nERROR in vehicle processing: {str(e)}")
+                logging.info("Processing completed with errors")
 
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
         logging.info(f"\nCombined processing completed in {duration:.2f} seconds")
 
 
-if __name__ == '__main__':
+def advanced_preprocessing(detection_type):
     spark = create_spark_session()
     try:
-        processor = CombinedProcessor(spark)
-        processor.process_all(BUCKETS["processed"], BUCKETS["refine"])
+        processor = CombinedProcessor(spark, detection_type)
+        processor.process_all(BUCKETS["processed"], BUCKETS["refine"], detection_type)
     except Exception as e:
         logging.info(f"Fatal error in combined processing: {str(e)}")
     finally:
         spark.stop()
+

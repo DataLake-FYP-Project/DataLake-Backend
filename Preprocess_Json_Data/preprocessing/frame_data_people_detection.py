@@ -1,6 +1,6 @@
 from pyspark.sql.functions import col, explode, struct, collect_list, array, lit, coalesce
 from pyspark.sql.types import *
-from preprocessing.common import *
+from .common import *
 
 def process_people_json_data(df):
     if "frame_detections" not in df.columns:

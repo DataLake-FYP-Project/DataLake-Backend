@@ -1,8 +1,14 @@
 import json
+import sys
 from flask import Flask, request, jsonify
 import os
+import sys
+from pathlib import Path
 
-# from Preprocess_Json_Data.main import spark_preprocessing
+# Add parent folder to Python's search path
+sys.path.append(str(Path(__file__).parent.parent))
+
+from Preprocess_Json_Data.main import spark_preprocessing
 from processing_vehicle import convert_json_format, vehicle_upload_to_minio, vehicle_upload_to_elasticsearch
 from processing_people import convert_people_json_format, people_upload_to_elasticsearch, people_upload_to_minio
 
@@ -30,13 +36,14 @@ def upload_vehicle_json():
 
     vehicle_upload_to_minio(json_path, video_name)
 
-    # spark_preprocessing(filename)
+    spark_preprocessing(filename, "Vehicle")
+
     # Process JSON
     # processed_json = f"{video_name}_processed.json"
     # convert_json_format(json_path, processed_json)
 
     # Upload both original and processed
-    # vehicle_upload_to_minio(processed_json, video_name)
+    # vehicle_upload_to_minio(video_name)
     # vehicle_upload_to_elasticsearch(processed_json)
 
     return jsonify({"message": "Vehicle file uploaded and processed successfully"}), 200
@@ -62,12 +69,15 @@ def upload_people_json():
     json_file.save(json_path)
 
     # 🔁 Convert original JSON into processed format
-    processed_json_path = os.path.join(json_folder_people, f"{video_name}_processed.json")
-    convert_people_json_format(json_path, processed_json_path)
+    # processed_json_path = os.path.join(json_folder_people, f"{video_name}_processed.json")
+    # convert_people_json_format(json_path, processed_json_path)
 
     # Upload original (raw) file to MinIO and processed to Elasticsearch
     people_upload_to_minio(json_path, video_name)
-    people_upload_to_elasticsearch(processed_json_path)
+
+    spark_preprocessing(filename, "People")
+
+    # people_upload_to_elasticsearch(processed_json_path)
 
     return jsonify({"message": "People file uploaded and processed successfully"}), 200
 

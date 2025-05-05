@@ -1,7 +1,7 @@
 import os
 from pyspark.sql import SparkSession
 from dotenv import load_dotenv
-from config.minio_config import MINIO_CONFIG
+from .minio_config import MINIO_CONFIG
 
 # Load environment variables
 load_dotenv()

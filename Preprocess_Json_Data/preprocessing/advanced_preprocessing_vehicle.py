@@ -7,9 +7,11 @@ import statistics
 from collections import Counter, defaultdict
 
 sys.path.append(str(Path(__file__).parent.parent))
-from connectors.minio_connector import MinIOConnector
-from pyspark.sql.functions import col, min as spark_min, max as spark_max, avg, stddev, count, collect_list, expr, udf, explode
+from ..connectors.minio_connector import MinIOConnector
+from pyspark.sql.functions import col, min as spark_min, max as spark_max, avg, stddev, count, collect_list, expr, udf, \
+    explode
 from pyspark.sql import functions as F
+
 
 class VehicleProcessor:
     def __init__(self, spark):
@@ -43,9 +45,9 @@ class VehicleProcessor:
 
             # ADD the new fields you need
             F.col("detection.red_light_violation").alias("red_light_violation"),
-            F.col("detection.line_crossing").alias("line_crossing"),
-            F.col("detection.geolocation.latitude").alias("latitude"),
-            F.col("detection.geolocation.longitude").alias("longitude")
+            F.col("detection.line_crossing").alias("line_crossing")
+            # F.col("detection.geolocation.latitude").alias("latitude"),
+            # F.col("detection.geolocation.longitude").alias("longitude")
         )
 
         return df
@@ -75,9 +77,9 @@ class VehicleProcessor:
 
             # Aggregate the red_light_violation and line_crossing fields
             F.sum(F.expr("CASE WHEN red_light_violation = true THEN 1 ELSE 0 END")).alias("red_light_violation_count"),
-            F.sum(F.expr("CASE WHEN line_crossing = true THEN 1 ELSE 0 END")).alias("line_crossing_count"),
-            F.first("latitude", ignorenulls=True).alias("latitude"),
-            F.first("longitude", ignorenulls=True).alias("longitude")
+            F.sum(F.expr("CASE WHEN line_crossing = true THEN 1 ELSE 0 END")).alias("line_crossing_count")
+            # F.first("latitude", ignorenulls=True).alias("latitude"),
+            # F.first("longitude", ignorenulls=True).alias("longitude")
 
         )
 
@@ -99,15 +101,15 @@ class VehicleProcessor:
         color_counts = Counter(colors)
         most_common_color = color_counts.most_common(1)[0][0] if color_counts else row["vehicle_color"] or "Unknown"
 
-        lane_changes = sum(1 for i in range(1, len(lanes)) if lanes[i] != lanes[i-1])
+        lane_changes = sum(1 for i in range(1, len(lanes)) if lanes[i] != lanes[i - 1])
         lane_change_frequency = lane_changes / len(lanes) if lanes else 0
-        direction_changes = sum(1 for i in range(1, len(directions)) if directions[i] != directions[i-1])
+        direction_changes = sum(1 for i in range(1, len(directions)) if directions[i] != directions[i - 1])
         stopped_duration = 0.0
 
         direction_time = defaultdict(float)
         for i in range(1, len(directions)):
-            d1 = directions[i-1]
-            t1, t2 = timestamps[i-1], timestamps[i]
+            d1 = directions[i - 1]
+            t1, t2 = timestamps[i - 1], timestamps[i]
             if d1 and t1 and t2:
                 delta = (t2.timestamp() - t1.timestamp())
                 direction_time[d1] += delta
@@ -121,20 +123,20 @@ class VehicleProcessor:
         total_distance = 0.0
         for i in range(1, len(bbox_list)):
             try:
-                b1 = bbox_list[i-1]
+                b1 = bbox_list[i - 1]
                 b2 = bbox_list[i]
                 x1 = (b1[0] + b1[2]) / 2
                 y1 = (b1[1] + b1[3]) / 2
                 x2 = (b2[0] + b2[2]) / 2
                 y2 = (b2[1] + b2[3]) / 2
-                dist = math.sqrt((x2-x1)**2 + (y2-y1)**2)
+                dist = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
                 total_distance += dist
-                angle = math.degrees(math.atan2(y2-y1, x2-x1))
+                angle = math.degrees(math.atan2(y2 - y1, x2 - x1))
                 movement_angles.append(angle)
             except:
                 continue
 
-        avg_movement_angle = sum(movement_angles)/len(movement_angles) if movement_angles else 0.0
+        avg_movement_angle = sum(movement_angles) / len(movement_angles) if movement_angles else 0.0
         speed_variation = statistics.stdev(speeds) if len(speeds) >= 2 else 0.0
 
         return tid, {
@@ -160,8 +162,8 @@ class VehicleProcessor:
             "direction_changes": direction_changes,
             "time_spent_per_direction": dict(direction_time),
             "red_light_violation_count": row["red_light_violation_count"],
-            "latitude": row["latitude"],
-            "longitude": row["longitude"],
+            # "latitude": row["latitude"],
+            # "longitude": row["longitude"],
             "total_distance": total_distance,
             "movement_angles": movement_angles,
             "avg_movement_angle": avg_movement_angle,
