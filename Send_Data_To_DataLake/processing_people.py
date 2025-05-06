@@ -30,7 +30,7 @@ def convert_people_json_format(input_path, output_path):
 
 
 
-def people_upload_to_minio(file_path, video_name):
+def people_upload_to_minio(file_path):
     s3 = boto3.client(
         's3',
         endpoint_url=MINIO_ENDPOINT,
@@ -38,7 +38,7 @@ def people_upload_to_minio(file_path, video_name):
         aws_secret_access_key=SECRET_KEY,
     )
     try:
-        folder_path = f"people_detection/{video_name}/"
+        folder_path = f"people_detection/"
         s3_key = f"{folder_path}{os.path.basename(file_path)}"
         s3.upload_file(file_path, BUCKET_NAME, s3_key)
         print(f"JSON File uploaded to MinIO: s3://{BUCKET_NAME}/{s3_key}")

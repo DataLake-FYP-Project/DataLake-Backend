@@ -77,7 +77,7 @@ def spark_preprocessing(filename, detection_type):
                     logging.error(f"Error processing vehicle file {vehicle_file}: {e}")
 
         elif detection_type == "People":
-            people_files = minio_conn.list_json_files(BUCKETS["raw"], f"people_detection/")
+            people_files = minio_conn.list_json_files(BUCKETS["raw"], f"people_detection/{filename}")
             if not people_files:
                 logging.warning("No people detection files found in raw bucket")
 

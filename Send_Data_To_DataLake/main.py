@@ -34,7 +34,7 @@ def upload_vehicle_json():
     json_path = os.path.join(json_folder_vehicle, filename)
     json_file.save(json_path)
 
-    vehicle_upload_to_minio(json_path, video_name)
+    vehicle_upload_to_minio(json_path)
 
     spark_preprocessing(filename, "Vehicle")
 
@@ -73,7 +73,7 @@ def upload_people_json():
     # convert_people_json_format(json_path, processed_json_path)
 
     # Upload original (raw) file to MinIO and processed to Elasticsearch
-    people_upload_to_minio(json_path, video_name)
+    people_upload_to_minio(json_path)
 
     spark_preprocessing(filename, "People")
 

@@ -89,7 +89,7 @@ def convert_json_format(input_path, output_path):
 
     print(f"Transformed JSON saved to {output_path}")
 
-def vehicle_upload_to_minio(file_path, video_name):
+def vehicle_upload_to_minio(file_path):
     s3 = boto3.client(
         's3',
         endpoint_url=MINIO_ENDPOINT,

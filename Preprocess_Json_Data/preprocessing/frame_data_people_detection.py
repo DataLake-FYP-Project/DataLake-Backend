@@ -2,6 +2,7 @@ from pyspark.sql.functions import col, explode, struct, collect_list, array, lit
 from pyspark.sql.types import *
 from .common import *
 
+
 def process_people_json_data(df):
     if "frame_detections" not in df.columns:
         print("Column 'frame_detections' not found in the input DataFrame. Skipping processing.")
@@ -14,10 +15,10 @@ def process_people_json_data(df):
             "tracker_id": -1,
             "class_id": -1,
             "gender": "unknown",
-            "age":-1,
+            "age": -1,
             "carrying": "none",
-            "mask_status": "unknown",
-            "mask_confidence": 0.0,
+            # "mask_status": "unknown",
+            # "mask_confidence": 0.0,
             "in_restricted_area": False,
             "entry_time": "2101-01-29 17:53:46",
             "exit_time": "2101-01-29 17:53:46"
@@ -55,9 +56,9 @@ def process_people_json_data(df):
     processed_detections = processed_detections.withColumn(
         "bbox", col("bbox").cast(ArrayType(DoubleType()))
     ).withColumn("bbox_x1", col("bbox")[0]) \
-     .withColumn("bbox_y1", col("bbox")[1]) \
-     .withColumn("bbox_x2", col("bbox")[2]) \
-     .withColumn("bbox_y2", col("bbox")[3])
+        .withColumn("bbox_y1", col("bbox")[1]) \
+        .withColumn("bbox_x2", col("bbox")[2]) \
+        .withColumn("bbox_y2", col("bbox")[3])
 
     # Step 4: Reconstruct detections with original structure plus new fields
     reconstructed_detections = processed_detections.select(
@@ -76,8 +77,8 @@ def process_people_json_data(df):
             col("gender"),
             col("age"),
             col("carrying"),
-            col("mask_status"),
-            col("mask_confidence"),
+            # col("mask_status"),
+            # col("mask_confidence"),
             col("entry_time"),
             col("exit_time"),
             col("first_seen_frame"),
