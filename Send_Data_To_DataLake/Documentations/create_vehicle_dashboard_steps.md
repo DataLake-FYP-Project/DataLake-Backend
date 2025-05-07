@@ -22,6 +22,8 @@ Go to Kibana → Stack Management → Index Patterns
 * Index Pattern(Data view) - datalake-vehicle-data
 * title - Total vehicle count over time
 
+![alt text](image.png)
+
 
 2. Vehicle Type Distribution
 
@@ -30,3 +32,5 @@ Go to Kibana → Stack Management → Index Patterns
 * Metric - Count of Records
 * Index Pattern(Data view) - datalake-vehicle-data
 * title - Vehicle Type Distribution
+
+![alt text](image-1.png)
