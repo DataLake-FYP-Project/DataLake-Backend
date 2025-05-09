@@ -1,28 +1,8 @@
 # Create Index in Kibana (Elasticsearch) using Dev Tools & Create Dashboard
 
 ## Steps to Follow
-### 1. Create a Data View
-datalake-vehicle-data
 
-### 1. Create a timestamp pipeline
-```json
-PUT _ingest/pipeline/vehicle_data_timestamp_pipeline
-{
-  "description": "Add timestamp to vehicle data",
-  "processors": [
-    {
-      "set": {
-        "field": "@timestamp",
-        "value": "{{_ingest.timestamp}}"
-      }
-    }
-  ]
-}
-```
-
-### 1. Go to Kibana → Dev Tools
-
-### 2. Create Index
+### 1. Create Index (Go to Kibana → Dev Tools)
 
 Run the below command to create an index:
 
@@ -69,9 +49,29 @@ PUT /datalake-vehicle-data
 }
 
 ```
+### 2. Create a Data View (Go to Stack management → Kibana → Data Views)
+datalake-vehicle-data
+
+### 3. Create a timestamp pipeline (Go to Kibana → Dev Tools)
+```json
+PUT _ingest/pipeline/vehicle_data_timestamp_pipeline
+{
+  "description": "Add timestamp to vehicle data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+```
 
 
-### 3. Enter data to the index
+
+### -----------For Testing Purpose----------------
+### 4. Enter data to the index
 ```json
 POST /datalake-vehicle-data/_doc?pipeline=vehicle_data_timestamp_pipeline
 {
@@ -116,17 +116,17 @@ POST /datalake-vehicle-data/_doc?pipeline=vehicle_data_timestamp_pipeline
   "avg_movement_angle": 32.30159205090093
 }
 ```
-### 4. Verify Data
+### 5. Verify Data
 ```json
 GET datalake-vehicle-data/_search
 ```
 
-### 5. Delete index
+### 6. Delete index
 ```json
 DELETE datalake-vehicle-data
 ```
 
-### 6. Get all indices
+### 7. Get all indices
 ```json
 GET _cat/indices?v
 ```
