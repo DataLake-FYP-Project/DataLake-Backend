@@ -9,7 +9,6 @@ from io import BytesIO
 from ..config.minio_config import MINIO_CONFIG, BUCKETS
 
 
-
 class MinIOConnector:
     def __init__(self, spark):
         self.spark = spark
@@ -132,3 +131,51 @@ class MinIOConnector:
         except Exception as e:
             logging.error(f"Unexpected error listing JSON files: {e}")
             return []
+
+    def fetch_json(self, bucket: str, path: str) -> Dict[str, Any]:
+        """
+        Fetch a specific JSON file from a MinIO bucket and return it as a dictionary.
+
+        Args:
+            bucket: Name of the bucket
+            path: Path to the JSON file within the bucket (e.g., 'data/file.json')
+
+        Returns:
+            Dictionary containing the parsed JSON data
+
+        Raises:
+            S3Error: If there’s an error accessing the file in MinIO
+            json.JSONDecodeError: If the file content is not valid JSON
+            Exception: For other unexpected errors
+        """
+        try:
+            # Ensure the bucket exists
+            if not self.ensure_bucket_exists(bucket):
+                raise Exception(f"Bucket {bucket} does not exist and could not be created")
+
+            # Fetch the object from MinIO
+            response = self.minio_client.get_object(bucket, path)
+            try:
+                # Read the content and decode it as UTF-8
+                json_data = response.read().decode('utf-8')
+            finally:
+                response.close()
+                response.release_conn()
+
+            # Parse the JSON string into a Python dictionary
+            data = json.loads(json_data)
+            if not isinstance(data, dict):
+                raise ValueError("Fetched JSON data is not a dictionary")
+
+            logging.info(f"Successfully fetched JSON file from {bucket}/{path}")
+            return data
+
+        except S3Error as e:
+            logging.error(f"Error fetching JSON file from {bucket}/{path}: {e}")
+            raise
+        except json.JSONDecodeError as e:
+            logging.error(f"Invalid JSON format in {bucket}/{path}: {e}")
+            raise
+        except Exception as e:
+            logging.error(f"Unexpected error fetching JSON file from {bucket}/{path}: {e}")
+            raise
