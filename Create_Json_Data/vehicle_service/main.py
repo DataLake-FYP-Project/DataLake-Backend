@@ -554,7 +554,7 @@ def upload_video():
             points = json.loads(points)
 
             # 👇 Separate the 3 point types
-            ex_points = points.get("point", [])
+            ex_points = points.get("Area", [])
             red_light_points = points.get("red_light", [])
             line_points = points.get("line_points", [])
 

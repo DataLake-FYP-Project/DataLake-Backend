@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 
 sys.path.append(str(Path(__file__).parent.parent))
-from connectors.minio_connector import MinIOConnector
+from ..connectors.minio_connector import MinIOConnector
 from pyspark.sql import functions as F
 from pyspark.sql.functions import col, min as spark_min, max as spark_max, avg, count, collect_list
 
@@ -23,8 +23,8 @@ class PeopleProcessor:
             collect_list("age").alias("age_list"),
             collect_list("gender").alias("gender_list"),
             collect_list("carrying").alias("carrying_list"),
-            collect_list("mask_status").alias("mask_status_list"),
-            avg("mask_confidence").alias("mask_confidence_avg"),
+            # collect_list("mask_status").alias("mask_status_list"),
+            # avg("mask_confidence").alias("mask_confidence_avg"),
             collect_list("in_restricted_area").alias("restricted_area_list"),
             collect_list(col("timestamp").alias("restricted_timestamps")).alias("restricted_timestamps"),
             collect_list("bbox").alias("bbox_list"),
@@ -53,8 +53,8 @@ class PeopleProcessor:
             F.col("detection.age").alias("age"),
             F.col("detection.gender").alias("gender"),
             F.col("detection.carrying").alias("carrying"),
-            F.col("detection.mask_status").alias("mask_status"),
-            F.col("detection.mask_confidence").alias("mask_confidence"),
+            # F.col("detection.mask_status").alias("mask_status"),
+            # F.col("detection.mask_confidence").alias("mask_confidence"),
             F.col("detection.in_restricted_area").alias("in_restricted_area"),
             F.col("detection.confidence").alias("confidence")
         ).filter(F.col("tracker_id").isNotNull())
@@ -63,7 +63,7 @@ class PeopleProcessor:
         """Process flat detections format"""
         detection_fields = [f.name for f in df.schema["detections"].dataType.fields]
         detections_expr = F.array([F.col(f"detections.{field}") for field in detection_fields])
-        
+
         return df.select(
             F.explode(detections_expr).alias("detection")
         ).select(
@@ -84,14 +84,14 @@ class PeopleProcessor:
             F.col("detection.age").alias("age"),
             F.col("detection.gender").alias("gender"),
             F.col("detection.carrying").alias("carrying"),
-            F.coalesce(
-                F.col("detection.mask_status"),
-                F.lit("unknown")
-            ).alias("mask_status"),
-            F.coalesce(
-                F.col("detection.mask_confidence"),
-                F.lit(0.0)
-            ).alias("mask_confidence"),
+            # F.coalesce(
+            #   F.col("detection.mask_status"),
+            #   F.lit("unknown")
+            # ).alias("mask_status"),
+            # F.coalesce(
+            #  F.col("detection.mask_confidence"),
+            #    F.lit(0.0)
+            # ).alias("mask_confidence"),
             F.coalesce(
                 F.col("detection.in_restricted_area"),
                 F.col("detection.entered_restricted"),
@@ -99,14 +99,14 @@ class PeopleProcessor:
             ).alias("in_restricted_area"),
             F.col("detection.confidence").alias("confidence")
         ).filter(
-            F.col("detection").isNotNull() & 
+            F.col("detection").isNotNull() &
             F.col("tracker_id").isNotNull()
         )
 
     def _enrich_person(self, row):
         """Enrich person data with aggregated information"""
         tid = str(row["tracker_id"])
-        
+
         def get_most_frequent(lst):
             if not lst:
                 return "Unknown"
@@ -117,13 +117,13 @@ class PeopleProcessor:
 
         age = get_most_frequent(row["age_list"])
         gender = get_most_frequent(row["gender_list"])
-        mask_status = get_most_frequent(row["mask_status_list"])
+        # mask_status = get_most_frequent(row["mask_status_list"])
         carrying = get_most_frequent(row["carrying_list"])
 
         restricted_entry_time = None
         restricted_areas = row["restricted_area_list"] or []
         restricted_timestamps = row["restricted_timestamps"] or []
-        
+
         for i, is_restricted in enumerate(restricted_areas):
             if is_restricted and i < len(restricted_timestamps):
                 restricted_entry_time = restricted_timestamps[i]
@@ -134,8 +134,8 @@ class PeopleProcessor:
             "gender": gender,
             "carrying": carrying,
             "confidence_avg": float(row["confidence_avg"] or 0.0),
-            "mask_status": mask_status,
-            "mask_confidence_avg": float(row["mask_confidence_avg"] or 0.0),
+            # "mask_status": mask_status,
+            # "mask_confidence_avg": float(row["mask_confidence_avg"] or 0.0),
             "entered_restricted_area": restricted_entry_time is not None,
             "restricted_area_entry_time": restricted_entry_time.isoformat() if restricted_entry_time else None,
             "first_detection": row["first_detection"].isoformat(),

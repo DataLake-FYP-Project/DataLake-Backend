@@ -8,7 +8,7 @@ from collections import defaultdict
 MINIO_ENDPOINT = 'http://127.0.0.1:9000'
 ACCESS_KEY = 'minioadmin'
 SECRET_KEY = 'minioadmin'
-BUCKET_NAME = 'vehicle-data'
+BUCKET_NAME = 'raw'
 
 # Elasticsearch Connection Details
 ES_HOST = "http://localhost:9200"
@@ -31,40 +31,52 @@ def get_average_speed(speeds):
 def process_tracker_data(data):
     tracker_data = defaultdict(lambda: {
         "class_id": [],
-        "class_name": [],
+        "vehicle_type": [],
         "vehicle_color": [],
-        "direction": [],
-        "lane": [],
+        "vehicle_direction": [],
+        "vehicle_lane": [],
         "confidence": [],
-        "speed": []
+        "vehicle_speed": []
     })
 
     for frame in data:
-        for detection in frame["detections"]:
-            tracker_id = detection["tracker_id"]
-            tracker_data[tracker_id]["class_id"].append(detection["class_id"])
-            tracker_data[tracker_id]["class_name"].append(detection["class_name"])
-            tracker_data[tracker_id]["vehicle_color"].append(detection["vehicle_color"])
-            tracker_data[tracker_id]["direction"].append(detection["direction"])
-            tracker_data[tracker_id]["lane"].append(detection["lane"])
-            tracker_data[tracker_id]["confidence"].append(detection["confidence"])
-            tracker_data[tracker_id]["speed"].append(detection["speed"])
+        for detection in frame.get("detections", []):
+            tracker_id = detection.get("tracker_id")
+            if tracker_id is None:
+                continue  # Skip detection if no tracker_id
+
+            if "class_id" in detection:
+                tracker_data[tracker_id]["class_id"].append(detection["class_id"])
+            if "vehicle_type" in detection:
+                tracker_data[tracker_id]["vehicle_type"].append(detection["vehicle_type"])
+            if "vehicle_color" in detection:
+                tracker_data[tracker_id]["vehicle_color"].append(detection["vehicle_color"])
+            if "vehicle_direction" in detection:
+                tracker_data[tracker_id]["vehicle_direction"].append(detection["vehicle_direction"])
+            if "vehicle_lane" in detection:
+                tracker_data[tracker_id]["vehicle_lane"].append(detection["vehicle_lane"])
+            if "confidence" in detection:
+                tracker_data[tracker_id]["confidence"].append(detection["confidence"])
+            if "vehicle_speed" in detection:
+                tracker_data[tracker_id]["vehicle_speed"].append(detection["vehicle_speed"])
 
     output_data = []
     for tracker_id, attributes in tracker_data.items():
         output_entry = {
             "tracker_id": tracker_id,
             "class_id": get_max_percentage(attributes["class_id"]),
-            "class_name": get_max_percentage(attributes["class_name"]),
+            "vehicle_type": get_max_percentage(attributes["vehicle_type"]),
             "vehicle_color": get_max_percentage(attributes["vehicle_color"]),
-            "direction": get_max_percentage(attributes["direction"]),
-            "lane": get_max_percentage(attributes["lane"]),
+            "vehicle_direction": get_max_percentage(attributes["vehicle_direction"]),
+            "vehicle_lane": get_max_percentage(attributes["vehicle_lane"]),
             "average_confidence": get_average_confidence(attributes["confidence"]),
-            "average_speed": get_average_speed(attributes["speed"])
+            "average_speed": get_average_speed(attributes["vehicle_speed"])
         }
         output_data.append(output_entry)
 
     return output_data
+
+
 
 def convert_json_format(input_path, output_path):
     with open(input_path, "r") as f:
@@ -77,7 +89,7 @@ def convert_json_format(input_path, output_path):
 
     print(f"Transformed JSON saved to {output_path}")
 
-def vehicle_upload_to_minio(file_path, video_name):
+def vehicle_upload_to_minio(file_path):
     s3 = boto3.client(
         's3',
         endpoint_url=MINIO_ENDPOINT,
@@ -85,7 +97,7 @@ def vehicle_upload_to_minio(file_path, video_name):
         aws_secret_access_key=SECRET_KEY,
     )
     try:
-        folder_path = f"{video_name}/"
+        folder_path = f"vehicle_detection/"
         s3_key = f"{folder_path}{os.path.basename(file_path)}"
         s3.upload_file(file_path, BUCKET_NAME, s3_key)
         print(f"JSON File uploaded to MinIO: s3://{BUCKET_NAME}/{s3_key}")

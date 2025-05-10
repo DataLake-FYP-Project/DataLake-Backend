@@ -133,7 +133,7 @@ if video_file:
             red_light_selected = bool(st.session_state.points_data.get("red_light"))
 
             points_to_send = {
-                "Area": st.session_state.points_data.get("point") if point_selected else [],
+                "Area": st.session_state.points_data.get("Area") if point_selected else [],
                 "red_light": st.session_state.points_data.get("red_light") if red_light_selected else [],
                 "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
