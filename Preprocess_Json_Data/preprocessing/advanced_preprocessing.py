@@ -62,7 +62,7 @@ class CombinedProcessor:
             logging.info(f"Error processing file {file}: {str(e)}")
             return None
 
-    def process_all(self, input_bucket: str, output_bucket: str, detection_type,processed_file_name):
+    def process_all(self, input_bucket: str, output_bucket: str, detection_type,filename):
         """Process both people and vehicle detection files with error handling"""
         start_time = datetime.now(timezone.utc)
 
@@ -70,7 +70,7 @@ class CombinedProcessor:
             # Process people detections
             print("\n=== Processing People Detections ===")
             try:
-                people_file = self.people_processor.minio.get_json_file(input_bucket, f"people_detection/{processed_file_name}")
+                people_file = self.people_processor.minio.get_json_file(input_bucket, f"people_detection/preprocessed_{filename}")
                 processed_df = self._process_file(self.people_processor, input_bucket, output_bucket, people_file,
                                                     "people_detection")
                 if processed_df:
@@ -83,7 +83,7 @@ class CombinedProcessor:
                         "people_count": len(enriched_data),
                         "people": enriched_data
                     })
-                    out_path = f"people_detection/refine_{people_file}"
+                    out_path = f"people_detection/refine_{filename}"
                     self._write_output(output_bucket, out_path, output)
                     logging.info(f"Successfully processed {len(enriched_data)} people in {people_file}")
             except Exception as e:
@@ -94,7 +94,7 @@ class CombinedProcessor:
             # Process vehicle detections
             print("\n=== Processing Vehicle Detections ===")
             try:
-                vehicle_file = self.vehicle_processor.minio.get_json_file(input_bucket, f"vehicle_detection/{processed_file_name}")
+                vehicle_file = self.vehicle_processor.minio.get_json_file(input_bucket, f"vehicle_detection/preprocessed_{filename}")
                 processed_df = self._process_file(self.vehicle_processor, input_bucket, output_bucket, vehicle_file,
                                                     "vehicle_detection")
                 if processed_df:
@@ -107,7 +107,7 @@ class CombinedProcessor:
                         "vehicle_count": len(enriched_data),
                         "vehicles": enriched_data
                     })
-                    out_path = f"vehicle_detection/refine_{vehicle_file}"
+                    out_path = f"vehicle_detection/refine_{filename}"
                     self._write_output(output_bucket, out_path, output)
                     logging.info(f"Successfully processed {len(enriched_data)} vehicles in {vehicle_file}")
             except Exception as e:
@@ -119,11 +119,11 @@ class CombinedProcessor:
         logging.info(f"\nCombined processing completed in {duration:.2f} seconds")
 
 
-def advanced_preprocessing(detection_type,processed_file_name):
+def advanced_preprocessing(detection_type,filename):
     spark = create_spark_session()
     try:
         processor = CombinedProcessor(spark, detection_type)
-        processor.process_all(BUCKETS["processed"], BUCKETS["refine"], detection_type,processed_file_name)
+        processor.process_all(BUCKETS["processed"], BUCKETS["refine"], detection_type,filename)
     except Exception as e:
         logging.info(f"Fatal error in combined processing: {str(e)}")
     finally:
