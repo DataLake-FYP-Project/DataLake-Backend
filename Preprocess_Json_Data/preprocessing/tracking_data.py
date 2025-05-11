@@ -3,7 +3,7 @@ from pyspark.sql.functions import col, lit, explode, to_timestamp, struct, array
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType, BooleanType
 from typing import Dict, Optional
 import logging
-from preprocessing.common import *
+from .common import *
 
 TRACKING_DATA_SCHEMA = StructType([
     StructField("tracker_id", StringType(), False),

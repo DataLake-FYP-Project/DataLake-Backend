@@ -18,3 +18,11 @@
 *.webp
 *.json
 
+#remove unwanted direcotries
+**/__pycache__/
+.idea/
+.vscode/
+
+
+
+

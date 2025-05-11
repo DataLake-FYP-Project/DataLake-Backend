@@ -6,7 +6,8 @@ from typing import Dict, Any, List
 from minio import Minio
 from minio.error import S3Error
 from io import BytesIO
-from config.minio_config import MINIO_CONFIG, BUCKETS
+from ..config.minio_config import MINIO_CONFIG, BUCKETS
+
 
 class MinIOConnector:
     def __init__(self, spark):
@@ -31,7 +32,7 @@ class MinIOConnector:
         except Exception as e:
             logging.error(f"Error verifying buckets: {e}")
             return False
-    
+
     def read_json(self, bucket: str, path: str, multiLine=True) -> DataFrame:
         """Read JSON data from MinIO"""
         self.ensure_bucket_exists(bucket)
@@ -40,7 +41,6 @@ class MinIOConnector:
                 .option("multiLine", multiLine)
                 .option("mode", "PERMISSIVE")
                 .json(s3_path))
-    
 
     def write_json(self, df: DataFrame, bucket: str, path: str, mode: str = "overwrite"):
         """Write DataFrame as proper JSON array to MinIO"""
@@ -77,8 +77,6 @@ class MinIOConnector:
         except S3Error as e:
             logging.error(f"Error cleaning up temp files: {e}")
 
-   
-
     def write_single_json(self, data: Dict[str, Any], bucket: str, path: str):
         """Write Python dict as single formatted JSON file"""
         self.ensure_bucket_exists(bucket)
@@ -96,14 +94,12 @@ class MinIOConnector:
             content_type='application/json'
         )
 
-    
-
     def write_json_string(self, json_str: str, bucket: str, path: str):
         """Write a JSON string directly to MinIO"""
         self.ensure_bucket_exists(bucket)
         json_bytes = json_str.encode('utf-8')
         json_stream = BytesIO(json_bytes)
-        
+
         self.minio_client.put_object(
             bucket,
             path,
@@ -111,8 +107,7 @@ class MinIOConnector:
             length=len(json_bytes),
             content_type='application/json'
         )
-    
-    
+
     def list_json_files(self, bucket: str, folder: str = "") -> List[str]:
         """
         List all JSON files in a bucket folder
@@ -126,7 +121,7 @@ class MinIOConnector:
             objects = self.minio_client.list_objects(bucket, prefix=folder, recursive=True)
             json_files = [
                 obj.object_name.split('/')[-1]  # Get just the filename
-                for obj in objects 
+                for obj in objects
                 if obj.object_name.endswith('.json') and not obj.is_dir
             ]
             return json_files
@@ -136,3 +131,51 @@ class MinIOConnector:
         except Exception as e:
             logging.error(f"Unexpected error listing JSON files: {e}")
             return []
+
+    def fetch_json(self, bucket: str, path: str) -> Dict[str, Any]:
+        """
+        Fetch a specific JSON file from a MinIO bucket and return it as a dictionary.
+
+        Args:
+            bucket: Name of the bucket
+            path: Path to the JSON file within the bucket (e.g., 'data/file.json')
+
+        Returns:
+            Dictionary containing the parsed JSON data
+
+        Raises:
+            S3Error: If there’s an error accessing the file in MinIO
+            json.JSONDecodeError: If the file content is not valid JSON
+            Exception: For other unexpected errors
+        """
+        try:
+            # Ensure the bucket exists
+            if not self.ensure_bucket_exists(bucket):
+                raise Exception(f"Bucket {bucket} does not exist and could not be created")
+
+            # Fetch the object from MinIO
+            response = self.minio_client.get_object(bucket, path)
+            try:
+                # Read the content and decode it as UTF-8
+                json_data = response.read().decode('utf-8')
+            finally:
+                response.close()
+                response.release_conn()
+
+            # Parse the JSON string into a Python dictionary
+            data = json.loads(json_data)
+            if not isinstance(data, dict):
+                raise ValueError("Fetched JSON data is not a dictionary")
+
+            logging.info(f"Successfully fetched JSON file from {bucket}/{path}")
+            return data
+
+        except S3Error as e:
+            logging.error(f"Error fetching JSON file from {bucket}/{path}: {e}")
+            raise
+        except json.JSONDecodeError as e:
+            logging.error(f"Invalid JSON format in {bucket}/{path}: {e}")
+            raise
+        except Exception as e:
+            logging.error(f"Unexpected error fetching JSON file from {bucket}/{path}: {e}")
+            raise

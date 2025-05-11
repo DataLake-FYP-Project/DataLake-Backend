@@ -1,37 +1,40 @@
-from preprocessing.advanced_preprocessing import CombinedProcessor
-from config.spark_config import create_spark_session
-from config.minio_config import BUCKETS
-from connectors.minio_connector import MinIOConnector
-from preprocessing.frame_data import process_frame_data
+# from Preprocess_Json_Data.preprocessing.advanced_preprocessing import CombinedProcessor
+from Preprocess_Json_Data.preprocessing.advanced_preprocessing import advanced_preprocessing
+from Preprocess_Json_Data.config.spark_config import create_spark_session
+from Preprocess_Json_Data.config.minio_config import BUCKETS
+from Preprocess_Json_Data.connectors.minio_connector import MinIOConnector
+from Preprocess_Json_Data.preprocessing.frame_data import process_frame_data
 import logging
 import os
 from dotenv import load_dotenv
-from preprocessing.frame_data_people_detection import process_people_json_data
+from Preprocess_Json_Data.preprocessing.frame_data_people_detection import process_people_json_data
 
 # Load environment variables
 load_dotenv()
 
+
 def process_video_data(spark, input_path, video_type):
     """Process video data and return processed DataFrame with output path"""
     minio_conn = MinIOConnector(spark)
-    
+
     try:
         type_folder = "vehicle_detection" if video_type.lower() == "vehicle" else "people_detection"
         full_input_path = f"{type_folder}/{input_path}"
-        
+
         raw_df = minio_conn.read_json(BUCKETS["raw"], full_input_path)
-        
+
         if video_type.lower() == "vehicle":
             processed_df = process_frame_data(raw_df)
             output_path = f"vehicle_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         else:
             processed_df = process_people_json_data(raw_df)
             output_path = f"people_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
-        
+
         return processed_df, output_path
     except Exception as e:
         logging.error(f"Data processing failed for {input_path}: {e}")
         raise
+
 
 def write_output_json(spark, df, output_path):
     try:
@@ -43,52 +46,97 @@ def write_output_json(spark, df, output_path):
         logging.error(f"Failed to write output to processed/{clean_path}: {e}")
         return False
 
-def main():
+
+def fetch_refined_file(spark, file_path: str, file_name: str, detection_type: str):
+    """
+    Fetch a specific refined JSON file from the refine bucket.
+
+    Args:
+        spark: Spark session instance
+        file_path: Path to the file (e.g., 'vehicle_detection' or 'people_detection')
+        file_name: Name of the file (e.g., 'refine_preprocessed_vehicle-counting1_2025-05-06_12-20-22.json')
+        detection_type: Type of detection ('Vehicle' or 'People')
+
+    Returns:
+        Dict containing the parsed JSON data
+
+    Raises:
+        Exception: If the file cannot be fetched or parsed
+    """
+    try:
+        minio_conn = MinIOConnector(spark)
+
+        # Construct the full file path
+        type_folder = "vehicle_detection" if detection_type.lower() == "vehicle" else "people_detection"
+        full_path = f"{file_path}/{file_name}" if file_path else file_name
+
+        # Ensure the refine bucket exists
+        if not minio_conn.ensure_bucket_exists(BUCKETS["refine"]):
+            raise Exception(f"Refine bucket {BUCKETS['refine']} does not exist and could not be created")
+
+        # Fetch the JSON file
+        logging.info(f"Fetching refined file: {full_path} from bucket {BUCKETS['refine']}")
+        data = minio_conn.fetch_json(BUCKETS["refine"], full_path)
+
+        return data
+
+    except Exception as e:
+        logging.error(f"Failed to fetch refined file {full_path} from {BUCKETS['refine']}: {e}")
+        raise
+
+
+def spark_preprocessing(filename, detection_type):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    
+
     spark = create_spark_session()
     minio_conn = MinIOConnector(spark)
-    
+
     if not minio_conn.ensure_bucket_exists(BUCKETS["raw"]):
         logging.error("Cannot proceed without required buckets")
         return
 
     try:
         # Get files using the MinIOConnector method
-        vehicle_files = minio_conn.list_json_files(BUCKETS["raw"], "vehicle_detection/")
-        people_files = minio_conn.list_json_files(BUCKETS["raw"], "people_detection/")
-        
-        if not vehicle_files:
-            logging.warning("No vehicle detection files found in raw bucket")
-        if not people_files:
-            logging.warning("No people detection files found in raw bucket")
-        print("\n=== Starting Basic Preprocessing=== ")
-        # Process vehicle files
-        for vehicle_file in vehicle_files:
-            try:
-                logging.info(f"Processing vehicle file: {vehicle_file}")
-                vehicle_df, vehicle_path = process_video_data(spark, vehicle_file, "vehicle")
-                if not write_output_json(spark, vehicle_df, vehicle_path):
-                    logging.error(f"Failed to process vehicle file: {vehicle_file}")
-            except Exception as e:
-                logging.error(f"Error processing vehicle file {vehicle_file}: {e}")
+        if detection_type == "Vehicle":
+            vehicle_files = minio_conn.list_json_files(BUCKETS["raw"], f"vehicle_detection/{filename}")
+            if not vehicle_files:
+                logging.warning("No vehicle detection files found in raw bucket")
 
-        # Process people files
-        for people_file in people_files:
-            try:
-                logging.info(f"Processing people file: {people_file}")
-                people_df, people_path = process_video_data(spark, people_file, "people")
-                if not write_output_json(spark, people_df, people_path):
-                    logging.error(f"Failed to process people file: {people_file}")
-            except Exception as e:
-                logging.error(f"Error processing people file {people_file}: {e}")
+            print("\n=== Starting Basic Preprocessing=== ")
+
+            # Process vehicle files
+            for vehicle_file in vehicle_files:
+                try:
+                    logging.info(f"Processing vehicle file: {vehicle_file}")
+                    vehicle_df, vehicle_path = process_video_data(spark, vehicle_file, "vehicle")
+                    if not write_output_json(spark, vehicle_df, vehicle_path):
+                        logging.error(f"Failed to process vehicle file: {vehicle_file}")
+                except Exception as e:
+                    logging.error(f"Error processing vehicle file {vehicle_file}: {e}")
+
+        elif detection_type == "People":
+            people_files = minio_conn.list_json_files(BUCKETS["raw"], f"people_detection/{filename}")
+            if not people_files:
+                logging.warning("No people detection files found in raw bucket")
+
+            print("\n=== Starting Basic Preprocessing=== ")
+
+            # Process people files
+            for people_file in people_files:
+                try:
+                    logging.info(f"Processing people file: {people_file}")
+                    people_df, people_path = process_video_data(spark, people_file, "people")
+                    if not write_output_json(spark, people_df, people_path):
+                        logging.error(f"Failed to process people file: {people_file}")
+                except Exception as e:
+                    logging.error(f"Error processing people file {people_file}: {e}")
 
         logging.info("Basic Processing completed")
+
         print("\n=== Starting Advanced Preprocessing=== ")
         try:
-            processor = CombinedProcessor(spark)
-            processor.process_all(BUCKETS["processed"], BUCKETS["refine"])
-            logging.info("Advanced preprocessing completed successfully")
+            processed_file_name=f"preprocessed_{filename}"
+            advanced_preprocessing(detection_type,processed_file_name)
         except Exception as e:
             logging.error(f"Error during advanced preprocessing: {e}")
 
@@ -98,6 +146,3 @@ def main():
     finally:
         spark.stop()
         logging.info("Spark session stopped")
-
-if __name__ == "__main__":
-    main()

@@ -21,13 +21,10 @@ FRAME_SAVE_DIR = "results/Frames"
 
 SECOND_BACKEND_URL = "http://localhost:8013/upload_2_people"
 
-
 # Object classes (COCO dataset)
 BAG_CLASSES = [24, 26, 28]  # backpack, handbag, suitcase
 CAT_CLASS = 15
 DOG_CLASS = 16
-
-
 
 
 # ===== Helper Functions =====
@@ -110,7 +107,6 @@ def extract_video_metadata(video_path):
             # If creation_time is not found or is None, use the current time
             dt = datetime.now(timezone.utc)
 
-
         return metadata
 
     except ffmpeg.Error as e:
@@ -119,6 +115,7 @@ def extract_video_metadata(video_path):
     except Exception as e:
         print(f"Error: {str(e)}")
         return None
+
 
 def is_carried(obj_bbox, person_bbox):
     """Check if an object is being carried by a person"""
@@ -129,6 +126,7 @@ def is_carried(obj_bbox, person_bbox):
     overlap = (ox1 > px1) and (ox2 < px2) and (oy1 > py1) and (oy2 < py2)
     in_carry_position = obj_center_y > lower_half_threshold
     return overlap and in_carry_position
+
 
 def analyze_person(frame, bbox, objects):
     """Analyze a person's attributes at entry/exit points"""
@@ -156,8 +154,8 @@ def analyze_person(frame, bbox, objects):
 
     return gender, age, carried_items if carried_items else "no objects"
 
-def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, restricted_points):
 
+def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, restricted_points):
     total_count = 0
     entering_count = 0
     exiting_count = 0
@@ -167,15 +165,15 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
     restricted_people = set()  # Track people who entered restricted area
 
     model_path = os.path.join("Model", "yolov8x.pt")
-    model = YOLO(model_path)  
-    model.fuse() 
+    model = YOLO(model_path)
+    model.fuse()
 
     # ===== Main Processing =====
-    
+
     video_info = sv.VideoInfo.from_video_path(SOURCE_VIDEO_PATH)
 
     restricted_area = np.array(restricted_points)
-    area1 = np.array(entry_points)  #near the door
+    area1 = np.array(entry_points)  # near the door
     area2 = np.array(exit_points)
 
     if area1.size == 0:
@@ -184,7 +182,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
         print("🚫 Entry points are missing!")
     if restricted_area.size == 0:
         print("⚠️ Restricted area points are missing!")
-
 
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -204,29 +201,31 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
         print("No 'creation_time' found. Using current time as fallback.")
         recording_time = datetime.now(timezone.utc)
 
-    frame_detections = [] 
+    frame_detections = []
     tracker_history = {}
-        
+
     with sv.VideoSink(TARGET_VIDEO_PATH, video_info) as sink:
         for frame_number, result in enumerate(
-            model.track(source=SOURCE_VIDEO_PATH, tracker="bytetrack.yaml", show=False, stream=True, persist=True)
+                model.track(source=SOURCE_VIDEO_PATH, tracker="bytetrack.yaml", show=False, stream=True, persist=True)
         ):
             frame = result.orig_img
             detections = sv.Detections.from_yolov8(result)
-            
+
             current_frame_data = {
                 "frame_number": frame_number,
-                "timestamp": (recording_time + timedelta(seconds=frame_number / video_info.fps)).strftime("%Y-%m-%d %H:%M:%S"),
+                "timestamp": (recording_time + timedelta(seconds=frame_number / video_info.fps)).strftime(
+                    "%Y-%m-%d %H:%M:%S"),
                 "detections": []
             }
 
             # Initialize objects and people lists for this frame
             objects = []
             people = []
-            
+
             if result.boxes.id is not None:
                 tracker_ids = result.boxes.id.cpu().numpy().astype(int)
-                for i, (bbox, conf, class_id) in enumerate(zip(detections.xyxy, detections.confidence, detections.class_id)):
+                for i, (bbox, conf, class_id) in enumerate(
+                        zip(detections.xyxy, detections.confidence, detections.class_id)):
                     if class_id == 0:  # Person
                         tracker_id = tracker_ids[i] if i < len(tracker_ids) else None
                         if tracker_id is not None:
@@ -237,7 +236,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
             # Process each person in the current frame
             for bbox, conf, tracker_id in people:
                 x1, y1, x2, y2 = bbox
-                bottom_center = (int((x1+x2)/2), int(y2))
+                bottom_center = (int((x1 + x2) / 2), int(y2))
 
                 # Check area crossings
                 in_area1 = cv2.pointPolygonTest(area1, bottom_center, False) >= 0
@@ -256,9 +255,9 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
                         'exit_time': None,
                         'gender': "Unknown",
                         'age': "Unknown",
-                        'carrying': "none",
-                        'mask_status': "unknown",
-                        'mask_confidence': 0.0
+                        'carrying': "none"
+                        # 'mask_status': "unknown",
+                        # 'mask_confidence': 0.0
                     }
                 else:
                     tracker_history[tracker_id]['last_seen'] = frame_number
@@ -271,17 +270,18 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
 
                 # Analyze person attributes if entering monitored area
                 if (in_area1 or in_area2) and tracker_history[tracker_id]['entry_frame'] is None:
-                    gender, age, mask_status, mask_conf, carrying = analyze_person(frame, bbox, objects)
+                    # mask_status, mask_conf,
+                    gender, age, carrying = analyze_person(frame, bbox, objects)
                     entry_time = recording_time + timedelta(seconds=frame_number / video_info.fps)
-                    
+
                     tracker_history[tracker_id].update({
                         'entry_frame': frame_number,
                         'entry_time': entry_time.strftime("%Y-%m-%d %H:%M:%S"),
                         'gender': gender,
                         'age': age,
-                        'carrying': carrying,
-                        'mask_status': mask_status,
-                        'mask_confidence': mask_conf
+                        'carrying': carrying
+                        # 'mask_status': mask_status,
+                        # 'mask_confidence': mask_conf
                     })
                     entering_count += 1
                     total_count += 1
@@ -299,8 +299,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
                     "gender": tracker_history[tracker_id]['gender'],
                     "age": tracker_history[tracker_id]['age'],
                     "carrying": tracker_history[tracker_id]['carrying'],
-                    "mask_status": tracker_history[tracker_id]['mask_status'],
-                    "mask_confidence": tracker_history[tracker_id]['mask_confidence'],
+                    # "mask_status": tracker_history[tracker_id]['mask_status'],
+                    # "mask_confidence": tracker_history[tracker_id]['mask_confidence'],
                     "entry_time": tracker_history[tracker_id]['entry_time'],
                     "exit_time": tracker_history[tracker_id]['exit_time'],
                     "first_seen_frame": tracker_history[tracker_id]['first_seen'],
@@ -312,13 +312,15 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
 
                 # Draw visualizations
                 if tracker_history[tracker_id]['entry_time']:
-                    label = f"ID: {tracker_id} | {tracker_history[tracker_id]['gender']}, {tracker_history[tracker_id]['age']} | Mask: {tracker_history[tracker_id]['mask_status']}"
+                    # | Mask: {tracker_history[tracker_id]['mask_status']}
+                    label = f"ID: {tracker_id} | {tracker_history[tracker_id]['gender']}, {tracker_history[tracker_id]['age']} "
                     if tracker_history[tracker_id]['entered_restricted']:
                         cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 3)
                         label += " | RESTRICTED"
                     else:
                         cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-                    cv2.putText(frame, label, (int(x1), int(y1)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
+                    cv2.putText(frame, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),
+                                1)
 
             # Add frame data to our collection
             frame_detections.append(current_frame_data)
@@ -326,17 +328,16 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
             cv2.polylines(frame, [area1], isClosed=True, color=(255, 0, 0), thickness=2)
             cv2.polylines(frame, [area2], isClosed=True, color=(0, 255, 0), thickness=2)
             cv2.polylines(frame, [restricted_area], isClosed=True, color=(0, 0, 255), thickness=2)
-            cv2.putText(frame, "RESTRICTED AREA", (restricted_area[0][0], restricted_area[0][1]-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            cv2.putText(frame, "RESTRICTED AREA", (restricted_area[0][0], restricted_area[0][1] - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
             cv2.putText(frame, f"Total: {total_count}", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
             cv2.putText(frame, f"Entering: {exiting_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             cv2.putText(frame, f"Exiting: {entering_count}", (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
             cv2.putText(frame, f"Restricted Area: {restricted_area_count}", (50, 200),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
             sink.write_frame(frame)
-
 
     # Update exit times for people who were tracked
     for tracker_id, data in tracker_history.items():
@@ -365,6 +366,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
         json.dump(json_output, f, indent=4)
     return json_output_path
 
+
 @app.route("/upload_people", methods=["POST"])
 def upload_video():
     if "file" not in request.files:
@@ -375,7 +377,7 @@ def upload_video():
         return jsonify({"error": "No selected file"}), 400
 
     points = request.form.get("points", None)
-    print("points",points)
+    print("points", points)
 
     if points:
         try:
@@ -426,7 +428,6 @@ def upload_video():
         "json_output": json_output_path,
         "second_backend_response": response_data
     }), 200
-
 
 
 if __name__ == "__main__":
