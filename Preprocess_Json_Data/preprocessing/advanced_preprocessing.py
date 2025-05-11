@@ -62,7 +62,7 @@ class CombinedProcessor:
             logging.info(f"Error processing file {file}: {str(e)}")
             return None
 
-    def process_all(self, input_bucket: str, output_bucket: str, detection_type):
+    def process_all(self, input_bucket: str, output_bucket: str, detection_type,processed_file_name):
         """Process both people and vehicle detection files with error handling"""
         start_time = datetime.now(timezone.utc)
 
@@ -70,7 +70,7 @@ class CombinedProcessor:
             # Process people detections
             print("\n=== Processing People Detections ===")
             try:
-                people_files = self.people_processor.minio.list_json_files(input_bucket, "people_detection/")
+                people_files = self.people_processor.minio.list_json_files(input_bucket, f"people_detection/{processed_file_name}")
                 for file in people_files:
                     processed_df = self._process_file(self.people_processor, input_bucket, output_bucket, file,
                                                       "people_detection")
@@ -95,7 +95,7 @@ class CombinedProcessor:
             # Process vehicle detections
             print("\n=== Processing Vehicle Detections ===")
             try:
-                vehicle_files = self.vehicle_processor.minio.list_json_files(input_bucket, "vehicle_detection/")
+                vehicle_files = self.vehicle_processor.minio.list_json_files(input_bucket, f"vehicle_detection/{processed_file_name}")
                 for file in vehicle_files:
                     processed_df = self._process_file(self.vehicle_processor, input_bucket, output_bucket, file,
                                                       "vehicle_detection")
@@ -121,11 +121,11 @@ class CombinedProcessor:
         logging.info(f"\nCombined processing completed in {duration:.2f} seconds")
 
 
-def advanced_preprocessing(detection_type):
+def advanced_preprocessing(detection_type,processed_file_name):
     spark = create_spark_session()
     try:
         processor = CombinedProcessor(spark, detection_type)
-        processor.process_all(BUCKETS["processed"], BUCKETS["refine"], detection_type)
+        processor.process_all(BUCKETS["processed"], BUCKETS["refine"], detection_type,processed_file_name)
     except Exception as e:
         logging.info(f"Fatal error in combined processing: {str(e)}")
     finally:

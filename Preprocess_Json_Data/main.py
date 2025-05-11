@@ -135,7 +135,8 @@ def spark_preprocessing(filename, detection_type):
 
         print("\n=== Starting Advanced Preprocessing=== ")
         try:
-            advanced_preprocessing(detection_type)
+            processed_file_name=f"preprocessed_{filename}"
+            advanced_preprocessing(detection_type,processed_file_name)
         except Exception as e:
             logging.error(f"Error during advanced preprocessing: {e}")
 
