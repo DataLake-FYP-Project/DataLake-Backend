@@ -1,4 +1,5 @@
 # from Preprocess_Json_Data.preprocessing.advanced_preprocessing import CombinedProcessor
+from datetime import datetime, timezone
 from Preprocess_Json_Data.preprocessing.advanced_preprocessing import advanced_preprocessing
 from Preprocess_Json_Data.config.spark_config import create_spark_session
 from Preprocess_Json_Data.config.minio_config import BUCKETS
@@ -29,7 +30,6 @@ def process_video_data(spark, input_path, video_type):
         else:
             processed_df = process_people_json_data(raw_df)
             output_path = f"people_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
-
         return processed_df, output_path
     except Exception as e:
         logging.error(f"Data processing failed for {input_path}: {e}")
@@ -95,15 +95,15 @@ def spark_preprocessing(filename, detection_type):
         logging.error("Cannot proceed without required buckets")
         return
 
+    print("\n")
+    logging.info("Starting Basic Preprocessing")
+    start_time = datetime.now(timezone.utc)
     try:
         # Get files using the MinIOConnector method
         if detection_type == "Vehicle":
             vehicle_file = minio_conn.get_json_file(BUCKETS["raw"], f"vehicle_detection/{filename}")
             if not vehicle_file:
                 logging.warning(f"No {filename} file found in vehicle_detection folder")
-
-            print("\n")
-            logging.info("Starting Basic Preprocessing")
 
             # Process vehicle files
             try:
@@ -119,9 +119,6 @@ def spark_preprocessing(filename, detection_type):
             if not people_file:
                  logging.warning(f"No {filename} file found in raw bucket people detection folder")
 
-            print("\n")
-            logging.info("Starting Basic Preprocessing")
-
             # Process people files
             try:
                 logging.info(f"Processing people file: {people_file}")
@@ -131,8 +128,9 @@ def spark_preprocessing(filename, detection_type):
             except Exception as e:
                 logging.error(f"Error processing people file {people_file}: {e}")
         
-        print("\n")
-        logging.info("Basic Processing completed")
+        end_time = datetime.now(timezone.utc)
+        duration = (end_time - start_time).total_seconds()
+        logging.info(f"Basic Processing completed in {duration:.2f} seconds")
 
         print("\n")
         logging.info("Starting Advanced Preprocessing ")
@@ -142,9 +140,10 @@ def spark_preprocessing(filename, detection_type):
             logging.error(f"Error during advanced preprocessing: {e}")
 
         print("\n")
-        logging.info(" All processing stages completed ")
+        logging.info("All processing stages completed ")
     except Exception as e:
         logging.error(f"Fatal error in processing pipeline: {e}")
     finally:
         spark.stop()
         logging.info("Spark session stopped")
+        print("\n")

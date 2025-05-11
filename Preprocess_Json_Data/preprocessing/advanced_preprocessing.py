@@ -31,7 +31,8 @@ class CombinedProcessor:
 
     def _process_file(self, processor, input_bucket, output_bucket, file, prefix):
         """Common file processing logic"""
-        logging.info(f"\nProcessing {file}...")
+
+        logging.info(f"Processing {file}...")
         try:
             df = processor.minio.read_json(input_bucket, f"{prefix}/{file}")
 
@@ -68,7 +69,7 @@ class CombinedProcessor:
 
         if detection_type == "People":
             # Process people detections
-            print("\n=== Processing People Detections ===")
+            logging.info("Processing People Detections")
             try:
                 people_file = self.people_processor.minio.get_json_file(input_bucket, f"people_detection/preprocessed_{filename}")
                 processed_df = self._process_file(self.people_processor, input_bucket, output_bucket, people_file,
@@ -86,13 +87,14 @@ class CombinedProcessor:
                     out_path = f"people_detection/refine_{filename}"
                     self._write_output(output_bucket, out_path, output)
                     logging.info(f"Successfully processed {len(enriched_data)} people in {people_file}")
+                    logging.info(f"Successfully wrote output to refined/{out_path}")
             except Exception as e:
-                logging.info(f"\nERROR in people processing: {str(e)}")
+                logging.info(f"ERROR in people processing: {str(e)}")
                 logging.info("Continuing with vehicle processing...")
 
         elif detection_type == "Vehicle":
             # Process vehicle detections
-            print("\n=== Processing Vehicle Detections ===")
+            logging.info("Processing Vehicle Detections")
             try:
                 vehicle_file = self.vehicle_processor.minio.get_json_file(input_bucket, f"vehicle_detection/preprocessed_{filename}")
                 processed_df = self._process_file(self.vehicle_processor, input_bucket, output_bucket, vehicle_file,
@@ -110,13 +112,14 @@ class CombinedProcessor:
                     out_path = f"vehicle_detection/refine_{filename}"
                     self._write_output(output_bucket, out_path, output)
                     logging.info(f"Successfully processed {len(enriched_data)} vehicles in {vehicle_file}")
+                    logging.info(f"Successfully wrote output to refined/{out_path}")
             except Exception as e:
-                logging.info(f"\nERROR in vehicle processing: {str(e)}")
+                logging.info(f"ERROR in vehicle processing: {str(e)}")
                 logging.info("Processing completed with errors")
 
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
-        logging.info(f"\nCombined processing completed in {duration:.2f} seconds")
+        logging.info(f"Advanced Processing completed in {duration:.2f} seconds")
 
 
 def advanced_preprocessing(detection_type,filename):
