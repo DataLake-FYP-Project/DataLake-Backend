@@ -70,23 +70,22 @@ class CombinedProcessor:
             # Process people detections
             print("\n=== Processing People Detections ===")
             try:
-                people_files = self.people_processor.minio.list_json_files(input_bucket, f"people_detection/{processed_file_name}")
-                for file in people_files:
-                    processed_df = self._process_file(self.people_processor, input_bucket, output_bucket, file,
-                                                      "people_detection")
-                    if processed_df:
-                        grouped = self.people_processor._group_data(processed_df)
-                        enriched_data = dict(
-                            sorted([self.people_processor._enrich_person(row) for row in grouped.collect()],
-                                   key=lambda x: int(x[0])))
-                        output = self._get_common_output_structure(file)
-                        output.update({
-                            "people_count": len(enriched_data),
-                            "people": enriched_data
-                        })
-                        out_path = f"people_detection/refine_{file}"
-                        self._write_output(output_bucket, out_path, output)
-                        logging.info(f"Successfully processed {len(enriched_data)} people in {file}")
+                people_file = self.people_processor.minio.get_json_file(input_bucket, f"people_detection/{processed_file_name}")
+                processed_df = self._process_file(self.people_processor, input_bucket, output_bucket, people_file,
+                                                    "people_detection")
+                if processed_df:
+                    grouped = self.people_processor._group_data(processed_df)
+                    enriched_data = dict(
+                        sorted([self.people_processor._enrich_person(row) for row in grouped.collect()],
+                                key=lambda x: int(x[0])))
+                    output = self._get_common_output_structure(people_file)
+                    output.update({
+                        "people_count": len(enriched_data),
+                        "people": enriched_data
+                    })
+                    out_path = f"people_detection/refine_{people_file}"
+                    self._write_output(output_bucket, out_path, output)
+                    logging.info(f"Successfully processed {len(enriched_data)} people in {people_file}")
             except Exception as e:
                 logging.info(f"\nERROR in people processing: {str(e)}")
                 logging.info("Continuing with vehicle processing...")
@@ -95,23 +94,22 @@ class CombinedProcessor:
             # Process vehicle detections
             print("\n=== Processing Vehicle Detections ===")
             try:
-                vehicle_files = self.vehicle_processor.minio.list_json_files(input_bucket, f"vehicle_detection/{processed_file_name}")
-                for file in vehicle_files:
-                    processed_df = self._process_file(self.vehicle_processor, input_bucket, output_bucket, file,
-                                                      "vehicle_detection")
-                    if processed_df:
-                        grouped = self.vehicle_processor._group_data(processed_df)
-                        enriched_data = dict(
-                            sorted([self.vehicle_processor._enrich_vehicle(row) for row in grouped.collect()],
-                                   key=lambda x: int(x[0])))
-                        output = self._get_common_output_structure(file)
-                        output.update({
-                            "vehicle_count": len(enriched_data),
-                            "vehicles": enriched_data
-                        })
-                        out_path = f"vehicle_detection/refine_{file}"
-                        self._write_output(output_bucket, out_path, output)
-                        logging.info(f"Successfully processed {len(enriched_data)} vehicles in {file}")
+                vehicle_file = self.vehicle_processor.minio.get_json_file(input_bucket, f"vehicle_detection/{processed_file_name}")
+                processed_df = self._process_file(self.vehicle_processor, input_bucket, output_bucket, vehicle_file,
+                                                    "vehicle_detection")
+                if processed_df:
+                    grouped = self.vehicle_processor._group_data(processed_df)
+                    enriched_data = dict(
+                        sorted([self.vehicle_processor._enrich_vehicle(row) for row in grouped.collect()],
+                                key=lambda x: int(x[0])))
+                    output = self._get_common_output_structure(vehicle_file)
+                    output.update({
+                        "vehicle_count": len(enriched_data),
+                        "vehicles": enriched_data
+                    })
+                    out_path = f"vehicle_detection/refine_{vehicle_file}"
+                    self._write_output(output_bucket, out_path, output)
+                    logging.info(f"Successfully processed {len(enriched_data)} vehicles in {vehicle_file}")
             except Exception as e:
                 logging.info(f"\nERROR in vehicle processing: {str(e)}")
                 logging.info("Processing completed with errors")
