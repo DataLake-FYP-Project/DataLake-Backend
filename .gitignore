@@ -19,7 +19,9 @@
 *.json
 
 #remove unwanted direcotries
-__pycache__/
+**/__pycache__/
+.idea/
+.vscode/
 
 
 
