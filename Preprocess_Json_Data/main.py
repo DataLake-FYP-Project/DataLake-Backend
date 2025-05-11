@@ -4,11 +4,11 @@ from Preprocess_Json_Data.preprocessing.advanced_preprocessing import advanced_p
 from Preprocess_Json_Data.config.spark_config import create_spark_session
 from Preprocess_Json_Data.config.minio_config import BUCKETS
 from Preprocess_Json_Data.connectors.minio_connector import MinIOConnector
-from Preprocess_Json_Data.preprocessing.frame_data import process_vehicle_json_data
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_vehicle import process_vehicle_json_data
 import logging
 import os
 from dotenv import load_dotenv
-from Preprocess_Json_Data.preprocessing.frame_data_people_detection import process_people_json_data
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_people_frame_data import process_people_json_data
 
 # Load environment variables
 load_dotenv()
