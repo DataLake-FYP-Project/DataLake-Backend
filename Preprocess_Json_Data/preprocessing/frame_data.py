@@ -3,7 +3,7 @@ from pyspark.sql.types import *
 from .common import *
 
 
-def process_frame_data(df):
+def process_vehicle_json_data(df):
     if "detections" not in df.columns:
         print("Column 'detections' not found in the input DataFrame. Skipping processing.")
         return df

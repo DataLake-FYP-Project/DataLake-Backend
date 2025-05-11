@@ -3,7 +3,7 @@ from Preprocess_Json_Data.preprocessing.advanced_preprocessing import advanced_p
 from Preprocess_Json_Data.config.spark_config import create_spark_session
 from Preprocess_Json_Data.config.minio_config import BUCKETS
 from Preprocess_Json_Data.connectors.minio_connector import MinIOConnector
-from Preprocess_Json_Data.preprocessing.frame_data import process_frame_data
+from Preprocess_Json_Data.preprocessing.frame_data import process_vehicle_json_data
 import logging
 import os
 from dotenv import load_dotenv
@@ -24,7 +24,7 @@ def process_video_data(spark, input_path, video_type):
         raw_df = minio_conn.read_json(BUCKETS["raw"], full_input_path)
 
         if video_type.lower() == "vehicle":
-            processed_df = process_frame_data(raw_df)
+            processed_df = process_vehicle_json_data(raw_df)
             output_path = f"vehicle_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         else:
             processed_df = process_people_json_data(raw_df)
@@ -98,49 +98,52 @@ def spark_preprocessing(filename, detection_type):
     try:
         # Get files using the MinIOConnector method
         if detection_type == "Vehicle":
-            vehicle_files = minio_conn.list_json_files(BUCKETS["raw"], f"vehicle_detection/{filename}")
-            if not vehicle_files:
-                logging.warning("No vehicle detection files found in raw bucket")
+            vehicle_file = minio_conn.get_json_file(BUCKETS["raw"], f"vehicle_detection/{filename}")
+            if not vehicle_file:
+                logging.warning(f"No {filename} file found in vehicle_detection folder")
 
-            print("\n=== Starting Basic Preprocessing=== ")
+            print("\n")
+            logging.info("Starting Basic Preprocessing")
 
             # Process vehicle files
-            for vehicle_file in vehicle_files:
-                try:
-                    logging.info(f"Processing vehicle file: {vehicle_file}")
-                    vehicle_df, vehicle_path = process_video_data(spark, vehicle_file, "vehicle")
-                    if not write_output_json(spark, vehicle_df, vehicle_path):
-                        logging.error(f"Failed to process vehicle file: {vehicle_file}")
-                except Exception as e:
-                    logging.error(f"Error processing vehicle file {vehicle_file}: {e}")
+            try:
+                logging.info(f"Processing vehicle file: {vehicle_file}")
+                vehicle_df, vehicle_path = process_video_data(spark, vehicle_file, "vehicle")
+                if not write_output_json(spark, vehicle_df, vehicle_path):
+                    logging.error(f"Failed to process vehicle file: {vehicle_file}")
+            except Exception as e:
+                logging.error(f"Error processing vehicle file {vehicle_file}: {e}")
 
         elif detection_type == "People":
-            people_files = minio_conn.list_json_files(BUCKETS["raw"], f"people_detection/{filename}")
-            if not people_files:
-                logging.warning("No people detection files found in raw bucket")
+            people_file = minio_conn.get_json_file(BUCKETS["raw"], f"people_detection/{filename}")
+            if not people_file:
+                 logging.warning(f"No {filename} file found in raw bucket people detection folder")
 
-            print("\n=== Starting Basic Preprocessing=== ")
+            print("\n")
+            logging.info("Starting Basic Preprocessing")
 
             # Process people files
-            for people_file in people_files:
-                try:
-                    logging.info(f"Processing people file: {people_file}")
-                    people_df, people_path = process_video_data(spark, people_file, "people")
-                    if not write_output_json(spark, people_df, people_path):
-                        logging.error(f"Failed to process people file: {people_file}")
-                except Exception as e:
-                    logging.error(f"Error processing people file {people_file}: {e}")
-
+            try:
+                logging.info(f"Processing people file: {people_file}")
+                people_df, people_path = process_video_data(spark, people_file, "people")
+                if not write_output_json(spark, people_df, people_path):
+                    logging.error(f"Failed to process people file: {people_file}")
+            except Exception as e:
+                logging.error(f"Error processing people file {people_file}: {e}")
+        
+        print("\n")
         logging.info("Basic Processing completed")
 
-        print("\n=== Starting Advanced Preprocessing=== ")
+        print("\n")
+        logging.info("Starting Advanced Preprocessing ")
         try:
             processed_file_name=f"preprocessed_{filename}"
             advanced_preprocessing(detection_type,processed_file_name)
         except Exception as e:
             logging.error(f"Error during advanced preprocessing: {e}")
 
-        print("\n=== All processing stages completed=== ")
+        print("\n")
+        logging.info(" All processing stages completed ")
     except Exception as e:
         logging.error(f"Fatal error in processing pipeline: {e}")
     finally:

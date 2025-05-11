@@ -2,7 +2,7 @@ import logging
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import lit
 import json
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from minio import Minio
 from minio.error import S3Error
 from io import BytesIO
@@ -108,6 +108,31 @@ class MinIOConnector:
             content_type='application/json'
         )
 
+    def get_json_file(self, bucket: str, file_path: str) -> Optional[str]:
+        """
+        Retrieve a specific JSON file by exact path.
+        
+        Args:
+            bucket: Name of the bucket
+            file_path: Full path of the file (e.g., 'vehicle/test.json')
+        
+        Returns:
+            The filename if it exists, otherwise None
+        """
+        try:
+            obj = self.minio_client.stat_object(bucket, file_path)
+            if obj:
+                return file_path.split("/")[-1]
+            return None
+        except S3Error as e:
+            logging.warning(f"JSON file '{file_path}' not found in bucket '{bucket}': {e}")
+            return None
+        except Exception as e:
+            logging.error(f"Unexpected error fetching JSON file: {e}")
+            return None
+
+
+    
     def list_json_files(self, bucket: str, folder: str = "") -> List[str]:
         """
         List all JSON files in a bucket folder
