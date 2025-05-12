@@ -6,7 +6,7 @@ from .common import *
 def process_people_json_data(df):
     if "frame_detections" not in df.columns:
         print("Column 'frame_detections' not found in the input DataFrame. Skipping processing.")
-        return df
+        return df,-1
     else:
         # Configuration with default values
         default_config = {
@@ -17,8 +17,8 @@ def process_people_json_data(df):
                 "gender": "unknown",
                 "age": -1,
                 "carrying": "none",
-                # "mask_status": "unknown",
-                # "mask_confidence": 0.0,
+                "mask_status": "unknown",
+                "mask_confidence": 0.0,
                 "in_restricted_area": False,
                 "entry_time": "2101-01-29 17:53:46",
                 "exit_time": "2101-01-29 17:53:46"
@@ -38,11 +38,11 @@ def process_people_json_data(df):
 
             non_empty_count = frame_fields_check.filter(size(col("detections")) > 0).count()
             if non_empty_count == 0:
-                print("No detections to process. Returning metadata only.")
+                logging.info("No detections to process. Returning metadata only.")
                 return df.select(
                     *[col(f) for f in ["video_metadata", "summary", "processing_time"]
                       if f in df.columns]
-                ).withColumn("processing_status", lit("no_detections"))
+                ).withColumn("processing_status", lit("no_detections")),-1
 
             # Step 2: Process frame-level fields - only available columns
             top_level_fields = [c for c in ["video_metadata", "summary"] 
@@ -79,7 +79,6 @@ def process_people_json_data(df):
             # Apply common preprocessing
             processed_detections = clean_string_columns(processed_detections)
             processed_detections = handle_null_values(processed_detections, config["default_values"])
-            # processed_detections = convert_timestamps(processed_detections, config["timestamp_fields"])
             
             # Convert existing timestamp fields only
             existing_timestamp_fields = [
@@ -125,8 +124,8 @@ def process_people_json_data(df):
                     detection_fields.append(col(col_name).alias(field_name))
 
             if not detection_fields:
-                print("No valid detection fields found")
-                return df
+                logging.info("No valid detection fields found")
+                return df,-1
 
             reconstructed_detections = processed_detections.select(
                 *[col(f) for f in top_level_fields],
@@ -179,10 +178,10 @@ def process_people_json_data(df):
                 col("frame_detections")
             )
 
-            return result_df
+            return result_df,1
 
         except Exception as e:
             print(f"Error processing people detection data: {str(e)}")
-            return df
+            return df,-1
 
 
