@@ -8,7 +8,7 @@ from Preprocess_Json_Data.preprocessing.basic_preprocessing_vehicle import proce
 import logging
 import os
 from dotenv import load_dotenv
-from Preprocess_Json_Data.preprocessing.basic_preprocessing_people_frame_data import process_people_json_data
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_people import process_people_json_data
 
 # Load environment variables
 load_dotenv()
