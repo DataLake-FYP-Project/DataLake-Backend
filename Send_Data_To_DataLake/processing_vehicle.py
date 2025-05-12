@@ -115,6 +115,10 @@ def parse_vehicle_data(file_path):
 
         for vehicle_id_str, vehicle_info in vehicles.items():
             vehicle_info["vehicle_id"] = int(vehicle_id_str)  # Convert to int
+
+            original_count = vehicle_info.get("red_light_violation_count", 0)
+            vehicle_info["red_light_violation_count"] = True if original_count > 0 else False
+
             parsed_records.append(vehicle_info)
 
         return parsed_records
