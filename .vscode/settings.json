@@ -1,5 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./Send_Data_To_DataLake"
-    ]
-}
