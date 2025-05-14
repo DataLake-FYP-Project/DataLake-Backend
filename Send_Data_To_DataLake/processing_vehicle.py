@@ -117,7 +117,16 @@ def parse_vehicle_data(file_path):
             vehicle_info["vehicle_id"] = int(vehicle_id_str)  # Convert to int
 
             original_count = vehicle_info.get("red_light_violation_count", 0)
-            vehicle_info["red_light_violation_count"] = True if original_count > 0 else False
+            vehicle_info["red_light_violation"] = original_count > 0
+            vehicle_info.pop("red_light_violation_count", None)
+
+            original_count = vehicle_info.get("line_crossing_count", 0)
+            vehicle_info["line_crossing_violation"] = original_count > 0
+            vehicle_info.pop("line_crossing_count", None)
+
+            original_count = vehicle_info.get("stopped_duration", 0)
+            vehicle_info["stopped"] = original_count > 0
+            vehicle_info.pop("stopped_duration", None)
 
             parsed_records.append(vehicle_info)
 
