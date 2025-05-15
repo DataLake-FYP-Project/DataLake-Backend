@@ -1,0 +1,99 @@
+GET _cat/indices?v
+
+DELETE datalake-vehicle-data
+
+PUT /datalake-vehicle-data
+{
+"mappings": {
+    "properties": {
+      "@timestamp": { "type": "date" },
+      "source_file": { "type": "keyword" },
+      "processing_date": { "type": "date" },
+      "processing_version": { "type": "keyword" },
+      "vehicle_count": { "type": "integer" },
+      "vehicle_id": { "type": "integer" },
+      "vehicle_type": { "type": "keyword" },
+      "vehicle_color": { "type": "keyword" },
+      "confidence_avg": { "type": "float" },
+      "entry_time": { "type": "date" },
+      "exit_time": { "type": "date" },
+      "duration_seconds": { "type": "float" },
+      "stopped": { "type": "boolean" },
+      "frame_count": { "type": "integer" },
+      "avg_speed": { "type": "float" },
+      "max_speed": { "type": "float" },
+      "min_speed": { "type": "float" },
+      "speed_variation": { "type": "float" },
+      "lane_changes": { "type": "integer" },
+      "initial_lane": { "type": "keyword" },
+      "final_lane": { "type": "keyword" },
+      "most_common_lane": { "type": "keyword" },
+      "lane_change_frequency": { "type": "float" },
+      "line_crossing_violation": { "type": "boolean" },
+      "direction": { "type": "keyword" },
+      "direction_changes": { "type": "integer" },
+      "time_spent_per_direction_Unknown": { "type": "float" },
+      "time_spent_per_direction_Down": { "type": "float" },
+      "time_spent_per_direction_Up": { "type": "float" },
+      "red_light_violation": { "type": "boolean" },
+      "total_distance": { "type": "float" },
+      "movement_angles": { "type": "float" },
+      "avg_movement_angle": { "type": "float" }
+    }
+  }
+}
+
+
+
+POST /datalake-vehicle-data/_doc?pipeline=vehicle_data_timestamp_pipeline
+{
+  "@timestamp": "2025-05-14T12:00:00Z",
+  "source_file": "camera_feed_001.mp4",
+  "processing_date": "2025-05-14",
+  "processing_version": "v1.0",
+  "vehicle_count": 1,
+  "vehicle_id": 12345,
+  "vehicle_type": "Car",
+  "vehicle_color": "Red",
+  "confidence_avg": 0.98,
+  "entry_time": "2025-05-14T11:59:50Z",
+  "exit_time": "2025-05-14T12:00:10Z",
+  "duration_seconds": 20.0,
+  "stopped": false,
+  "frame_count": 300,
+  "avg_speed": 45.5,
+  "max_speed": 60.0,
+  "min_speed": 30.0,
+  "speed_variation": 5.2,
+  "lane_changes": 2,
+  "initial_lane": "Lane 1",
+  "final_lane": "Lane 2",
+  "most_common_lane": "Lane 1",
+  "lane_change_frequency": 0.1,
+  "line_crossing_violation": false,
+  "direction": "Up",
+  "direction_changes": 1,
+  "time_spent_per_direction_Unknown": 0.0,
+  "time_spent_per_direction_Down": 0.0,
+  "time_spent_per_direction_Up": 20.0,
+  "red_light_violation": false,
+  "total_distance": 500.0,
+  "movement_angles": 45.0,
+  "avg_movement_angle": 42.5
+}
+
+
+PUT _ingest/pipeline/vehicle_data_timestamp_pipeline
+{
+  "description": "Add timestamp to vehicle data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+GET datalake-vehicle-data/_search

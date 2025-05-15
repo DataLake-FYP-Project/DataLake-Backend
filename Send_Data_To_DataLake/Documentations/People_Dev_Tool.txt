@@ -1,0 +1,55 @@
+GET _cat/indices?v
+
+DELETE datalake-people-data
+
+PUT /datalake-people-data
+{
+  "mappings": {
+    "properties": {
+      "@timestamp": { "type": "date" },
+      "people_id": { "type": "integer" },
+      "age": { "type": "keyword" },
+      "gender": { "type": "keyword" },
+      "carrying": { "type": "keyword" },
+      "confidence_avg": { "type": "float" },
+      "entered_restricted_area": { "type": "boolean" },
+      "restricted_area_entry_time": { "type": "date", "null_value": null },
+      "entry_time": { "type": "date" },
+      "exit_time": { "type": "date" },
+      "duration_seconds": { "type": "double" },
+      "frame_count": { "type": "integer" }
+    }
+  }
+}
+
+POST /datalake-people-data/_doc?pipeline=people_data_timestamp_pipeline
+{
+  "@timestamp": "2025-05-06T06:41:01", 
+  "people_id": 1,
+  "age": "30",
+  "gender": "Man",
+  "carrying": "none",
+  "confidence_avg": 0.875567140430212,
+  "entered_restricted_area": false,
+  "restricted_area_entry_time": null,
+  "entry_time": "2025-05-06T06:41:01",
+  "exit_time": "2101-01-29T17:53:46",
+  "duration_seconds": 2389950765.0,
+  "frame_count": 40
+}
+
+
+PUT _ingest/pipeline/people_data_timestamp_pipeline
+{
+  "description": "Add timestamp to people data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+GET datalake-people-data/_search
