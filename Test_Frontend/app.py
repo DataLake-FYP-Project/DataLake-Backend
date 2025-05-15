@@ -5,6 +5,7 @@ import cv2
 import tempfile
 import os
 
+
 # Function to capture points on the video
 def select_points_on_video(video_path, num_points=4, new_width=640, new_height=480):
     cap = cv2.VideoCapture(video_path)
@@ -37,10 +38,12 @@ def select_points_on_video(video_path, num_points=4, new_width=640, new_height=4
 
     return scale_polygon_points(points, original_width, original_height, new_width, new_height)
 
+
 def scale_polygon_points(polygon_points, original_width, original_height, new_width, new_height):
     scale_x = original_width / new_width
     scale_y = original_height / new_height
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
+
 
 def upload_video_and_points(video_file, points_data, video_type):
     try:
@@ -73,8 +76,9 @@ def upload_video_and_points(video_file, points_data, video_type):
         print(f"Error uploading video: {str(e)}")
         return None
 
+
 # Streamlit UI
-st.title("Video Uploader with Points Selection")
+st.title("Video Uploader with Points Selection and Camera Metadata")
 
 video_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov", "mkv"])
 
@@ -93,6 +97,19 @@ if video_file:
     if video_type == "People":
         option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
     else:
+        # Camera metadata input
+        st.subheader("Camera Metadata")
+        camera_lat = st.number_input("Enter the camera's latitude ")
+        camera_lon = st.number_input("Enter the camera's longitude", )
+        camera_heading = st.number_input("Enter the camera's heading in degrees")
+
+        camera_metadata = {
+            "latitude": camera_lat,
+            "longitude": camera_lon,
+            "heading": camera_heading
+        }
+        st.session_state.camera_metadata = camera_metadata
+
         option = st.radio("Select Point Type", ["Area", "red_light", "line_points"])
 
     if st.button("Select Points on Video"):
