@@ -60,7 +60,7 @@ def upload_vehicle_json():
             base_name = video_name.split("preprocessed_")[1]
         else:
             base_name = video_name
-        prefix = f"vehicle_detection/refine_preprocessed_{base_name}"
+        prefix = f"vehicle_detection/refine_{base_name}"
         logging.info(f"Listing refined files with prefix: {prefix} in bucket: {refine_bucket}")
 
         # List refined files
@@ -163,7 +163,7 @@ def upload_people_json():
             base_name = video_name.split("preprocessed_")[1]
         else:
             base_name = video_name
-        prefix = f"people_detection/refine_preprocessed_{base_name}"
+        prefix = f"people_detection/refine_{base_name}"
         logging.info(f"Listing refined files with prefix: {prefix} in bucket: {refine_bucket}")
 
         # List refined files
