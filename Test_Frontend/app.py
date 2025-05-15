@@ -45,7 +45,7 @@ def scale_polygon_points(polygon_points, original_width, original_height, new_wi
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
 
-def upload_video_and_points(video_file, points_data, video_type):
+def upload_video_and_points(video_file, points_data, video_type, metadata_to_send=None):
     try:
         files = {"file": (video_file.name, video_file, "video/mp4")}
 
@@ -56,6 +56,7 @@ def upload_video_and_points(video_file, points_data, video_type):
                 "restricted": points_data.get("restricted", [])
             }
             url = "http://localhost:8011/upload_people"
+            data = {"points": json.dumps(points)}
 
         elif video_type == "Vehicle":
             points = {
@@ -64,11 +65,15 @@ def upload_video_and_points(video_file, points_data, video_type):
                 "line_points": points_data.get("line_points", [])
             }
             url = "http://localhost:8012/upload_vehicle"
+            # Include metadata in the request if available
+            data = {
+                "points": json.dumps(points),
+                "metadata": json.dumps(metadata_to_send) if metadata_to_send else None
+            }
 
         else:
             raise ValueError("Invalid video type")
 
-        data = {"points": json.dumps(points)}
         response = requests.post(url, files=files, data=data)
         return response
 
@@ -78,7 +83,7 @@ def upload_video_and_points(video_file, points_data, video_type):
 
 
 # Streamlit UI
-st.title("Video Uploader with Points Selection and Camera Metadata")
+st.title("Video Uploader with Points Selection")
 
 video_file = st.file_uploader("Choose a video file", type=["mp4", "avi", "mov", "mkv"])
 
@@ -94,14 +99,15 @@ if video_file:
 
     video_type = st.selectbox("Select Video Type", ["People", "Vehicle"])
 
+    camera_metadata = None
     if video_type == "People":
         option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
     else:
         # Camera metadata input
         st.subheader("Camera Metadata")
-        camera_lat = st.number_input("Enter the camera's latitude ")
-        camera_lon = st.number_input("Enter the camera's longitude", )
-        camera_heading = st.number_input("Enter the camera's heading in degrees")
+        camera_lat = st.number_input("Enter the camera's latitude ", value=6.9271, step=0.0001)
+        camera_lon = st.number_input("Enter the camera's longitude", value=79.8612, step=0.0001)
+        camera_heading = st.number_input("Enter the camera's heading in degrees", value=45.0, step=0.1)
 
         camera_metadata = {
             "latitude": camera_lat,
@@ -143,6 +149,7 @@ if video_file:
                 "restricted": st.session_state.points_data.get("Restricted")
             }
             valid = all(points_to_send.values())
+            metadata_to_send = None  # No metadata for People type
 
         else:
             point_selected = bool(st.session_state.points_data.get("Area"))
@@ -155,12 +162,23 @@ if video_file:
                 "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
 
+            # Create metadata_to_send for Vehicle type
+            metadata_to_send = {
+                "latitude": st.session_state.camera_metadata.get("latitude") if bool(
+                    st.session_state.camera_metadata.get("latitude")) else None,
+                "longitude": st.session_state.camera_metadata.get("longitude") if bool(
+                    st.session_state.camera_metadata.get("longitude")) else None,
+                "heading": st.session_state.camera_metadata.get("heading") if bool(
+                    st.session_state.camera_metadata.get("heading")) else None
+            }
             valid = point_selected or line_selected
 
         if valid:
             with st.spinner("Uploading..."):
                 print("Points to send:", points_to_send)
-                response = upload_video_and_points(video_file, points_to_send, video_type)
+                if video_type == "Vehicle":
+                    print("Metadata to send:", metadata_to_send)
+                response = upload_video_and_points(video_file, points_to_send, video_type, metadata_to_send)
 
             if response:
                 if response.status_code == 200:

@@ -23,6 +23,9 @@
 .idea/
 .vscode/
 
+# Ignore other data files
+*.csv
+
 
 
 
