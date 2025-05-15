@@ -1,12 +1,7 @@
-# Create Index in Kibana (Elasticsearch) using Dev Tools & Create Dashboard
+GET _cat/indices?v
 
-## Steps to Follow
+DELETE datalake-people-data
 
-### 1. Create Index (Go to Kibana → Dev Tools)
-
-Run the below command to create an index:
-
-```json
 PUT /datalake-people-data
 {
   "mappings": {
@@ -27,31 +22,6 @@ PUT /datalake-people-data
   }
 }
 
-```
-
-### 2. Create a Data View (Go to Stack management → Kibana → Data Views)
-datalake-people-data
-
-### 3. Create a timestamp pipeline (Go to Kibana → Dev Tools)
-```json
-PUT _ingest/pipeline/people_data_timestamp_pipeline
-{
-  "description": "Add timestamp to people data",
-  "processors": [
-    {
-      "set": {
-        "field": "@timestamp",
-        "value": "{{_ingest.timestamp}}"
-      }
-    }
-  ]
-}
-```
-
-
-### -----------For Testing Purpose----------------
-### 4. Enter data to the index
-```json
 POST /datalake-people-data/_doc?pipeline=people_data_timestamp_pipeline
 {
   "@timestamp": "2025-05-06T06:41:01", 
@@ -67,20 +37,19 @@ POST /datalake-people-data/_doc?pipeline=people_data_timestamp_pipeline
   "duration_seconds": 2389950765.0,
   "frame_count": 40
 }
-```
 
-### 5. Verify Data
-```json
+
+PUT _ingest/pipeline/people_data_timestamp_pipeline
+{
+  "description": "Add timestamp to people data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
 GET datalake-people-data/_search
-```
-
-### 6. Delete index
-```json
-DELETE datalake-people-data
-```
-
-### 7. Get all indices
-```json
-GET _cat/indices?v
-```
-
