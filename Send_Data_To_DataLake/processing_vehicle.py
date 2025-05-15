@@ -128,6 +128,10 @@ def parse_vehicle_data(file_path):
             vehicle_info["stopped"] = original_count > 0
             vehicle_info.pop("stopped_duration", None)
 
+            vehicle_info["entry_time"] = vehicle_info.pop("first_detection", None)
+            vehicle_info["exit_time"] = vehicle_info.pop("last_detection", None)
+
+
             parsed_records.append(vehicle_info)
 
         return parsed_records

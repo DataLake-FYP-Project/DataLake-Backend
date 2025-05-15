@@ -45,21 +45,43 @@ def people_upload_to_minio(file_path):
     except Exception as e:
         print(f"Error uploading to MinIO: {e}")
 
-def people_upload_to_elasticsearch(file_path):
+
+def parse_people_data(file_path):
     try:
         with open(file_path, "r") as file:
             data = json.load(file)
 
+        peoples = data.get("people", {})
+        parsed_records = []
+
+        for people_id_str, people_info in peoples.items():
+            people_info["people_id"] = int(people_id_str)
+
+            # Rename fields
+            people_info["entry_time"] = people_info.pop("first_detection", None)
+            people_info["exit_time"] = people_info.pop("last_detection", None)
+
+            parsed_records.append(people_info)
+
+        return parsed_records
+
+    except Exception as e:
+        print(f"Error parsing JSON file: {e}")
+        return []
+
+def people_upload_to_elasticsearch(file_path):
+    try:
+        people_records = parse_people_data(file_path)
+        if not people_records:
+            print("No people data to upload.")
+            return
+
         es = Elasticsearch([ES_HOST])
         es.indices.create(index=ES_INDEX, ignore=400)
 
-        if isinstance(data, list):
-            for i, record in enumerate(data):
-                res = es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="vehicle_data_timestamp_pipeline")
-                print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
-        else:
-            res = es.index(index=ES_INDEX, id=1, body=data, pipeline="people_data_timestamp_pipeline")
-            print(f"Single document uploaded to Elasticsearch: {res['result']}")
+        for i, record in enumerate(people_records):
+            res = es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="people_data_timestamp_pipeline")
+            print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
 
     except Exception as e:
         print(f"Error uploading to Elasticsearch: {e}")
