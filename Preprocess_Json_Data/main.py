@@ -91,10 +91,11 @@ def spark_preprocessing(filename, detection_type):
 
     spark = create_spark_session()
     minio_conn = MinIOConnector(spark)
+    processing_status = None
 
     if not minio_conn.ensure_bucket_exists(BUCKETS["raw"]):
         logging.error("Cannot proceed without required buckets")
-        return
+        return processing_status
 
     print("\n")
     logging.info("Starting Basic Preprocessing")
@@ -133,7 +134,8 @@ def spark_preprocessing(filename, detection_type):
         duration = (end_time - start_time).total_seconds()
         if processing_status==-1:
             logging.info("No detections in raw json to process. Skipping further preprocessing\n")
-        else:
+            return processing_status
+        elif processing_status==1:
             logging.info(f"Basic Processing completed in {duration:.2f} seconds")
 
             print("\n")
@@ -142,11 +144,16 @@ def spark_preprocessing(filename, detection_type):
                 advanced_preprocessing(detection_type,filename)
             except Exception as e:
                 logging.error(f"Error during advanced preprocessing: {e}")
+                processing_status=None
 
             print("\n")
             logging.info("All processing stages completed ")
+            return processing_status
+        else:
+            return processing_status
     except Exception as e:
         logging.error(f"Fatal error in processing pipeline: {e}")
+        return processing_status
     finally:
         spark.stop()
         logging.info("Spark session stopped")
