@@ -97,11 +97,41 @@ if 'points_data' not in st.session_state:
 if video_file:
     st.video(video_file)
 
-    video_type = st.selectbox("Select Video Type", ["People", "Vehicle"])
+    video_type = st.selectbox("Select Video Type", ["People", "Vehicle", "Vehicle Geolocation tracker"])
 
     camera_metadata = None
-    if video_type == "People":
-        option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
+    # Common point types for each video type
+    point_types_map = {
+        "People": ["Entry", "Exit", "Restricted"],
+        "Vehicle": ["Area", "red_light", "line_points"]
+    }
+
+    if video_type in point_types_map:
+        point_types = point_types_map[video_type]
+        option = st.radio("Select Point Type", point_types)
+
+        if st.button("Select Points on Video"):
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
+                tmp.write(video_file.read())
+                tmp_path = tmp.name
+
+            num_points = 2 if option == "line_points" else 4
+            selected_points = select_points_on_video(tmp_path, num_points=num_points)
+            os.remove(tmp_path)
+
+            if selected_points:
+                st.session_state.points_data[option] = [list(point) for point in selected_points]
+                st.success(f"{option} points saved: {st.session_state.points_data[option]}")
+            else:
+                st.error("No points selected.")
+
+        if st.button("Clear All Points"):
+            # Reset all known point types
+            st.session_state.points_data = {
+                key: [] for key in set().union(*point_types_map.values())
+            }
+            st.success("All points cleared.")
+
     else:
         # Camera metadata input
         st.subheader("Camera Metadata")
@@ -115,31 +145,6 @@ if video_file:
             "heading": camera_heading
         }
         st.session_state.camera_metadata = camera_metadata
-
-        option = st.radio("Select Point Type", ["Area", "red_light", "line_points"])
-
-    if st.button("Select Points on Video"):
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
-            tmp.write(video_file.read())
-            tmp_path = tmp.name
-
-        # Set number of points for selection
-        num_points = 2 if option == "line_points" else 4
-        selected_points = select_points_on_video(tmp_path, num_points=num_points)
-        os.remove(tmp_path)
-
-        if selected_points:
-            st.session_state.points_data[option] = [list(point) for point in selected_points]
-            st.success(f"{option} points saved: {st.session_state.points_data[option]}")
-        else:
-            st.error("No points selected.")
-
-    if st.button("Clear All Points"):
-        st.session_state.points_data = {
-            "Entry": [], "Exit": [], "Restricted": [],
-            "Area": [], "red_light": [], "line_points": []
-        }
-        st.success("All points cleared.")
 
     if st.button("Upload Video"):
         if video_type == "People":
