@@ -45,9 +45,14 @@ def scale_polygon_points(polygon_points, original_width, original_height, new_wi
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
 
+import json
+import requests
+
+
 def upload_video_and_points(video_file, points_data, video_type, metadata_to_send=None):
     try:
         files = {"file": (video_file.name, video_file, "video/mp4")}
+        data = {}
 
         if video_type == "People":
             points = {
@@ -56,7 +61,7 @@ def upload_video_and_points(video_file, points_data, video_type, metadata_to_sen
                 "restricted": points_data.get("restricted", [])
             }
             url = "http://localhost:8011/upload_people"
-            data = {"points": json.dumps(points)}
+            data["points"] = json.dumps(points)
 
         elif video_type == "Vehicle":
             points = {
@@ -65,14 +70,18 @@ def upload_video_and_points(video_file, points_data, video_type, metadata_to_sen
                 "line_points": points_data.get("line_points", [])
             }
             url = "http://localhost:8012/upload_vehicle"
-            # Include metadata in the request if available
-            data = {
-                "points": json.dumps(points),
-                "metadata": json.dumps(metadata_to_send) if metadata_to_send else None
-            }
+            data["points"] = json.dumps(points)
+
+        elif video_type == "Vehicle Geolocation tracker":
+            url = "http://localhost:8012/upload_vehicle"
+            data["metadata"] = json.dumps(metadata_to_send)
 
         else:
             raise ValueError("Invalid video type")
+
+        # Debug print
+        print("Sending to:", url)
+        print("Data:", json.dumps(data, indent=2))
 
         response = requests.post(url, files=files, data=data)
         return response
@@ -147,16 +156,21 @@ if video_file:
         st.session_state.camera_metadata = camera_metadata
 
     if st.button("Upload Video"):
+        people_valid = vehicle_valid = metadata_valid = False
         if video_type == "People":
-            points_to_send = {
-                "entry": st.session_state.points_data.get("Entry"),
-                "exit": st.session_state.points_data.get("Exit"),
-                "restricted": st.session_state.points_data.get("Restricted")
-            }
-            valid = all(points_to_send.values())
-            metadata_to_send = None  # No metadata for People type
+            entry_selected = bool(st.session_state.points_data.get("Entry"))
+            exit_selected = bool(st.session_state.points_data.get("Exit"))
+            restricted_selected = bool(st.session_state.points_data.get("Restricted"))
 
-        else:
+            points_to_send = {
+                "entry": st.session_state.points_data.get("Entry") if entry_selected else [],
+                "exit": st.session_state.points_data.get("Exit") if exit_selected else [],
+                "restricted": st.session_state.points_data.get("Restricted") if restricted_selected else []
+            }
+
+            people_valid = entry_selected and exit_selected and restricted_selected
+
+        elif video_type == "Vehicle":
             point_selected = bool(st.session_state.points_data.get("Area"))
             line_selected = bool(st.session_state.points_data.get("line_points"))
             red_light_selected = bool(st.session_state.points_data.get("red_light"))
@@ -167,23 +181,34 @@ if video_file:
                 "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
 
+            vehicle_valid = point_selected and (line_selected or red_light_selected)
+
+        else:
+            latitude_selected = bool(st.session_state.camera_metadata.get("latitude"))
+            longitude_selected = bool(st.session_state.camera_metadata.get("longitude"))
+            heading_selected = bool(st.session_state.camera_metadata.get("heading"))
+
             # Create metadata_to_send for Vehicle type
             metadata_to_send = {
-                "latitude": st.session_state.camera_metadata.get("latitude") if bool(
-                    st.session_state.camera_metadata.get("latitude")) else None,
-                "longitude": st.session_state.camera_metadata.get("longitude") if bool(
-                    st.session_state.camera_metadata.get("longitude")) else None,
-                "heading": st.session_state.camera_metadata.get("heading") if bool(
-                    st.session_state.camera_metadata.get("heading")) else None
+                "latitude": st.session_state.camera_metadata.get("latitude") if latitude_selected else None,
+                "longitude": st.session_state.camera_metadata.get("longitude") if longitude_selected else None,
+                "heading": st.session_state.camera_metadata.get("heading") if heading_selected else None
             }
-            valid = point_selected or line_selected
+
+            metadata_valid = latitude_selected or longitude_selected or heading_selected
+
+        valid = people_valid or vehicle_valid or metadata_valid
 
         if valid:
             with st.spinner("Uploading..."):
-                print("Points to send:", points_to_send)
-                if video_type == "Vehicle":
+
+                if video_type == "Vehicle Geolocation tracker":
                     print("Metadata to send:", metadata_to_send)
-                response = upload_video_and_points(video_file, points_to_send, video_type, metadata_to_send)
+                    response = upload_video_and_points(video_file, {}, video_type, metadata_to_send)
+
+                else:
+                    print("Points to send:", points_to_send)
+                    response = upload_video_and_points(video_file, points_to_send, video_type)
 
             if response:
                 if response.status_code == 200:

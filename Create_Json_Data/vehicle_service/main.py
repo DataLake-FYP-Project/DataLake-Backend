@@ -254,6 +254,120 @@ def detect_light_color(frame, box):
     return "unknown"
 
 
+# Define approximate_geolocation function first
+def approximate_geolocation(bbox, camera_gps, heading, image_width, hfv=60.0):
+    x_center = (bbox[0] + bbox[2]) / 2
+    bbox_height = bbox[3] - bbox[1]
+    k = 5000  # Can be adjusted based on setup
+    distance = min(k / bbox_height, 50)
+    image_center_x = image_width / 2
+    azimuth = ((x_center - image_center_x) / image_center_x) * (hfv / 2)
+    true_azimuth = azimuth + heading
+    azimuth_rad = np.deg2rad(true_azimuth)
+    lat_per_meter = 1 / 111139
+    lon_per_meter = 1 / (111139 * np.cos(np.deg2rad(camera_gps['latitude'])))
+    lat_offset = distance * np.cos(azimuth_rad) * lat_per_meter
+    lon_offset = distance * np.sin(azimuth_rad) * lon_per_meter
+    return camera_gps['latitude'] + lat_offset, camera_gps['longitude'] + lon_offset
+
+
+# Run custom model for geolocation estimation
+def CustomModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, camera_metadata):
+    custom_model_path = os.path.join("Model", "yolov8_custom.pt")
+    model = YOLO(custom_model_path)
+    model.fuse()
+
+    # Define output paths
+    output_video_path = TARGET_VIDEO_PATH
+    output_geolocation_dir = os.path.join(os.path.dirname(TARGET_VIDEO_PATH), "detections_with_gps_video")
+    os.makedirs(output_geolocation_dir, exist_ok=True)
+
+    # Open the video
+    cap = cv2.VideoCapture(SOURCE_VIDEO_PATH)
+    if not cap.isOpened():
+        print("Error: Could not open video.")
+        return
+
+    # Get video properties
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+    # Define the codec and create VideoWriter object
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
+
+    # Process each frame
+    frame_number = 0
+    all_detections = []
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # Run detection
+        results = model(frame, conf=0.1, iou=0.5)
+        detections = []
+
+        # Use provided camera_metadata
+        camera_gps = {'latitude': camera_metadata['latitude'], 'longitude': camera_metadata['longitude']}
+        heading = camera_metadata['heading']
+
+        # Process detections
+        for result in results:
+            boxes = result.boxes.xyxy.cpu().numpy()
+            confidences = result.boxes.conf.cpu().numpy()
+            classes = result.boxes.cls.cpu().numpy()
+            for box, conf, cls in zip(boxes, confidences, classes):
+                x1, y1, x2, y2 = map(int, box)
+                class_name = result.names[int(cls)]
+                color = (255, 0, 255) if class_name == 'tuk-tuk' else (0, 255, 0)
+
+                # Draw bounding box and label
+                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+                cv2.putText(frame, f'{class_name} {conf:.2f}', (x1, y1 - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+                # Estimate geolocation
+                lat, lon = approximate_geolocation([x1, y1, x2, y2], camera_gps, heading, frame_width)
+                detections.append({
+                    'frame': frame_number,
+                    'class': class_name,
+                    'confidence': float(conf),
+                    'bbox': [float(x1), float(y1), float(x2), float(y2)],
+                    'geolocation': {'latitude': lat, 'longitude': lon}
+                })
+
+                # Display geolocation on the frame
+                cv2.putText(frame, f'Lat: {lat:.4f}, Lon: {lon:.4f}', (x1, y2 + 20),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+        # Write the frame to the output video
+        out.write(frame)
+
+        # Store detections
+        all_detections.extend(detections)
+        print(f'Processed frame {frame_number}/{total_frames}')
+        frame_number += 1
+
+    # Release resources
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
+
+    # Save all detections with geolocation
+    output_json = os.path.join(output_geolocation_dir, 'video_detections.json')
+    with open(output_json, 'w') as f:
+        json.dump(all_detections, f, indent=4)
+
+    print(f'Annotated video saved to {output_video_path}')
+    print(f'Geolocation data saved to {output_json}')
+
+    return output_json
+
+
 # Create metadata.csv
 def create_metadata_csv(video_path, camera_metadata, output_path):
     cap = cv2.VideoCapture(video_path)
@@ -595,7 +709,7 @@ def upload_video():
             print(f"Error parsing metadata JSON: {e}")
             return jsonify({"error": f"Invalid JSON in metadata: {e}"}), 400
 
-    if points:
+    elif points:
         try:
             points = json.loads(points)
             # Separate the 3 point types
@@ -619,7 +733,15 @@ def upload_video():
         print(f"TARGET_VIDEO_PATH: {target_video_path}")
         print(f"FRAME_SAVE_DIR: {FRAME_SAVE_DIR}")
 
-        json_output_path = ModelRun(source_video_path, target_video_path, ex_points, red_light_points, line_points)
+        if camera_metadata:
+            json_output_path = CustomModelRun(
+                source_video_path, target_video_path,camera_metadata
+            )
+        else:
+            json_output_path = ModelRun(
+                source_video_path, target_video_path,
+                ex_points, red_light_points, line_points
+            )
         print(f"JSON Output Path: {json_output_path}")
 
         # Create metadata.csv after ModelRun
