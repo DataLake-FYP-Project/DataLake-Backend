@@ -12,3 +12,4 @@ elasticsearch
 streamlit
 minio
 pyspark
+dotenv

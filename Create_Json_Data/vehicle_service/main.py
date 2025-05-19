@@ -21,6 +21,7 @@ os.makedirs(RESULTS_FOLDER, exist_ok=True)
 FRAME_SAVE_DIR = 'results/frames/'
 
 SECOND_BACKEND_URL = "http://localhost:8013/upload_2_vehicle"
+SECOND_BACKEND_URL_v1 = "http://localhost:8013/upload_2_geolocation"
 SCALE_FACTOR = 0.05  # Conversion factor from pixels/frame to real-world speed (km/h)
 VEHICLE_POSITIONS = {}
 FPS = 30
@@ -690,6 +691,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, 
 
 @app.route("/upload_vehicle", methods=["POST"])
 def upload_video():
+    global line_points, red_light_points, ex_points
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
 
@@ -768,8 +770,13 @@ def upload_video():
             files = {"json_file": json_file}
             if metadata_csv_path and os.path.exists(metadata_csv_path):
                 files["metadata_csv"] = open(metadata_csv_path, 'rb')
-            response = requests.post(SECOND_BACKEND_URL, files=files, timeout=10)
-            response_data = response.json()
+            if camera_metadata:
+                response = requests.post(SECOND_BACKEND_URL_v1, files=files, timeout=10)
+                response_data = response.json()
+
+            else:
+                response = requests.post(SECOND_BACKEND_URL, files=files, timeout=10)
+                response_data = response.json()
 
     except Exception as e:
         return jsonify({"error": f"Error during second backend communication: {str(e)}"}), 500
