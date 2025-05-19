@@ -358,7 +358,9 @@ def CustomModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, camera_metadata):
     cv2.destroyAllWindows()
 
     # Save all detections with geolocation
-    output_json = os.path.join(output_geolocation_dir, 'video_detections.json')
+    video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    output_json = os.path.join(output_geolocation_dir, f"{video_name}_{now}.json")
     with open(output_json, 'w') as f:
         json.dump(all_detections, f, indent=4)
 
