@@ -23,6 +23,8 @@
 .idea/
 .vscode/
 
+#Ignore environmental variables
+*.env
 
 
 

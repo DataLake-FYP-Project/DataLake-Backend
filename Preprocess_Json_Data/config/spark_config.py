@@ -46,4 +46,7 @@ def create_spark_session(app_name=None):
         .config("spark.executor.heartbeatInterval", "60s") \
         .config("spark.network.timeout", "300s") \
         .config("spark.sql.execution.pyspark.udf.simplifiedTraceback.enabled", "false") \
+        .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer") \
+        .config("spark.kryoserializer.buffer.max", "512m") \
+        .config("spark.driver.maxResultSize", "2g") \
         .getOrCreate()
