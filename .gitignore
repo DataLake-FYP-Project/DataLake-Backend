@@ -26,8 +26,6 @@
 # Ignore other data files
 *.csv
 
-.env
-
-
+*.env
 
 
