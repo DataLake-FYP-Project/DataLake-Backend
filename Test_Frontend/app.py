@@ -144,9 +144,9 @@ if video_file:
     else:
         # Camera metadata input
         st.subheader("Camera Metadata")
-        camera_lat = st.number_input("Enter the camera's latitude ", value=6.9271, step=0.0001)
-        camera_lon = st.number_input("Enter the camera's longitude", value=79.8612, step=0.0001)
-        camera_heading = st.number_input("Enter the camera's heading in degrees", value=45.0, step=0.1)
+        camera_lat = st.number_input("Enter the camera's latitude ", value=7.076772, step=0.0000001)
+        camera_lon = st.number_input("Enter the camera's longitude", value=80.0443499, step=0.0000001)
+        camera_heading = st.number_input("Enter the camera's heading in degrees", value=206.43, step=0.01)
 
         camera_metadata = {
             "latitude": camera_lat,
@@ -181,7 +181,7 @@ if video_file:
                 "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
 
-            vehicle_valid = point_selected and (line_selected or red_light_selected)
+            vehicle_valid = point_selected and line_selected
 
         else:
             latitude_selected = bool(st.session_state.camera_metadata.get("latitude"))
@@ -195,7 +195,7 @@ if video_file:
                 "heading": st.session_state.camera_metadata.get("heading") if heading_selected else None
             }
 
-            metadata_valid = latitude_selected or longitude_selected or heading_selected
+            metadata_valid = latitude_selected and longitude_selected and heading_selected
 
         valid = people_valid or vehicle_valid or metadata_valid
 
