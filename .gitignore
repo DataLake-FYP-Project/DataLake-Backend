@@ -23,8 +23,9 @@
 .idea/
 .vscode/
 
-#Ignore environmental variables
-*.env
+# Ignore other data files
+*.csv
 
+*.env
 
 

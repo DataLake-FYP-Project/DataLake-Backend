@@ -5,6 +5,7 @@ import cv2
 import tempfile
 import os
 
+
 # Function to capture points on the video
 def select_points_on_video(video_path, num_points=4, new_width=640, new_height=480):
     cap = cv2.VideoCapture(video_path)
@@ -37,14 +38,21 @@ def select_points_on_video(video_path, num_points=4, new_width=640, new_height=4
 
     return scale_polygon_points(points, original_width, original_height, new_width, new_height)
 
+
 def scale_polygon_points(polygon_points, original_width, original_height, new_width, new_height):
     scale_x = original_width / new_width
     scale_y = original_height / new_height
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
-def upload_video_and_points(video_file, points_data, video_type):
+
+import json
+import requests
+
+
+def upload_video_and_points(video_file, points_data, video_type, metadata_to_send=None):
     try:
         files = {"file": (video_file.name, video_file, "video/mp4")}
+        data = {}
 
         if video_type == "People":
             points = {
@@ -53,6 +61,7 @@ def upload_video_and_points(video_file, points_data, video_type):
                 "restricted": points_data.get("restricted", [])
             }
             url = "http://localhost:8011/upload_people"
+            data["points"] = json.dumps(points)
 
         elif video_type == "Vehicle":
             points = {
@@ -61,17 +70,26 @@ def upload_video_and_points(video_file, points_data, video_type):
                 "line_points": points_data.get("line_points", [])
             }
             url = "http://localhost:8012/upload_vehicle"
+            data["points"] = json.dumps(points)
+
+        elif video_type == "Vehicle Geolocation tracker":
+            url = "http://localhost:8012/upload_vehicle"
+            data["metadata"] = json.dumps(metadata_to_send)
 
         else:
             raise ValueError("Invalid video type")
 
-        data = {"points": json.dumps(points)}
+        # Debug print
+        print("Sending to:", url)
+        print("Data:", json.dumps(data, indent=2))
+
         response = requests.post(url, files=files, data=data)
         return response
 
     except Exception as e:
         print(f"Error uploading video: {str(e)}")
         return None
+
 
 # Streamlit UI
 st.title("Video Uploader with Points Selection")
@@ -88,46 +106,71 @@ if 'points_data' not in st.session_state:
 if video_file:
     st.video(video_file)
 
-    video_type = st.selectbox("Select Video Type", ["People", "Vehicle"])
+    video_type = st.selectbox("Select Video Type", ["People", "Vehicle", "Vehicle Geolocation tracker"])
 
-    if video_type == "People":
-        option = st.radio("Select Point Type", ["Entry", "Exit", "Restricted"])
+    camera_metadata = None
+    # Common point types for each video type
+    point_types_map = {
+        "People": ["Entry", "Exit", "Restricted"],
+        "Vehicle": ["Area", "red_light", "line_points"]
+    }
+
+    if video_type in point_types_map:
+        point_types = point_types_map[video_type]
+        option = st.radio("Select Point Type", point_types)
+
+        if st.button("Select Points on Video"):
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
+                tmp.write(video_file.read())
+                tmp_path = tmp.name
+
+            num_points = 2 if option == "line_points" else 4
+            selected_points = select_points_on_video(tmp_path, num_points=num_points)
+            os.remove(tmp_path)
+
+            if selected_points:
+                st.session_state.points_data[option] = [list(point) for point in selected_points]
+                st.success(f"{option} points saved: {st.session_state.points_data[option]}")
+            else:
+                st.error("No points selected.")
+
+        if st.button("Clear All Points"):
+            # Reset all known point types
+            st.session_state.points_data = {
+                key: [] for key in set().union(*point_types_map.values())
+            }
+            st.success("All points cleared.")
+
     else:
-        option = st.radio("Select Point Type", ["Area", "red_light", "line_points"])
+        # Camera metadata input
+        st.subheader("Camera Metadata")
+        camera_lat = st.number_input("Enter the camera's latitude ", value=7.076772, step=0.0000001)
+        camera_lon = st.number_input("Enter the camera's longitude", value=80.0443499, step=0.0000001)
+        camera_heading = st.number_input("Enter the camera's heading in degrees", value=206.43, step=0.01)
 
-    if st.button("Select Points on Video"):
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
-            tmp.write(video_file.read())
-            tmp_path = tmp.name
-
-        # Set number of points for selection
-        num_points = 2 if option == "line_points" else 4
-        selected_points = select_points_on_video(tmp_path, num_points=num_points)
-        os.remove(tmp_path)
-
-        if selected_points:
-            st.session_state.points_data[option] = [list(point) for point in selected_points]
-            st.success(f"{option} points saved: {st.session_state.points_data[option]}")
-        else:
-            st.error("No points selected.")
-
-    if st.button("Clear All Points"):
-        st.session_state.points_data = {
-            "Entry": [], "Exit": [], "Restricted": [],
-            "Area": [], "red_light": [], "line_points": []
+        camera_metadata = {
+            "latitude": camera_lat,
+            "longitude": camera_lon,
+            "heading": camera_heading
         }
-        st.success("All points cleared.")
+        st.session_state.camera_metadata = camera_metadata
 
     if st.button("Upload Video"):
+        people_valid = vehicle_valid = metadata_valid = False
         if video_type == "People":
-            points_to_send = {
-                "entry": st.session_state.points_data.get("Entry"),
-                "exit": st.session_state.points_data.get("Exit"),
-                "restricted": st.session_state.points_data.get("Restricted")
-            }
-            valid = all(points_to_send.values())
+            entry_selected = bool(st.session_state.points_data.get("Entry"))
+            exit_selected = bool(st.session_state.points_data.get("Exit"))
+            restricted_selected = bool(st.session_state.points_data.get("Restricted"))
 
-        else:
+            points_to_send = {
+                "entry": st.session_state.points_data.get("Entry") if entry_selected else [],
+                "exit": st.session_state.points_data.get("Exit") if exit_selected else [],
+                "restricted": st.session_state.points_data.get("Restricted") if restricted_selected else []
+            }
+
+            people_valid = entry_selected and exit_selected and restricted_selected
+
+        elif video_type == "Vehicle":
             point_selected = bool(st.session_state.points_data.get("Area"))
             line_selected = bool(st.session_state.points_data.get("line_points"))
             red_light_selected = bool(st.session_state.points_data.get("red_light"))
@@ -138,12 +181,34 @@ if video_file:
                 "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
 
-            valid = point_selected or line_selected
+            vehicle_valid = point_selected
+
+        else:
+            latitude_selected = bool(st.session_state.camera_metadata.get("latitude"))
+            longitude_selected = bool(st.session_state.camera_metadata.get("longitude"))
+            heading_selected = bool(st.session_state.camera_metadata.get("heading"))
+
+            # Create metadata_to_send for Vehicle type
+            metadata_to_send = {
+                "latitude": st.session_state.camera_metadata.get("latitude") if latitude_selected else None,
+                "longitude": st.session_state.camera_metadata.get("longitude") if longitude_selected else None,
+                "heading": st.session_state.camera_metadata.get("heading") if heading_selected else None
+            }
+
+            metadata_valid = latitude_selected and longitude_selected and heading_selected
+
+        valid = people_valid or vehicle_valid or metadata_valid
 
         if valid:
             with st.spinner("Uploading..."):
-                print("Points to send:", points_to_send)
-                response = upload_video_and_points(video_file, points_to_send, video_type)
+
+                if video_type == "Vehicle Geolocation tracker":
+                    print("Metadata to send:", metadata_to_send)
+                    response = upload_video_and_points(video_file, {}, video_type, metadata_to_send)
+
+                else:
+                    print("Points to send:", points_to_send)
+                    response = upload_video_and_points(video_file, points_to_send, video_type)
 
             if response:
                 if response.status_code == 200:
