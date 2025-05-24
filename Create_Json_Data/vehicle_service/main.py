@@ -399,11 +399,11 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, 
     SOURCE = np.array(ex_points)
     TARGET_WIDTH = 25
     TARGET_HEIGHT = 250
-
-    LINE_POINTS = np.array(line_points)
-    x1, y1 = LINE_POINTS[0]
-    x2, y2 = LINE_POINTS[1]
-    line = LineString([(x1, y1), (x2, y2)])
+    if line_points:
+        LINE_POINTS = np.array(line_points)
+        x1, y1 = LINE_POINTS[0]
+        x2, y2 = LINE_POINTS[1]
+        line = LineString([(x1, y1), (x2, y2)])
 
     TARGET = np.array([
         [0, 0],
@@ -451,7 +451,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, 
 
     # Define the crossing line position (horizontal line in the middle of the frame)
     line_y_position = video_info.height // 2  # Horizontal line in the middle of the frame
-
     # Variables to track vehicle crossings
     vehicle_crossings = {'entered': 0, 'exited': 0}
     crossing_tracker = {}  # Tracks if a vehicle has crossed the line
@@ -556,12 +555,14 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, 
                 tracker_id_int = int(tracker_id)
                 crossing_tracker[tracker_id]['last_position'] = center_y
 
-                cv2.line(frame, (0, line_y_position), (video_info.width, line_y_position), (0, 255, 0), 2)
-                cv2.line(frame, (x1, y1), (x2, y2), (0, 0, 255), 4)
-                cv2.putText(frame, f"Entered: {vehicle_crossings['entered']}", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                            (255, 0, 0), 2)
-                cv2.putText(frame, f"Exited: {vehicle_crossings['exited']}", (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                            (0, 0, 255), 2)
+                if line_points:
+                    cv2.line(frame, (0, line_y_position), (video_info.width, line_y_position), (0, 255, 0), 2)
+                    cv2.line(frame, (x1, y1), (x2, y2), (0, 0, 255), 4)
+                    cv2.putText(frame, f"Entered: {vehicle_crossings['entered']}", (30, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                                1,
+                                (255, 0, 0), 2)
+                    cv2.putText(frame, f"Exited: {vehicle_crossings['exited']}", (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                                (0, 0, 255), 2)
 
                 congestion_level = calculate_congestion_level(detections)
                 speed = calculate_speed(center_x, center_y, tracker_id, frame_number)
@@ -609,8 +610,9 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, ex_points, red_light_points, 
 
                     center_point = Point(center_x, center_y)
                     bbox_width = bbox[2] - bbox[0]
-                    distance = center_point.distance(line)
-                    line_crossing = distance <= (bbox_width / 2)
+                    if line_points:
+                        distance = center_point.distance(line)
+                        line_crossing = distance <= (bbox_width / 2)
 
                     # Store frame number for first violation
                     if line_crossing and tracker_id not in line_violation_times:

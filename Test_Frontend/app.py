@@ -181,7 +181,7 @@ if video_file:
                 "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
 
-            vehicle_valid = point_selected and line_selected
+            vehicle_valid = point_selected
 
         else:
             latitude_selected = bool(st.session_state.camera_metadata.get("latitude"))
