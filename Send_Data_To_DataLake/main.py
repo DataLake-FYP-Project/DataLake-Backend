@@ -17,7 +17,7 @@ from Preprocess_Json_Data.connectors.minio_connector import MinIOConnector
 from Preprocess_Json_Data.main import spark_preprocessing, fetch_refined_file
 from processing_vehicle import convert_json_format, vehicle_upload_to_minio, vehicle_upload_to_elasticsearch
 from processing_people import convert_people_json_format, people_upload_to_elasticsearch, people_upload_to_minio
-from processing_geolocation import geolocation_upload_to_minio
+from processing_geolocation import geolocation_upload_to_elasticsearch, geolocation_upload_to_minio
 
 app = Flask(__name__)
 
@@ -211,7 +211,7 @@ def upload_geolocation_json():
             # Upload the refined JSON to Elasticsearch
             logging.info("Uploading refined JSON to Elasticsearch")
             try:
-                geolocation_upload_to_minio(temp_file_path)
+                geolocation_upload_to_elasticsearch(temp_file_path)
                 logging.info("Successfully uploaded to Elasticsearch")
             except Exception as e:
                 logging.error(f"Error uploading to Elasticsearch: {str(e)}", exc_info=True)
