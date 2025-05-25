@@ -42,7 +42,8 @@ class MinIOConnector:
                 .option("mode", "PERMISSIVE")
                 .json(s3_path))
 
-    def write_json(self, df: DataFrame, bucket: str, path: str, mode: str = "overwrite"):
+    def write_json(self, df: DataFrame, bucket: str, path: str, mode: str = "overwrite", temp_bucket: Optional[str] = None):
+        temp_bucket = temp_bucket or bucket
         """Write DataFrame as proper JSON array to MinIO"""
         self.ensure_bucket_exists(bucket)
 
@@ -56,9 +57,9 @@ class MinIOConnector:
 
         # Step 3: Convert to a proper JSON array (without re-dumping strings!)
         json_array = "[\n" + ",\n".join(json_rows) + "\n]"
+        wrapped_json = f'{{\n  "frame_detections": {json_array}\n}}'
+        json_bytes = wrapped_json.encode('utf-8')
 
-        # Step 4: Write the combined array as a single object to MinIO
-        json_bytes = json_array.encode('utf-8')
         json_stream = BytesIO(json_bytes)
 
         self.minio_client.put_object(
