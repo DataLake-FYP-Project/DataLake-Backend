@@ -9,6 +9,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_people import process_people_json_data
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_geolocation import process_geolocation_json_data
 
 # Load environment variables
 load_dotenv()
@@ -19,7 +20,9 @@ def process_video_data(spark, input_path, video_type):
     minio_conn = MinIOConnector(spark)
 
     try:
-        type_folder = "vehicle_detection" if video_type.lower() == "vehicle" else "people_detection"
+        type_folder = "vehicle_detection" if video_type.lower() == "vehicle" else \
+        "people_detection" if video_type.lower() == "people" else \
+        "geolocation_detection"
         full_input_path = f"{type_folder}/{input_path}"
 
         raw_df = minio_conn.read_json(BUCKETS["raw"], full_input_path)
@@ -27,9 +30,12 @@ def process_video_data(spark, input_path, video_type):
         if video_type.lower() == "vehicle":
             processed_df,processing_status = process_vehicle_json_data(raw_df)
             output_path = f"vehicle_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
-        else:
+        elif video_type.lower() == "people":
             processed_df,processing_status = process_people_json_data(raw_df)
             output_path = f"people_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
+        else:  # geolocation
+            processed_df, processing_status = process_geolocation_json_data(raw_df)
+            output_path = f"geolocation_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         return processed_df, output_path,processing_status
     except Exception as e:
         logging.error(f"Data processing failed for {input_path}: {e}")
@@ -68,7 +74,7 @@ def fetch_refined_file(spark, file_path: str, file_name: str, detection_type: st
         minio_conn = MinIOConnector(spark)
 
         # Construct the full file path
-        type_folder = "vehicle_detection" if detection_type.lower() == "vehicle" else "people_detection"
+        # type_folder = "vehicle_detection" if detection_type.lower() == "vehicle" else "people_detection"
         full_path = f"{file_path}/{file_name}" if file_path else file_name
 
         # Ensure the refine bucket exists
@@ -130,12 +136,28 @@ def spark_preprocessing(filename, detection_type):
             except Exception as e:
                 logging.error(f"Error processing people file {people_file}: {e}")
         
+        elif detection_type == "Geolocation":
+            geolocation_file = minio_conn.get_json_file(BUCKETS["raw"], f"geolocation_detection/{filename}")
+            if not geolocation_file:
+                logging.warning(f"No {filename} file found in geolocation_detection folder")
+
+            try:
+                logging.info(f"Processing geolocation file: {geolocation_file}")
+                geolocation_df, geolocation_path, processing_status = process_video_data(spark, geolocation_file, "geolocation")
+                if not write_output_json(spark, geolocation_df, geolocation_path, processing_status):
+                    logging.error(f"Failed to process geolocation file: {geolocation_file}")
+                refine_output_path = geolocation_path.replace("preprocessed_", "refine_")
+                minio_conn.write_json(geolocation_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
+
+            except Exception as e:
+                logging.error(f"Error processing geolocation file {geolocation_file}: {e}")
+
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
         if processing_status==-1:
             logging.info("No detections in raw json to process. Skipping further preprocessing\n")
             return processing_status
-        elif processing_status==1:
+        elif processing_status==1 and detection_type != "Geolocation":
             logging.info(f"Basic Processing completed in {duration:.2f} seconds")
 
             print("\n")
