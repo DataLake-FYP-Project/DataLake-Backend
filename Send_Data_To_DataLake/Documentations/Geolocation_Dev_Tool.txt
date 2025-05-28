@@ -1,0 +1,61 @@
+GET _cat/indices?v
+
+DELETE datalake-geolocation-data
+
+PUT /datalake-geolocation-data
+{
+  "mappings": {
+    "properties": {
+      "@timestamp": { "type": "date" },
+      "source_file": { "type": "keyword" },
+      "processing_date": { "type": "date" },
+      "processing_version": { "type": "keyword" },
+      "frame_number": { "type": "integer" },
+      "timestamp": { "type": "date" },
+      "class": { "type": "keyword" },
+      "class_id": { "type": "integer" },
+      "confidence": { "type": "float" },
+      "bbox": { "type": "float" }, 
+      "bbox_x1": { "type": "float" },
+      "bbox_y1": { "type": "float" },
+      "bbox_x2": { "type": "float" },
+      "bbox_y2": { "type": "float" },
+      "geolocation_latitude": { "type": "float" },
+      "geolocation_longitude": { "type": "float" }
+    }
+  }
+}
+
+POST /datalake-geolocation-data/_doc?pipeline=geolocation_data_timestamp_pipeline
+{
+  "source_file": "geolocation_device_001.json",
+  "processing_date": "2025-05-25",
+  "processing_version": "v1.0",
+  "frame_number": 42,
+  "timestamp": "2025-05-25T13:15:00Z",
+  "class": "motorcycle",
+  "class_id": -1,
+  "confidence": 0.89,
+  "bbox": [505.0, 65.0, 571.0, 160.0],
+  "bbox_x1": 505.0,
+  "bbox_y1": 65.0,
+  "bbox_x2": 571.0,
+  "bbox_y2": 160.0,
+  "geolocation_latitude": 7.076353846637395,
+  "geolocation_longitude": 80.04418265560186
+}
+
+PUT _ingest/pipeline/geolocation_data_timestamp_pipeline
+{
+  "description": "Add timestamp to geolocation data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+GET datalake-geolocation-data/_search

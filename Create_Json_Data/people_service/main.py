@@ -176,13 +176,6 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH, exit_points, entry_points, re
     area1 = np.array(entry_points)  # near the door
     area2 = np.array(exit_points)
 
-    if area1.size == 0:
-        print("🚫 Exit points are missing!")
-    if area2.size == 0:
-        print("🚫 Entry points are missing!")
-    if restricted_area.size == 0:
-        print("⚠️ Restricted area points are missing!")
-
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_{now}.json")
