@@ -18,7 +18,7 @@ class PeopleDataSplitter:
     def __init__(self, spark):
         self.spark = spark
         self.minio_connector = MinIOConnector(spark)
-        self.source_file = "people_detection/refine_people_final_2025-05-20_14-30-27.json"
+        self.source_file = "people_detection/refine_people_final_2025-05-20_12-54-03.json"
 
     def process(self):
         try:
@@ -124,7 +124,7 @@ class PeopleDataSplitter:
     def _upload_files(self, files: Dict[str, Dict[str, Any]]):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         for feature_name, content in files.items():
-            file_path = f"{feature_name}/{feature_name}_{timestamp}.json"  # removed 'feature_data/' prefix
+            file_path = f"people_detection/{feature_name}/{feature_name}_{timestamp}.json"
             self.minio_connector.write_single_json(content, BUCKETS["refine"], file_path)
 
 
