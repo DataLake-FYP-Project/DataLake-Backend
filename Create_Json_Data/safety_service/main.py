@@ -37,15 +37,16 @@ UNSAFE_CLASSES = {"NO-Hardhat", "NO-Mask", "NO-Safety Vest"}
 os.makedirs(FRAME_SAVE_DIR, exist_ok=True)
 box_annotator = sv.BoxAnnotator(thickness=2, text_thickness=2, text_scale=1)
 
-id_counter = 1
-id_map = {}
-frame_data_list = []
-
 
 def get_class_name(class_id):
     return classNames[class_id] if class_id < len(classNames) else f"Class {class_id}"
 
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
+
+    id_counter = 1
+    id_map = {}
+    frame_data_list = []
+
 
     model_path = os.path.join("Model", "ppe.pt")
     model = YOLO(model_path)  
