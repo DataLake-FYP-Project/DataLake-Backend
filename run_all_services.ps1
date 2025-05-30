@@ -6,6 +6,9 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\Create_
 # Run vehicle_service
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\Create_Json_Data\vehicle_service'; python main.py"
 
+# Run safety_service
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\Create_Json_Data\safety_service'; python main.py"
+
 # Run Send_Data_To_DataLake
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\Send_Data_To_DataLake'; python main.py"
 

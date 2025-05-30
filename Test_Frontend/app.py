@@ -45,10 +45,6 @@ def scale_polygon_points(polygon_points, original_width, original_height, new_wi
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
 
-import json
-import requests
-
-
 def upload_video_and_points(video_file, points_data, video_type, metadata_to_send=None):
     try:
         files = {"file": (video_file.name, video_file, "video/mp4")}
@@ -76,10 +72,12 @@ def upload_video_and_points(video_file, points_data, video_type, metadata_to_sen
             url = "http://localhost:8012/upload_vehicle"
             data["metadata"] = json.dumps(metadata_to_send)
 
+        elif video_type == "Safety":
+            url = "http://localhost:8014/upload_safety"
+
         else:
             raise ValueError("Invalid video type")
 
-        # Debug print
         print("Sending to:", url)
         print("Data:", json.dumps(data, indent=2))
 
@@ -106,10 +104,10 @@ if 'points_data' not in st.session_state:
 if video_file:
     st.video(video_file)
 
-    video_type = st.selectbox("Select Video Type", ["People", "Vehicle", "Vehicle Geolocation tracker"])
+    video_type = st.selectbox("Select Video Type", ["People", "Vehicle", "Vehicle Geolocation tracker", "Safety"])
 
     camera_metadata = None
-    # Common point types for each video type
+
     point_types_map = {
         "People": ["Entry", "Exit", "Restricted"],
         "Vehicle": ["Area", "red_light", "line_points"]
@@ -135,16 +133,14 @@ if video_file:
                 st.error("No points selected.")
 
         if st.button("Clear All Points"):
-            # Reset all known point types
             st.session_state.points_data = {
                 key: [] for key in set().union(*point_types_map.values())
             }
             st.success("All points cleared.")
 
-    else:
-        # Camera metadata input
+    elif video_type == "Vehicle Geolocation tracker":
         st.subheader("Camera Metadata")
-        camera_lat = st.number_input("Enter the camera's latitude ", value=7.076772, step=0.0000001)
+        camera_lat = st.number_input("Enter the camera's latitude", value=7.076772, step=0.0000001)
         camera_lon = st.number_input("Enter the camera's longitude", value=80.0443499, step=0.0000001)
         camera_heading = st.number_input("Enter the camera's heading in degrees", value=206.43, step=0.01)
 
@@ -156,7 +152,10 @@ if video_file:
         st.session_state.camera_metadata = camera_metadata
 
     if st.button("Upload Video"):
-        people_valid = vehicle_valid = metadata_valid = False
+        valid = False
+        points_to_send = {}
+        metadata_to_send = {}
+
         if video_type == "People":
             entry_selected = bool(st.session_state.points_data.get("Entry"))
             exit_selected = bool(st.session_state.points_data.get("Exit"))
@@ -168,46 +167,42 @@ if video_file:
                 "restricted": st.session_state.points_data.get("Restricted") if restricted_selected else []
             }
 
-            people_valid = entry_selected and exit_selected and restricted_selected
+            valid = entry_selected and exit_selected and restricted_selected
 
         elif video_type == "Vehicle":
-            point_selected = bool(st.session_state.points_data.get("Area"))
+            area_selected = bool(st.session_state.points_data.get("Area"))
             line_selected = bool(st.session_state.points_data.get("line_points"))
-            red_light_selected = bool(st.session_state.points_data.get("red_light"))
+            red_selected = bool(st.session_state.points_data.get("red_light"))
 
             points_to_send = {
-                "Area": st.session_state.points_data.get("Area") if point_selected else [],
-                "red_light": st.session_state.points_data.get("red_light") if red_light_selected else [],
+                "Area": st.session_state.points_data.get("Area") if area_selected else [],
+                "red_light": st.session_state.points_data.get("red_light") if red_selected else [],
                 "line_points": st.session_state.points_data.get("line_points") if line_selected else []
             }
 
-            vehicle_valid = point_selected
+            valid = area_selected
 
-        else:
-            latitude_selected = bool(st.session_state.camera_metadata.get("latitude"))
-            longitude_selected = bool(st.session_state.camera_metadata.get("longitude"))
-            heading_selected = bool(st.session_state.camera_metadata.get("heading"))
+        elif video_type == "Vehicle Geolocation tracker":
+            lat = st.session_state.camera_metadata.get("latitude")
+            lon = st.session_state.camera_metadata.get("longitude")
+            heading = st.session_state.camera_metadata.get("heading")
 
-            # Create metadata_to_send for Vehicle type
             metadata_to_send = {
-                "latitude": st.session_state.camera_metadata.get("latitude") if latitude_selected else None,
-                "longitude": st.session_state.camera_metadata.get("longitude") if longitude_selected else None,
-                "heading": st.session_state.camera_metadata.get("heading") if heading_selected else None
+                "latitude": lat,
+                "longitude": lon,
+                "heading": heading
             }
 
-            metadata_valid = latitude_selected and longitude_selected and heading_selected
+            valid = all([lat, lon, heading])
 
-        valid = people_valid or vehicle_valid or metadata_valid
+        elif video_type == "Safety":
+            valid = True  # No point selection needed
 
         if valid:
             with st.spinner("Uploading..."):
-
                 if video_type == "Vehicle Geolocation tracker":
-                    print("Metadata to send:", metadata_to_send)
                     response = upload_video_and_points(video_file, {}, video_type, metadata_to_send)
-
                 else:
-                    print("Points to send:", points_to_send)
                     response = upload_video_and_points(video_file, points_to_send, video_type)
 
             if response:
@@ -217,4 +212,4 @@ if video_file:
                 else:
                     st.error(f"Upload failed: {response.status_code} - {response.text}")
         else:
-            st.warning("Please select all required points before uploading.")
+            st.warning("Please select all required inputs before uploading.")

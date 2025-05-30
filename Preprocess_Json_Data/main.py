@@ -45,7 +45,31 @@ def process_video_data(spark, input_path, video_type):
 def write_output_json(spark, df, output_path,processing_status):
     try:
         clean_path = output_path.lstrip('/')
-        MinIOConnector(spark).write_json(df, BUCKETS["processed"], clean_path)
+        minio_conn = MinIOConnector(spark)
+
+        # Check if it's geolocation by file path
+        is_geolocation = "geolocation_detection" in clean_path
+
+        if is_geolocation:
+            # Write wrapped JSON to "processed"
+            minio_conn.write_wrapped_json(
+                df=df,
+                bucket=BUCKETS["processed"],
+                path=clean_path,
+                key="frame_detections"
+            )
+            # Also write wrapped JSON to "refine"
+            refine_path = clean_path.replace("preprocessed_", "refine_")
+            minio_conn.write_wrapped_json(
+                df=df,
+                bucket=BUCKETS["refine"],
+                path=refine_path,
+                key="frame_detections"
+            )
+        else:
+            # Use standard write_json for people/vehicle
+            minio_conn.write_json(df, BUCKETS["processed"], clean_path)
+        
         if processing_status==1:
             logging.info(f"Successfully wrote output to processed/{clean_path}")
         return True
