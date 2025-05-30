@@ -48,96 +48,119 @@ class PeopleDataSplitter:
 
     def _transform_data(self, data: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
         """Transform the data into feature-based files"""
-        # Prepare metadata
-        metadata = {
-            "source_file": data["source_file"],
-            "processing_date": data["processing_date"],
-            "processing_version": data["processing_version"],
-            "people_count": data["people_count"],
-            "processing_timestamp": datetime.utcnow().isoformat() + "Z"
-        }
+        try:
+            # Prepare metadata
+            metadata = {
+                "source_file": data.get("source_file", "unknown"),
+                "processing_date": data.get("processing_date", "unknown"),
+                "processing_version": data.get("processing_version", "unknown"),
+                "people_count": data.get("people_count", 0),
+            }
 
-        # Initialize files structure
-        files = {
-            "PersonalInfo": {"metadata": metadata, "people": {}, "statistics": {}},
-            "Activity": {"metadata": metadata, "people": {}, "statistics": {}},
-            "Security": {"metadata": metadata, "people": {}, "statistics": {}},
-            "Confidence": {"metadata": metadata, "people": {}, "statistics": {}},
-        }
+            # Initialize files structure
+            files = {
+                "PersonalInfo": {"metadata": metadata, "people": {}, "statistics": {}},
+                "Activity": {"metadata": metadata, "people": {}, "statistics": {}},
+                "Security": {"metadata": metadata, "people": {}, "statistics": {}},
+                "Confidence": {"metadata": metadata, "people": {}, "statistics": {}},
+            }
 
-        # Initialize statistics
-        gender_dist = {}
-        age_dist = {}
-        carrying_dist = {}
-        frame_counts = []
-        durations = []
-        confidences = []
-        restricted_entries = 0
+            # Initialize statistics
+            gender_dist = {}
+            age_dist = {}
+            carrying_dist = {}
+            frame_counts = []
+            durations = []
+            confidences = []
+            restricted_entries = 0
+            valid_person_found = False
 
-        # Process each person
-        for person_id, person in data["people"].items():
-            # PersonalInfo
-            files["PersonalInfo"]["people"][person_id] = {
-                "age": person["age"],
-                "gender": person["gender"]
+            # Process each person
+            for person_id, person in data.get("people", {}).items():
+                # Initialize all person data containers
+                personal_info, activity, security, confidence = {}, {}, {}, {}
+
+                # Personal Info
+                age = person.get("age")
+                gender = person.get("gender")
+                if age is not None and gender is not None:
+                    personal_info = {"age": age, "gender": gender}
+                    gender_dist[gender] = gender_dist.get(gender, 0) + 1
+                    age_dist[age] = age_dist.get(age, 0) + 1
+                    valid_person_found = True
+
+                # Activity
+                if all(k in person for k in ["first_detection", "last_detection", "duration_seconds", "frame_count"]):
+                    activity = {
+                        "first_detection": person["first_detection"],
+                        "last_detection": person["last_detection"],
+                        "duration_seconds": person["duration_seconds"],
+                        "frame_count": person["frame_count"]
+                    }
+                    durations.append(person["duration_seconds"])
+                    frame_counts.append(person["frame_count"])
+                    valid_person_found = True
+
+                # Security
+                if all(k in person for k in ["carrying", "entered_restricted_area", "restricted_area_entry_time"]):
+                    security = {
+                        "carrying": person["carrying"],
+                        "entered_restricted_area": person["entered_restricted_area"],
+                        "restricted_area_entry_time": person["restricted_area_entry_time"]
+                    }
+                    carrying_dist[person["carrying"]] = carrying_dist.get(person["carrying"], 0) + 1
+                    if person["entered_restricted_area"]:
+                        restricted_entries += 1
+                    valid_person_found = True
+
+                # Confidence
+                confidence_avg = person.get("confidence_avg")
+                if confidence_avg is not None:
+                    confidence = {"confidence_avg": confidence_avg}
+                    confidences.append(confidence_avg)
+                    valid_person_found = True
+
+                if personal_info:
+                    files["PersonalInfo"]["people"][person_id] = personal_info
+                if activity:
+                    files["Activity"]["people"][person_id] = activity
+                if security:
+                    files["Security"]["people"][person_id] = security
+                if confidence:
+                    files["Confidence"]["people"][person_id] = confidence
+
+            if not valid_person_found:
+                print("No valid person data found. Skipping processing.")
+                return {}
+
+            # Calculate and add statistics
+            files["PersonalInfo"]["statistics"] = {
+                "gender_distribution": gender_dist,
+                "age_distribution": age_dist
             }
             
-            # Activity
-            files["Activity"]["people"][person_id] = {
-                "first_detection": person["first_detection"],
-                "last_detection": person["last_detection"],
-                "duration_seconds": person["duration_seconds"],
-                "frame_count": person["frame_count"]
+            files["Activity"]["statistics"] = {
+                "total_frame_count": sum(frame_counts),
+                "total_duration_seconds": sum(durations),
+                "avg_duration_seconds": mean(durations) if durations else 0,
+                "avg_frame_count": mean(frame_counts) if frame_counts else 0
             }
             
-            # Security
-            files["Security"]["people"][person_id] = {
-                "carrying": person["carrying"],
-                "entered_restricted_area": person["entered_restricted_area"],
-                "restricted_area_entry_time": person["restricted_area_entry_time"]
+            files["Security"]["statistics"] = {
+                "carrying_distribution": carrying_dist,
+                "restricted_area_entries": restricted_entries
             }
             
-            # Confidence
-            files["Confidence"]["people"][person_id] = {
-                "confidence_avg": person["confidence_avg"]
+            files["Confidence"]["statistics"] = {
+                "avg_confidence": mean(confidences) if confidences else 0,
+                "min_confidence": min(confidences) if confidences else 0,
+                "max_confidence": max(confidences) if confidences else 0
             }
-            
-            # Update statistics
-            gender_dist[person["gender"]] = gender_dist.get(person["gender"], 0) + 1
-            age_dist[person["age"]] = age_dist.get(person["age"], 0) + 1
-            carrying_dist[person["carrying"]] = carrying_dist.get(person["carrying"], 0) + 1
-            frame_counts.append(person["frame_count"])
-            durations.append(person["duration_seconds"])
-            confidences.append(person["confidence_avg"])
-            
-            if person["entered_restricted_area"]:
-                restricted_entries += 1
 
-        # Calculate and add statistics
-        files["PersonalInfo"]["statistics"] = {
-            "gender_distribution": gender_dist,
-            "age_distribution": age_dist
-        }
-        
-        files["Activity"]["statistics"] = {
-            "total_frame_count": sum(frame_counts),
-            "total_duration_seconds": sum(durations),
-            "avg_duration_seconds": mean(durations) if durations else 0,
-            "avg_frame_count": mean(frame_counts) if frame_counts else 0
-        }
-        
-        files["Security"]["statistics"] = {
-            "carrying_distribution": carrying_dist,
-            "restricted_area_entries": restricted_entries
-        }
-        
-        files["Confidence"]["statistics"] = {
-            "avg_confidence": mean(confidences) if confidences else 0,
-            "min_confidence": min(confidences) if confidences else 0,
-            "max_confidence": max(confidences) if confidences else 0
-        }
-
-        return files
+            return files
+        except Exception as e:
+            print(f"Error during data transformation: {e}")
+            return {}
 
     def _upload_files(self, files: Dict[str, Dict[str, Any]]):
         """Upload the generated files to MinIO"""
