@@ -57,8 +57,9 @@ class MinIOConnector:
 
         # Step 3: Convert to a proper JSON array (without re-dumping strings!)
         json_array = "[\n" + ",\n".join(json_rows) + "\n]"
-        wrapped_json = f'{{\n  "frame_detections": {json_array}\n}}'
-        json_bytes = wrapped_json.encode('utf-8')
+        # wrapped_json = f'{{\n  "frame_detections": {json_array}\n}}'
+        # json_bytes = wrapped_json.encode('utf-8')
+        json_bytes = json_array.encode('utf-8')
 
         json_stream = BytesIO(json_bytes)
 
@@ -77,6 +78,25 @@ class MinIOConnector:
                 self.minio_client.remove_object(bucket, obj.object_name)
         except S3Error as e:
             logging.error(f"Error cleaning up temp files: {e}")
+
+    def write_wrapped_json(self, df: DataFrame, bucket: str, path: str, key: str = "frame_detections"):
+        """Wraps DataFrame content under a top-level key and writes to MinIO as a single object."""
+        from io import BytesIO
+
+        self.ensure_bucket_exists(bucket)
+
+        json_rows = df.toJSON().collect()
+        wrapped = f'{{\n  "{key}": [\n' + ",\n".join(json_rows) + '\n  ]\n}}'
+        json_bytes = wrapped.encode('utf-8')
+        stream = BytesIO(json_bytes)
+
+        self.minio_client.put_object(
+            bucket,
+            path,
+            stream,
+            len(json_bytes),
+            content_type="application/json"
+        )
 
     def write_single_json(self, data: Dict[str, Any], bucket: str, path: str):
         """Write Python dict as single formatted JSON file"""
