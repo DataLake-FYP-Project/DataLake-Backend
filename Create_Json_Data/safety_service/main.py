@@ -19,7 +19,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 FRAME_SAVE_DIR = 'results/frames/'
 
-SECOND_BACKEND_URL = "http://localhost:8013/upload_2_vehicle"
+SECOND_BACKEND_URL = "http://localhost:8013/upload_2_safety"
 
 
 # All classes in our custom model
