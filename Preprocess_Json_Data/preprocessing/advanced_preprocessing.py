@@ -3,6 +3,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from Preprocess_Json_Data.preprocessing.advanced_preprocessing_safety import SafetyProcessor
+
 sys.path.append(str(Path(__file__).parent.parent))
 from .advanced_preprocessing_people import PeopleProcessor
 from .advanced_preprocessing_vehicle import VehicleProcessor
@@ -16,6 +18,7 @@ class CombinedProcessor:
         self.spark = spark
         self.people_processor = PeopleProcessor(spark)
         self.vehicle_processor = VehicleProcessor(spark)
+        self.safety_processor = SafetyProcessor(spark)
 
     def _get_common_output_structure(self, source_file):
         """Common output structure for both people and vehicle processing"""
@@ -31,7 +34,7 @@ class CombinedProcessor:
 
     # def _process_file(self, processor, input_bucket, output_bucket, file, prefix):
     #     """Common file processing logic"""
-
+    
     #     logging.info(f"Processing {file}...")
     #     try:
     #         df = processor.minio.read_json(input_bucket, f"{prefix}/{file}")
@@ -87,6 +90,8 @@ class CombinedProcessor:
                 else:
                     logging.info(f"Skipping {file} - unknown format")
                     return None
+            elif processor.__class__.__name__ == "SafetyProcessor":
+                processed_df = processor._process_safety_format(df)
             else:  # VehicleProcessor
                 processed_df = processor._process_vehicle_format(df)
 
@@ -237,11 +242,40 @@ class CombinedProcessor:
             except Exception as e:
                 logging.info(f"ERROR in vehicle processing: {str(e)}")
                 return -1
+        
+        elif detection_type == "Safety":
+            logging.info("Processing Safety Detections")
+            try:
+                safety_file = self.safety_processor.minio.get_json_file(input_bucket, f"safety_detection/preprocessed_{filename}")
+                processed_df = self._process_file(self.safety_processor, input_bucket, output_bucket, safety_file,
+                                                  "safety_detection")
 
-        end_time = datetime.now(timezone.utc)
-        duration = (end_time - start_time).total_seconds()
-        logging.info(f"Advanced Processing completed in {duration:.2f} seconds")
-        return 1
+                if processed_df == "all_invalid":
+                    logging.info("Stopping preprocessing - all safety tracker IDs are -1")
+                    return -1
+
+                if processed_df is None:
+                    logging.info("No valid safety detections to process")
+                    return -1
+
+                grouped = self.safety_processor._group_data(processed_df)
+                collected = grouped.collect()
+                enriched_data = dict(
+                    sorted([self.safety_processor._enrich_safety(row) for row in collected],
+                           key=lambda x: int(x[0])))
+
+                output = self._get_common_output_structure(safety_file)
+                output.update({
+                    "safety_count": len(enriched_data),
+                    "safety_objects": enriched_data
+                })
+                out_path = f"safety_detection/refine_{filename}"
+                self._write_output(output_bucket, out_path, output)
+                logging.info(f"Successfully processed {len(enriched_data)} safety objects in {safety_file}")
+
+            except Exception as e:
+                logging.info(f"ERROR in safety processing: {str(e)}")
+                return -1
 
 
 

@@ -4,6 +4,7 @@ from Preprocess_Json_Data.preprocessing.advanced_preprocessing import advanced_p
 from Preprocess_Json_Data.config.spark_config import create_spark_session
 from Preprocess_Json_Data.config.minio_config import BUCKETS
 from Preprocess_Json_Data.connectors.minio_connector import MinIOConnector
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_safety import process_safety_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_vehicle import process_vehicle_json_data
 import logging
 import os
@@ -28,7 +29,8 @@ def process_video_data(spark, input_path, video_type):
     try:
         type_folder = "vehicle_detection" if video_type.lower() == "vehicle" else \
             "people_detection" if video_type.lower() == "people" else \
-                "geolocation_detection"
+                "safety_detection" if video_type.lower() == "safety" else \
+                    "geolocation_detection"
         full_input_path = f"{type_folder}/{input_path}"
 
         raw_df = minio_conn.read_json(BUCKETS["raw"], full_input_path)
@@ -39,6 +41,9 @@ def process_video_data(spark, input_path, video_type):
         elif video_type.lower() == "people":
             processed_df, processing_status = process_people_json_data(raw_df)
             output_path = f"people_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
+        elif video_type.lower() == "safety":
+            processed_df, processing_status = process_safety_json_data(raw_df)
+            output_path = f"safety_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         else:  # geolocation
             processed_df, processing_status = process_geolocation_json_data(raw_df)
             output_path = f"geolocation_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
@@ -112,18 +117,11 @@ def fetch_refined_file(spark, file_path: str, file_name: str, detection_type: st
 
 
 def spark_preprocessing(filename, detection_type):
-    detection_type = detection_type.lower()
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
     spark = create_spark_session()
     minio_conn = MinIOConnector(spark)
     processing_status = None
-
-    if detection_type not in DETECTION_REGISTRY:
-        logging.error(f"Unknown detection type: {detection_type}")
-        return None
-
-    config = DETECTION_REGISTRY[detection_type]
 
     if not minio_conn.ensure_bucket_exists(BUCKETS["raw"]):
         logging.error("Cannot proceed without required buckets")
@@ -179,6 +177,23 @@ def spark_preprocessing(filename, detection_type):
             except Exception as e:
                 logging.error(f"Error processing geolocation file {geolocation_file}: {e}")
 
+        elif detection_type == "Safety":
+            geolocation_file = minio_conn.get_json_file(BUCKETS["raw"], f"safety_detection/{filename}")
+            if not geolocation_file:
+                logging.warning(f"No {filename} file found in safety_detection folder")
+
+            try:
+                logging.info(f"Processing safety file: {geolocation_file}")
+                geolocation_df, geolocation_path, processing_status = process_video_data(spark, geolocation_file,
+                                                                                         "safety")
+                if not write_output_json(spark, geolocation_df, geolocation_path, processing_status):
+                    logging.error(f"Failed to process safety file: {geolocation_file}")
+                refine_output_path = geolocation_path.replace("preprocessed_", "refine_")
+                minio_conn.write_json(geolocation_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
+
+            except Exception as e:
+                logging.error(f"Error processing safety file {geolocation_file}: {e}")
+
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
         if processing_status == -1:
@@ -201,7 +216,9 @@ def spark_preprocessing(filename, detection_type):
         else:
             return processing_status
     except Exception as e:
-        logging.error(f"Fatal error: {e}")
-        return None
+        logging.error(f"Fatal error in processing pipeline: {e}")
+        return processing_status
     finally:
         spark.stop()
+        logging.info("Spark session stopped")
+        print("\n")
