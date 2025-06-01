@@ -246,9 +246,20 @@ class CombinedProcessor:
         elif detection_type == "Safety":
             logging.info("Processing Safety Detections")
             try:
-                safety_file = self.safety_processor.minio.get_json_file(input_bucket, f"safety_detection/preprocessed_{filename}")
-                processed_df = self._process_file(self.safety_processor, input_bucket, output_bucket, safety_file,
-                                                  "safety_detection")
+                # 1. Load input JSON file from MinIO
+                safety_file = self.safety_processor.minio.get_json_file(
+                    input_bucket,
+                    f"safety_detection/preprocessed_{filename}"
+                )
+
+                # 2. Preprocess file
+                processed_df = self._process_file(
+                    self.safety_processor,
+                    input_bucket,
+                    output_bucket,
+                    safety_file,
+                    "safety_detection"
+                )
 
                 if processed_df == "all_invalid":
                     logging.info("Stopping preprocessing - all safety tracker IDs are -1")
@@ -258,24 +269,35 @@ class CombinedProcessor:
                     logging.info("No valid safety detections to process")
                     return -1
 
+                # 3. Group and enrich data
                 grouped = self.safety_processor._group_data(processed_df)
                 collected = grouped.collect()
-                enriched_data = dict(
-                    sorted([self.safety_processor._enrich_safety(row) for row in collected],
-                           key=lambda x: int(x[0])))
 
-                output = self._get_common_output_structure(safety_file)
+                # 4. Enrich each group using updated logic
+                enriched_data = dict(
+                    sorted(
+                        [self.safety_processor._enrich_safety(row) for row in collected],
+                        key=lambda x: int(x[0])
+                    )
+                )
+
+                # 5. Build common output structure
+                output = self._get_common_output_structure(filename)
                 output.update({
                     "safety_count": len(enriched_data),
                     "safety_objects": enriched_data
                 })
+
+                # 6. Save enriched output to MinIO
                 out_path = f"safety_detection/refine_{filename}"
                 self._write_output(output_bucket, out_path, output)
+
                 logging.info(f"Successfully processed {len(enriched_data)} safety objects in {safety_file}")
 
             except Exception as e:
                 logging.info(f"ERROR in safety processing: {str(e)}")
                 return -1
+
 
 
 

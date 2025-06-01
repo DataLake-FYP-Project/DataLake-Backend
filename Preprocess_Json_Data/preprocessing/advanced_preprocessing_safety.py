@@ -18,18 +18,16 @@ class SafetyProcessor:
         self.minio = MinIOConnector(spark)
 
     def _process_safety_format(self, df):
-        """Flatten and normalize safety detection data"""
         df = df.select(
             F.col("frame_data.frame_number").alias("frame_number"),
             F.explode("frame_data.people").alias("person")
         )
-
         df = df.select(
             "frame_number",
             F.col("person.tracker_id").alias("tracker_id"),
             F.col("person.bbox").alias("bbox"),
             coalesce(
-                F.lit(datetime.now(timezone.utc).isoformat())  # Placeholder timestamp
+                F.lit(datetime.now(timezone.utc).isoformat())
             ).alias("timestamp"),
             F.col("person.hardhat").alias("hardhat"),
             F.col("person.mask").alias("mask"),
@@ -37,11 +35,9 @@ class SafetyProcessor:
             F.col("person.safety_status").alias("safety_status"),
             F.col("person.missing_items").alias("missing_items")
         ).filter((F.col("tracker_id").isNotNull()) & (F.col("tracker_id") != -1))
-
         return df
 
     def _group_data(self, df):
-        """Aggregate safety data by person (tracker_id)"""
         return df.groupBy("tracker_id").agg(
             spark_min("frame_number").alias("start_frame"),
             spark_max("frame_number").alias("end_frame"),
@@ -56,7 +52,6 @@ class SafetyProcessor:
         )
 
     def _enrich_safety(self, row):
-        """Enrich data per person with safety compliance metrics"""
         tid = str(row["tracker_id"])
         hardhat_list = row["hardhat_list"] or []
         mask_list = row["mask_list"] or []
@@ -65,21 +60,31 @@ class SafetyProcessor:
         status_list = row["status_list"] or []
         bbox_list = row["bbox_list"] or []
 
-        # Count violations
-        hardhat_violations = hardhat_list.count(False)
-        mask_violations = mask_list.count("false")
-        vest_violations = vest_list.count("false")
+        # Compute violations
+        hardhat_violations = sum(1 for v in hardhat_list if v is False)
+        mask_violations = sum(1 for v in mask_list if v is False or v == "false")
+        vest_violations = sum(1 for v in vest_list if v is False or v == "false")
         total_unsafe = status_list.count("Unsafe")
 
-        # Flatten and count missing items
+        # Missing item analysis
         all_missing = [item for sublist in missing_items_list if sublist for item in sublist]
         missing_counter = Counter(all_missing)
 
-        # Duration approximation
-        duration = row["frame_count"]  # Assuming 1 frame = 1 unit of time
+        # Safety condition resolution
+        final_safety_status = "Safe" if "Safe" in status_list else "Unsafe"
+        final_hardhat = any(h is True for h in hardhat_list)
+        final_mask = any(m is True for m in mask_list)
+        final_vest = any(v is True for v in vest_list)
+
+        # Duration
+        duration = row["frame_count"]
 
         return tid, {
             "initial_safety_status": row["initial_status"],
+            "safety_status": final_safety_status,
+            "hardhat": final_hardhat,
+            "mask": final_mask,
+            "safety_vest": final_vest,
             "total_frames": row["frame_count"],
             "duration_frames": duration,
             "hardhat_violations": hardhat_violations,
@@ -91,8 +96,8 @@ class SafetyProcessor:
             "bbox_movement_estimate": self._estimate_movement(bbox_list)
         }
 
+
     def _estimate_movement(self, bbox_list):
-        """Estimate movement based on center point distance between bounding boxes"""
         total_distance = 0.0
         for i in range(1, len(bbox_list)):
             try:
@@ -104,3 +109,15 @@ class SafetyProcessor:
             except:
                 continue
         return total_distance
+
+    def generate_final_output(self, grouped_df, source_filename: str):
+        """Generate final structured JSON output"""
+        enriched_data = grouped_df.rdd.map(self._enrich_safety).collectAsMap()
+
+        return {
+            "source_file": source_filename,
+            "processing_date": datetime.now(timezone.utc).isoformat(),
+            "processing_version": "1.0",
+            "safety_count": len(enriched_data),
+            "safety_objects": enriched_data
+        }
