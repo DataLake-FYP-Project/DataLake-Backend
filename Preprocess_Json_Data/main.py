@@ -178,21 +178,21 @@ def spark_preprocessing(filename, detection_type):
                 logging.error(f"Error processing geolocation file {geolocation_file}: {e}")
 
         elif detection_type == "Safety":
-            geolocation_file = minio_conn.get_json_file(BUCKETS["raw"], f"safety_detection/{filename}")
-            if not geolocation_file:
+            safety_file = minio_conn.get_json_file(BUCKETS["raw"], f"safety_detection/{filename}")
+            if not safety_file:
                 logging.warning(f"No {filename} file found in safety_detection folder")
 
             try:
-                logging.info(f"Processing safety file: {geolocation_file}")
-                geolocation_df, geolocation_path, processing_status = process_video_data(spark, geolocation_file,
+                logging.info(f"Processing safety file: {safety_file}")
+                safety_df, safety_path, processing_status = process_video_data(spark, safety_file,
                                                                                          "safety")
-                if not write_output_json(spark, geolocation_df, geolocation_path, processing_status):
-                    logging.error(f"Failed to process safety file: {geolocation_file}")
-                refine_output_path = geolocation_path.replace("preprocessed_", "refine_")
-                minio_conn.write_json(geolocation_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
+                if not write_output_json(spark, safety_df, safety_path, processing_status):
+                    logging.error(f"Failed to process safety file: {safety_file}")
+                refine_output_path = safety_path.replace("preprocessed_", "refine_")
+                minio_conn.write_json(safety_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
 
             except Exception as e:
-                logging.error(f"Error processing safety file {geolocation_file}: {e}")
+                logging.error(f"Error processing safety file {safety_file}: {e}")
 
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
