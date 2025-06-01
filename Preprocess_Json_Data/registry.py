@@ -1,7 +1,7 @@
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_geolocation import process_geolocation_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_people import process_people_json_data
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_safety import process_safety_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_vehicle import process_vehicle_json_data
-from Preprocess_Json_Data.safety.basic_preprocessing_safety import process_safety_json_data
 
 
 DETECTION_REGISTRY = {
