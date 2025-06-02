@@ -4,25 +4,32 @@ from Preprocess_Json_Data.preprocessing.advanced_preprocessing import advanced_p
 from Preprocess_Json_Data.config.spark_config import create_spark_session
 from Preprocess_Json_Data.config.minio_config import BUCKETS
 from Preprocess_Json_Data.connectors.minio_connector import MinIOConnector
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_safety import process_safety_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_vehicle import process_vehicle_json_data
 import logging
 import os
 from dotenv import load_dotenv
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_people import process_people_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_geolocation import process_geolocation_json_data
+from Preprocess_Json_Data.registry import DETECTION_REGISTRY
 
 # Load environment variables
 load_dotenv()
 
 
 def process_video_data(spark, input_path, video_type):
-    """Process video data and return processed DataFrame with output path"""
+    """Generic processor for all detection types"""
+    video_type = video_type.lower()
+    if video_type not in DETECTION_REGISTRY:
+        raise ValueError(f"Unsupported detection type: {video_type}")
+
     minio_conn = MinIOConnector(spark)
 
     try:
         type_folder = "vehicle_detection" if video_type.lower() == "vehicle" else \
             "people_detection" if video_type.lower() == "people" else \
-                "geolocation_detection"
+                "safety_detection" if video_type.lower() == "safety" else \
+                    "geolocation_detection"
         full_input_path = f"{type_folder}/{input_path}"
 
         raw_df = minio_conn.read_json(BUCKETS["raw"], full_input_path)
@@ -33,6 +40,9 @@ def process_video_data(spark, input_path, video_type):
         elif video_type.lower() == "people":
             processed_df, processing_status = process_people_json_data(raw_df)
             output_path = f"people_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
+        elif video_type.lower() == "safety":
+            processed_df, processing_status = process_safety_json_data(raw_df)
+            output_path = f"safety_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         else:  # geolocation
             processed_df, processing_status = process_geolocation_json_data(raw_df)
             output_path = f"geolocation_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
@@ -45,29 +55,18 @@ def process_video_data(spark, input_path, video_type):
 def write_output_json(spark, df, output_path, processing_status):
     try:
         clean_path = output_path.lstrip('/')
+        video_type = clean_path.split('/')[0].replace('_detection', '')
+        config = DETECTION_REGISTRY.get(video_type)
+
         minio_conn = MinIOConnector(spark)
 
-        # Check if it's geolocation by file path
-        is_geolocation = "geolocation_detection" in clean_path
+        if config and config["wrapped"]:
+            # Write wrapped JSON
+            minio_conn.write_wrapped_json(df, BUCKETS["processed"], clean_path, key="frame_detections")
 
-        if is_geolocation:
-            # Write wrapped JSON to "processed"
-            minio_conn.write_wrapped_json(
-                df=df,
-                bucket=BUCKETS["processed"],
-                path=clean_path,
-                key="frame_detections"
-            )
-            # Also write wrapped JSON to "refine"
             refine_path = clean_path.replace("preprocessed_", "refine_")
-            minio_conn.write_wrapped_json(
-                df=df,
-                bucket=BUCKETS["refine"],
-                path=refine_path,
-                key="frame_detections"
-            )
+            minio_conn.write_wrapped_json(df, BUCKETS["refine"], refine_path, key="frame_detections")
         else:
-            # Use standard write_json for people/vehicle
             minio_conn.write_json(df, BUCKETS["processed"], clean_path)
 
         if processing_status == 1:
@@ -176,6 +175,23 @@ def spark_preprocessing(filename, detection_type):
 
             except Exception as e:
                 logging.error(f"Error processing geolocation file {geolocation_file}: {e}")
+
+        elif detection_type == "Safety":
+            safety_file = minio_conn.get_json_file(BUCKETS["raw"], f"safety_detection/{filename}")
+            if not safety_file:
+                logging.warning(f"No {filename} file found in safety_detection folder")
+
+            try:
+                logging.info(f"Processing safety file: {safety_file}")
+                safety_df, safety_path, processing_status = process_video_data(spark, safety_file,
+                                                                                         "safety")
+                if not write_output_json(spark, safety_df, safety_path, processing_status):
+                    logging.error(f"Failed to process safety file: {safety_file}")
+                refine_output_path = safety_path.replace("preprocessed_", "refine_")
+                minio_conn.write_json(safety_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
+
+            except Exception as e:
+                logging.error(f"Error processing safety file {safety_file}: {e}")
 
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
