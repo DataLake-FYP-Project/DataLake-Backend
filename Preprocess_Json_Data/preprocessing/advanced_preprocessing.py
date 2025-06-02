@@ -298,7 +298,10 @@ class CombinedProcessor:
                 logging.info(f"ERROR in safety processing: {str(e)}")
                 return -1
 
-
+        end_time = datetime.now(timezone.utc)
+        duration = (end_time - start_time).total_seconds()
+        logging.info(f"Advanced Processing completed in {duration:.2f} seconds")
+        return 1
 
 
 def advanced_preprocessing(detection_type,filename):

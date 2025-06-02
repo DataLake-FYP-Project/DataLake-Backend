@@ -13,3 +13,4 @@ streamlit
 minio
 pyspark
 dotenv
+typing_extensions>=4.5.0
