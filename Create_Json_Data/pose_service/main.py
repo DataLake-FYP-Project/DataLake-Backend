@@ -31,7 +31,7 @@ with open(MODEL_PATH, 'rb') as f:
 
 def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
     """
-    Process a video for pose estimation and action recognition.
+    Process a video for pose estimation and action recognition, with progress updates in the terminal.
 
     Args:
         SOURCE_VIDEO_PATH (str): Path to the input video.
@@ -51,6 +51,7 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))  # Get total frame count for progress
 
     # Initialize video writer
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -117,6 +118,13 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
         # Save annotated frame
         frame_path = os.path.join(FRAME_SAVE_DIR, f"frame_{frame_number:04d}.jpg")
         cv2.imwrite(frame_path, image)
+
+        # Print progress update to PowerShell terminal
+        if total_frames > 0:  # Avoid division by zero
+            progress = (frame_number + 1) / total_frames * 100
+            print(f"Extracting frame {frame_number + 1}/{total_frames} ({progress:.1f}%) - Saved to {frame_path}")
+        else:
+            print(f"Extracting frame {frame_number + 1} - Saved to {frame_path}")
 
         # Save JSON info
         frame_data_list.append({
