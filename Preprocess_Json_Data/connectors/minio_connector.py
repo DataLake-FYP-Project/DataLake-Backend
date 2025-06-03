@@ -81,13 +81,26 @@ class MinIOConnector:
 
     def write_wrapped_json(self, df: DataFrame, bucket: str, path: str, key: str = "frame_detections"):
         """Wraps DataFrame content under a top-level key and writes to MinIO as a single object."""
+        # from io import BytesIO
+
+        # self.ensure_bucket_exists(bucket)
+
+        # json_rows = df.toJSON().collect()
+        # wrapped = f'{{\n  "{key}": [\n' + ",\n".join(json_rows) + '\n  ]\n}}'
+        # wrapped = f'{{\n  "{key}": [\n' + ",\n".join(json_rows) + '\n  ]\n}'
+        # json_bytes = wrapped.encode('utf-8')
+        # stream = BytesIO(json_bytes)
+        
+        import json
         from io import BytesIO
 
         self.ensure_bucket_exists(bucket)
 
         json_rows = df.toJSON().collect()
-        wrapped = f'{{\n  "{key}": [\n' + ",\n".join(json_rows) + '\n  ]\n}}'
-        json_bytes = wrapped.encode('utf-8')
+        # Convert each row string to a dict, then wrap in a top-level key
+        data = {key: [json.loads(row) for row in json_rows]}
+        json_str = json.dumps(data, indent=2, ensure_ascii=False)
+        json_bytes = json_str.encode('utf-8')
         stream = BytesIO(json_bytes)
 
         self.minio_client.put_object(
