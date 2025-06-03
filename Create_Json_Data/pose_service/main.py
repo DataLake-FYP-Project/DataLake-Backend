@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 import requests
 from flask import Flask, request, jsonify
 import cv2
@@ -59,7 +61,8 @@ def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
 
     # Prepare JSON output path
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
-    json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_pose_action.json")
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_{now}.json")
 
     frame_number = 0
     while cap.isOpened():
