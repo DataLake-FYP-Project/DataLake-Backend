@@ -481,7 +481,7 @@ def upload_pose_json():
     logging.info(f"Uploaded file to MinIO raw bucket")
 
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
-    processing_status=spark_preprocessing(filename, "Safety")
+    processing_status=spark_preprocessing(filename, "Pose")
     logging.info("Completed Spark preprocessing")
 
     if processing_status==1:
@@ -496,7 +496,7 @@ def upload_pose_json():
                 base_name = video_name.split("preprocessed_")[1]
             else:
                 base_name = video_name
-            prefix = f"safety_detection/refine_{base_name}"
+            prefix = f"pose_detection/refine_{base_name}"
             logging.info(f"Listing refined files with prefix: {prefix} in bucket: {refine_bucket}")
 
             # List refined files
@@ -523,9 +523,9 @@ def upload_pose_json():
             logging.info(f"Fetching refined JSON: {refined_file_name}")
             refined_data = fetch_refined_file(
                 spark,
-                file_path="safety_detection",
+                file_path="pose_detection",
                 file_name=refined_file_name,
-                detection_type="Safety"
+                detection_type="Pose"
             )
             logging.info("Successfully fetched refined JSON")
 
