@@ -176,7 +176,7 @@ def spark_preprocessing(filename, detection_type):
                 if not write_output_json(spark, geolocation_df, geolocation_path, processing_status):
                     logging.error(f"Failed to process geolocation file: {geolocation_file}")
                 refine_output_path = geolocation_path.replace("preprocessed_", "refine_")
-                minio_conn.write_json(geolocation_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
+                # minio_conn.write_json(geolocation_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
 
             except Exception as e:
                 logging.error(f"Error processing geolocation file {geolocation_file}: {e}")
