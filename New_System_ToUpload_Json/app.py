@@ -32,14 +32,13 @@ processed_bucket_name = "processed"
 import logging
 
 
-def save_processed_json_to_minio(processed_df, minio_connector, bucket_name, upload_filename, wrapped=True):
+def save_processed_json_to_minio(processed_df, minio_connector, bucket_name, upload_filename, wrapped=False):
     try:
         clean_path = upload_filename.lstrip('/')
 
         if wrapped:
             # If your MinIOConnector supports writing wrapped JSON
             minio_connector.write_wrapped_json(processed_df, bucket_name, clean_path, key="frame_detections")
-            print("wrappedddd")
         else:
             # Write normal JSON
             minio_connector.write_json(processed_df, bucket_name, clean_path)
@@ -115,7 +114,7 @@ if uploaded_file:
                 minio_connector,
                 processed_bucket_name,
                 f"processed_{uploaded_file.name}",
-                wrapped=True  # Set this to False if you don’t want wrapping
+                wrapped=False  # Set this to False if you don’t want wrapping
             )
 
             if success:
