@@ -14,16 +14,17 @@ project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 
 from Preprocess_Json_Data.config.minio_config import BUCKETS
-from minio_connector import MinIOConnector
+from .minio_connector import MinIOConnector
 
 
 class SafetyDataSplitter:
     def __init__(self):
         self.minio_connector = MinIOConnector(spark=None)
-        self.source_file = "safety_detection/refine_safety_video_2025-06-01_22-30-12.json"
+        self.source_file = None
 
-    def process(self):
+    def process(self, filename):
         try:
+            self.source_file = f"safety_detection/{filename}"
             print(f"Processing {self.source_file} from {BUCKETS['refine']}")
 
             # 1. Get original data
@@ -157,9 +158,3 @@ class SafetyDataSplitter:
         for feature_name, content in files.items():
             file_path = f"safety_detection/{feature_name}/{feature_name}_{timestamp}.json"
             self.minio_connector.write_single_json(content, BUCKETS["refine"], file_path)
-
-
-if __name__ == "__main__":
-    processor = SafetyDataSplitter()
-    success = processor.process()
-    sys.exit(0 if success else 1)

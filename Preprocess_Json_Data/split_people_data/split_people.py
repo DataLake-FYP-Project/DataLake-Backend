@@ -12,32 +12,33 @@ project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 
 from Preprocess_Json_Data.config.minio_config import BUCKETS
-from minio_connector import MinIOConnector
+from .minio_connector import MinIOConnector
 
 
 class PeopleDataSplitter:
     def __init__(self):
         # Initialize MinIO connector without Spark
+        self.source_file = None
         self.minio_connector = MinIOConnector(spark=None)  # Pass None since we're not using Spark
-        self.source_file = "people_detection/refine_people_final_2025-05-20_12-54-03.json"
 
-    def process(self):
+    def process(self, filename):
         """Main processing method"""
         try:
+            self.source_file = f"people_detection/{filename}"
             print(f"Processing {self.source_file} from {BUCKETS['refine']}")
 
             # 1. Get original data
             original_data = self._get_original_data()
-            
+
             # 2. Transform into feature files
             feature_files = self._transform_data(original_data)
-            
+
             # 3. Upload to MinIO
             self._upload_files(feature_files)
-            
+
             print("Processing completed successfully")
             return True
-            
+
         except Exception as e:
             print(f"Error during processing: {e}")
             return False
@@ -138,19 +139,19 @@ class PeopleDataSplitter:
                 "gender_distribution": gender_dist,
                 "age_distribution": age_dist
             }
-            
+
             files["Activity"]["statistics"] = {
                 "total_frame_count": sum(frame_counts),
                 "total_duration_seconds": sum(durations),
                 "avg_duration_seconds": mean(durations) if durations else 0,
                 "avg_frame_count": mean(frame_counts) if frame_counts else 0
             }
-            
+
             files["Security"]["statistics"] = {
                 "carrying_distribution": carrying_dist,
                 "restricted_area_entries": restricted_entries
             }
-            
+
             files["Confidence"]["statistics"] = {
                 "avg_confidence": mean(confidences) if confidences else 0,
                 "min_confidence": min(confidences) if confidences else 0,
@@ -169,8 +170,3 @@ class PeopleDataSplitter:
             file_path = f"people_detection/{feature_name}/{feature_name}_{timestamp}.json"
             self.minio_connector.write_single_json(content, BUCKETS["refine"], file_path)
 
-
-if __name__ == "__main__":
-    processor = PeopleDataSplitter()
-    success = processor.process()
-    sys.exit(0 if success else 1)

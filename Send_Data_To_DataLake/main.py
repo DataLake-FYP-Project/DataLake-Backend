@@ -6,7 +6,6 @@ from pathlib import Path
 import logging
 import tempfile
 
-
 # Configure logging with more detail
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -21,7 +20,10 @@ from processing_people import convert_people_json_format, people_upload_to_elast
 from processing_geolocation import geolocation_upload_to_elasticsearch, geolocation_upload_to_minio
 from processing_safety import safety_upload_to_minio
 from Send_Data_To_DataLake.preprocessing_pose import pose_upload_to_minio
-
+from Preprocess_Json_Data.split_vehicle_data.split_vehicle import VehicleDataSplitter
+from Preprocess_Json_Data.spilt_safety_data.split_safety import SafetyDataSplitter
+from Preprocess_Json_Data.split_people_data.split_people import PeopleDataSplitter
+from Preprocess_Json_Data.split_pose_data.split_pose import PoseDataSplitter
 
 app = Flask(__name__)
 
@@ -52,10 +54,10 @@ def upload_vehicle_json():
     logging.info(f"Uploaded file to MinIO raw bucket")
 
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
-    processing_status=spark_preprocessing(filename, "Vehicle")
+    processing_status = spark_preprocessing(filename, "Vehicle")
     logging.info("Completed Spark preprocessing")
 
-    if processing_status==1:
+    if processing_status == 1:
         # Fetch the most recent refined JSON from the refine bucket
         spark = create_spark_session()
         minio_conn = MinIOConnector(spark)
@@ -89,6 +91,16 @@ def upload_vehicle_json():
             latest_file = max(objects, key=lambda x: x.last_modified)
             refined_file_name = latest_file.object_name.split('/')[-1]
             logging.info(f"Selected latest refined file: {refined_file_name}")
+
+            try:
+                splitter = VehicleDataSplitter()
+                if splitter.process(refined_file_name):
+                    logging.info(f"Successfully split refined file: {refined_file_name}")
+                else:
+                    logging.error(f"Failed to split refined file: {refined_file_name}")
+            except Exception as e:
+                logging.error(f"Error split refined file: {str(e)}", exc_info=True)
+                raise
 
             # Fetch the refined JSON
             logging.info(f"Fetching refined JSON: {refined_file_name}")
@@ -158,10 +170,10 @@ def upload_geolocation_json():
     logging.info(f"Uploaded file to MinIO raw bucket")
 
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
-    processing_status=spark_preprocessing(filename, "Geolocation")
+    processing_status = spark_preprocessing(filename, "Geolocation")
     logging.info("Completed Spark preprocessing")
 
-    if processing_status==1:
+    if processing_status == 1:
         # Fetch the most recent refined JSON from the refine bucket
         spark = create_spark_session()
         minio_conn = MinIOConnector(spark)
@@ -266,10 +278,10 @@ def upload_people_json():
     logging.info(f"Uploaded file to MinIO raw bucket")
 
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
-    processing_status=spark_preprocessing(filename, "People")
+    processing_status = spark_preprocessing(filename, "People")
     logging.info("Completed Spark preprocessing")
 
-    if processing_status==1:
+    if processing_status == 1:
         # Fetch the most recent refined JSON from the refine bucket
         spark = create_spark_session()
         minio_conn = MinIOConnector(spark)
@@ -303,6 +315,16 @@ def upload_people_json():
             latest_file = max(objects, key=lambda x: x.last_modified)
             refined_file_name = latest_file.object_name.split('/')[-1]
             logging.info(f"Selected latest refined file: {refined_file_name}")
+
+            try:
+                splitter = PeopleDataSplitter()
+                if splitter.process(refined_file_name):
+                    logging.info(f"Successfully split refined file: {refined_file_name}")
+                else:
+                    logging.error(f"Failed to split refined file: {refined_file_name}")
+            except Exception as e:
+                logging.error(f"Error split refined file: {str(e)}", exc_info=True)
+                raise
 
             # Fetch the refined JSON
             logging.info(f"Fetching refined JSON: {refined_file_name}")
@@ -344,7 +366,8 @@ def upload_people_json():
     else:
         logging.info("Nothing to query/dashboard. Stop calling elastic search")
         return jsonify({"message": "Nothing to query/dashboard. Stop calling elastic search"}), 200
-    
+
+
 @app.route("/upload_2_safety", methods=["POST"])
 def upload_safety_json():
     if "json_file" not in request.files:
@@ -373,10 +396,10 @@ def upload_safety_json():
     logging.info(f"Uploaded file to MinIO raw bucket")
 
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
-    processing_status=spark_preprocessing(filename, "Safety")
+    processing_status = spark_preprocessing(filename, "Safety")
     logging.info("Completed Spark preprocessing")
 
-    if processing_status==1:
+    if processing_status == 1:
         # Fetch the most recent refined JSON from the refine bucket
         spark = create_spark_session()
         minio_conn = MinIOConnector(spark)
@@ -410,6 +433,16 @@ def upload_safety_json():
             latest_file = max(objects, key=lambda x: x.last_modified)
             refined_file_name = latest_file.object_name.split('/')[-1]
             logging.info(f"Selected latest refined file: {refined_file_name}")
+
+            try:
+                splitter = SafetyDataSplitter()
+                if splitter.process(refined_file_name):
+                    logging.info(f"Successfully split refined file: {refined_file_name}")
+                else:
+                    logging.error(f"Failed to split refined file: {refined_file_name}")
+            except Exception as e:
+                logging.error(f"Error split refined file: {str(e)}", exc_info=True)
+                raise
 
             # Fetch the refined JSON
             logging.info(f"Fetching refined JSON: {refined_file_name}")
@@ -518,6 +551,16 @@ def upload_pose_json():
             latest_file = max(objects, key=lambda x: x.last_modified)
             refined_file_name = latest_file.object_name.split('/')[-1]
             logging.info(f"Selected latest refined file: {refined_file_name}")
+
+            try:
+                splitter = PoseDataSplitter()
+                if splitter.process(refined_file_name):
+                    logging.info(f"Successfully split refined file: {refined_file_name}")
+                else:
+                    logging.error(f"Failed to split refined file: {refined_file_name}")
+            except Exception as e:
+                logging.error(f"Error split refined file: {str(e)}", exc_info=True)
+                raise
 
             # Fetch the refined JSON
             logging.info(f"Fetching refined JSON: {refined_file_name}")

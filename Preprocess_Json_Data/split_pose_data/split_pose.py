@@ -14,16 +14,17 @@ project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 
 from Preprocess_Json_Data.config.minio_config import BUCKETS
-from minio_connector import MinIOConnector
+from .minio_connector import MinIOConnector
 
 
 class PoseDataSplitter:
     def __init__(self):
         self.minio_connector = MinIOConnector(spark=None)
-        self.source_file = "pose_detection/refine_park_video_2025-06-03_17-16-54.json"
+        self.source_file = None
 
-    def process(self):
+    def process(self, filename):
         try:
+            self.source_file = f"pose_detection/{filename}"
             print(f"Processing {self.source_file} from {BUCKETS['refine']}")
 
             # 1. Get original data
@@ -45,7 +46,7 @@ class PoseDataSplitter:
     def _get_original_data(self) -> Dict[str, Any]:
         """Fetch original JSON from MinIO"""
         data = self.minio_connector.fetch_json(BUCKETS["refine"], self.source_file)
-        return {"frames": data}  # Wrap as a dict to match the expected structure
+        return data
 
     def _transform_data(self, data: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
         try:
@@ -69,7 +70,7 @@ class PoseDataSplitter:
             confidences = []
 
             # Process each frame
-            frames = data["frames"]
+            frames = data["frame_detections"]
             for frame in frames:
                 frame_num = frame["frame_number"]
                 action = frame.get("action", "Unknown")
@@ -78,7 +79,10 @@ class PoseDataSplitter:
                 # PoseInfo
                 files["PoseInfo"]["frames"][str(frame_num)] = {
                     "frame_number": frame_num,
-                    "duration_seconds": 0.033 if frame_num > 0 and frame_num - 1 not in [f["frame_number"] for f in frames[:frames.index(frame)]] else 0  # Approx 30 FPS
+                    "duration_seconds": 0.033 if frame_num > 0 and frame_num - 1 not in [f["frame_number"] for f in
+                                                                                         frames[
+                                                                                         :frames.index(frame)]] else 0
+                    # Approx 30 FPS
                 }
 
                 # Movement
@@ -98,7 +102,8 @@ class PoseDataSplitter:
             # Calculate and add statistics
             files["PoseInfo"]["statistics"] = {
                 "total_frames": len(frames),
-                "avg_duration_seconds": mean([f["duration_seconds"] for f in files["PoseInfo"]["frames"].values()]) if frames else 0
+                "avg_duration_seconds": mean(
+                    [f["duration_seconds"] for f in files["PoseInfo"]["frames"].values()]) if frames else 0
             }
 
             files["Movement"]["statistics"] = {
@@ -122,8 +127,3 @@ class PoseDataSplitter:
             file_path = f"pose_detection/{feature_name}/{feature_name}_{timestamp}.json"
             self.minio_connector.write_single_json(content, BUCKETS["refine"], file_path)
 
-
-if __name__ == "__main__":
-    processor = PoseDataSplitter()
-    success = processor.process()
-    sys.exit(0 if success else 1)
