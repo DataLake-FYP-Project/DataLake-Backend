@@ -457,7 +457,7 @@ def upload_safety_json():
 def upload_pose_json():
     if "json_file" not in request.files:
         logging.error("No JSON file uploaded in request")
-        return jsonify({"error": "No JSON file uploaded"}), 400
+        return jsonify({"error": "No JSON file found"}), 400
 
     json_file = request.files["json_file"]
     if json_file.filename == "":
@@ -468,11 +468,11 @@ def upload_pose_json():
     video_name = filename.split('.')[0]
     logging.info(f"Received file: {filename}, video name: {video_name}")
 
-    json_folder_people = "Pose_Json_Folder"
-    os.makedirs(json_folder_people, exist_ok=True)
+    json_folder_pose = "Pose_Json_Folder"
+    os.makedirs(json_folder_pose, exist_ok=True)
 
     # Save uploaded file
-    json_path = os.path.join(json_folder_people, filename)
+    json_path = os.path.join(json_folder_pose, filename)
     json_file.save(json_path)
     logging.info(f"Saved file to local path: {json_path}")
 
@@ -481,10 +481,10 @@ def upload_pose_json():
     logging.info(f"Uploaded file to MinIO raw bucket")
 
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
-    processing_status=spark_preprocessing(filename, "Pose")
+    processing_status = spark_preprocessing(filename, "Pose")
     logging.info("Completed Spark preprocessing")
 
-    if processing_status==1:
+    if processing_status == 1:
         # Fetch the most recent refined JSON from the refine bucket
         spark = create_spark_session()
         minio_conn = MinIOConnector(spark)
@@ -527,6 +527,7 @@ def upload_pose_json():
                 file_name=refined_file_name,
                 detection_type="Pose"
             )
+
             logging.info("Successfully fetched refined JSON")
 
             # Save the refined data to a temporary file
@@ -555,11 +556,10 @@ def upload_pose_json():
             spark.stop()
             logging.info("Spark session stopped after fetch/upload")
 
-        return jsonify({"message": "Safety file uploaded, processed, and indexed successfully"}), 200
+        return jsonify({"message": "Pose file uploaded, processed, and indexed successfully"}), 200
     else:
         logging.info("Nothing to query/dashboard. Stop calling elastic search")
         return jsonify({"message": "Nothing to query/dashboard. Stop calling elastic search"}), 200
-
 
 
 if __name__ == "__main__":

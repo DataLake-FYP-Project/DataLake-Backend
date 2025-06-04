@@ -29,6 +29,6 @@ DETECTION_REGISTRY = {
     "pose": {
         "folder": "pose_detection",
         "processor": process_pose_json_data,
-        "wrapped": False
+        "wrapped": True
     }
 }
