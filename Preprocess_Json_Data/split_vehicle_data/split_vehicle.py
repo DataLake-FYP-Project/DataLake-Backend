@@ -14,7 +14,7 @@ project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 
 from Preprocess_Json_Data.config.minio_config import BUCKETS
-from .minio_connector import MinIOConnector
+from Preprocess_Json_Data.connectors.split_data_minio_connector import MinIOConnector
 
 
 class VehicleDataSplitter:
