@@ -1,16 +1,13 @@
-from datetime import datetime, timezone
 import tempfile
 import pandas as pd
 import streamlit as st
-import logging
-from pyspark.sql import functions as F
-
-from process_scripts.advanced_preprocessing_vehicle import VehicleProcessor  # fallback import if needed
+from config.minio_config import BUCKETS
 from connectors.minio_connector import MinIOConnector
 from config.spark_config import create_spark_session
 from pyspark.sql import SparkSession
 
-import processors_registry  # your registry file with processor configs
+from process_scripts.common import save_refined_json_to_minio
+import processors_registry
 
 
 st.set_page_config(page_title="MinIO Spark Viewer", layout="wide")
@@ -38,40 +35,16 @@ config = processors_registry.PROCESSOR_REGISTRY[selected_type]
 
 processor_class = config["processor_class"]
 process_func = config["process_func"]
+folder_prefix = config["folder_prefix"]
 
-raw_bucket_name = config["raw_bucket"]
-processed_bucket_name = config["processed_bucket"]
-refine_bucket_name = config["refine_bucket"]
+raw_bucket_name = BUCKETS["raw"]
+processed_bucket_name = BUCKETS["processed"]
+refine_bucket_name = BUCKETS["refine"]
 
 # Initialize processor instance
 data_processor = processor_class(spark)
 
 uploaded_file = st.file_uploader("Upload a JSON file", type=["json"])
-
-
-def save_processed_json_to_minio(processed_df, minio_connector, bucket_name, upload_filename, wrapped=False):
-    try:
-        clean_path = upload_filename.lstrip('/')
-        if wrapped:
-            minio_connector.write_wrapped_json(processed_df, bucket_name, clean_path, key="frame_detections")
-        else:
-            minio_connector.write_json(processed_df, bucket_name, clean_path)
-        logging.info(f"Successfully uploaded processed JSON to {bucket_name}/{clean_path}")
-        return True
-    except Exception as e:
-        logging.error(f"Failed to upload processed JSON to {bucket_name}/{upload_filename}: {e}")
-        return False
-
-    
-def save_refined_json_to_minio(refined_df, minio_connector, bucket_name, upload_filename, wrapped=True):
-    try:
-        clean_path = upload_filename.lstrip('/')
-        minio_connector.write_wrapped_json(refined_df, bucket_name, clean_path, key="frame_detections")
-        logging.info(f"Successfully uploaded refined JSON to {bucket_name}/{clean_path}")
-        return True
-    except Exception as e:
-        logging.error(f"Failed to upload refined JSON to {bucket_name}/{upload_filename}: {e}")
-        return False
 
 
 def upload_file_to_minio(bucket, file_path, object_name):
@@ -85,16 +58,8 @@ def upload_file_to_minio(bucket, file_path, object_name):
         )
 
 
-def get_common_output_structure(source_file):
-    """Common output structure for all types"""
-    return {
-        "source_file": source_file,
-        "processing_date": datetime.now(timezone.utc).isoformat(),
-        "processing_version": "1.0"
-    }
-
-
 if uploaded_file:
+    object_name = f"{folder_prefix}/{uploaded_file.name}"
     st.info(f"Uploading file `{uploaded_file.name}` to raw bucket `{raw_bucket_name}`...")
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".json") as tmp:
@@ -102,13 +67,13 @@ if uploaded_file:
         tmp_path = tmp.name
 
     try:
-        upload_file_to_minio(raw_bucket_name, tmp_path, uploaded_file.name)
-        st.success(f"Uploaded to raw bucket `{raw_bucket_name}` successfully.")
+        upload_file_to_minio(raw_bucket_name, tmp_path, object_name)
+        st.success(f"Uploaded to raw bucket `{raw_bucket_name}/{object_name}` successfully.")
     except Exception as e:
         st.error(f"Failed to upload to raw bucket: {e}")
 
     try:
-        raw_df = minio_connector.read_json(raw_bucket_name, uploaded_file.name)
+        raw_df = minio_connector.read_json(raw_bucket_name, object_name)
         st.write("### Raw Data Sample")
         st.dataframe(raw_df.limit(10).toPandas())
     except Exception as e:
@@ -133,68 +98,19 @@ if uploaded_file:
     else:
         processed_df = None
 
-    if processed_df:
-        try:
-            success_processed = save_processed_json_to_minio(
-                processed_df,
-                minio_connector,
-                processed_bucket_name,
-                f"processed_{uploaded_file.name}",
-                wrapped=False
-            )
-
-            if success_processed:
-                st.success(f"Processed data uploaded to '{processed_bucket_name}' bucket as processed_{uploaded_file.name}")
-            else:
-                st.error(f"Failed to save or upload processed JSON.")
-
-        except Exception as e:
-            st.error(f"Failed to save or upload processed JSON: {e}")
-
-    refined_df = None
     if processed_df is not None:
         try:
-            processed_df = data_processor._process_vehicle_format(processed_df)
-            processed_df = processed_df.withColumn("timestamp",
-                                        F.to_timestamp(F.regexp_replace("timestamp", r"\+05:30$", "")))
-            
-            if "frame_timestamp" in processed_df.columns:
-                processed_df = processed_df.withColumn("frame_timestamp",
-                                            F.to_timestamp(
-                                                F.regexp_replace("frame_timestamp", r"\+05:30$", "")))
+            refined_df = data_processor.format_processed_data(processed_df)
 
-            grouped = data_processor._group_data(processed_df)
-            collected = grouped.collect()
-
-            enriched_data = dict(
-                sorted(
-                    [data_processor._enrich_vehicle(row) for row in collected],
-                    key=lambda x: int(x[0])
-                )
-            )
-
-            output = get_common_output_structure(uploaded_file.name)
-            output.update({
-                "vehicle_count": len(enriched_data),
-                "vehicles": enriched_data
-            })
-            # Show refined data sample as DataFrame table
-            vehicles_list = []
-            for vehicle_id, vehicle_info in enriched_data.items():
-                record = {"vehicle_id": vehicle_id}
-                record.update(vehicle_info)
-                vehicles_list.append(record)
-
-            if vehicles_list:
-                vehicles_df = pd.DataFrame(vehicles_list)
+            # Optionally show a sample if the format_processed_data returns something viewable
+            if isinstance(refined_df, pd.DataFrame):
                 st.write("### Refined Data Sample")
-                st.dataframe(vehicles_df)
-            else:
-                st.info("No refined data to display.")
+                st.dataframe(refined_df)
+                refined_df = spark.createDataFrame(refined_df)
+            elif hasattr(refined_df, 'limit'):
+                st.write("### Refined Data Sample")
+                st.dataframe(refined_df.limit(10).toPandas())
 
-            pdf = pd.DataFrame([output])
-            refined_df = spark.createDataFrame(pdf)
-        
         except Exception as e:
             st.error(f"Error refining processed data: {e}")
             refined_df = None
@@ -203,16 +119,17 @@ if uploaded_file:
 
     if refined_df:
         try:
+            refined_object_name = f"{folder_prefix}/refine_{uploaded_file.name}"
             success_refined = save_refined_json_to_minio(
                 refined_df,
                 minio_connector,
                 refine_bucket_name,
-                f"refine_{uploaded_file.name}",
+                refined_object_name,
                 wrapped=True
             )
 
             if success_refined:
-                st.success(f"Refined data uploaded to {refine_bucket_name} as refine_{uploaded_file.name}")
+                st.success(f"Refined data uploaded to {refine_bucket_name} as {refined_object_name}")
             else:
                 st.error("Failed to upload refined JSON.")
         except Exception as e:

@@ -3,8 +3,6 @@ from pyspark.sql.types import *
 
 from process_scripts.common import clean_string_columns, convert_timestamps, handle_null_values
 
-
-
 def process_vehicle_json_data(df):
     # First validate required columns exist
     required_columns = ["frame_number", "detections"]

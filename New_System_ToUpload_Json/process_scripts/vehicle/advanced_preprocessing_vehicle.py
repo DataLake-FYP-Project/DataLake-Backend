@@ -18,7 +18,7 @@ class VehicleProcessor:
         self.spark = spark
         self.minio = MinIOConnector(spark)
 
-    def _process_vehicle_format(self, df):
+    def format_processed_data(self, df):
         """Process vehicle detection format"""
         df = df.select(
             F.col("frame_data.frame_number").alias("frame_number"),

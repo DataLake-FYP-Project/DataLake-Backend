@@ -1,6 +1,7 @@
+from datetime import datetime, timezone
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, to_timestamp, lit, coalesce, when, trim, current_timestamp, md5
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType
+from pyspark.sql.types import StructType, StringType
 import logging
 from minio import Minio
 from io import BytesIO
@@ -60,3 +61,36 @@ def upload_to_minio(bucket_name, object_name, data_str, minio_config):
 
     data_bytes = BytesIO(data_str.encode('utf-8'))
     client.put_object(bucket_name, object_name, data_bytes, length=len(data_str))
+
+
+def save_processed_json_to_minio(processed_df, minio_connector, bucket_name, upload_filename, wrapped=False):
+    try:
+        clean_path = upload_filename.lstrip('/')
+        if wrapped:
+            minio_connector.write_wrapped_json(processed_df, bucket_name, clean_path, key="frame_detections")
+        else:
+            minio_connector.write_json(processed_df, bucket_name, clean_path)
+        logging.info(f"Successfully uploaded processed JSON to {bucket_name}/{clean_path}")
+        return True
+    except Exception as e:
+        logging.error(f"Failed to upload processed JSON to {bucket_name}/{upload_filename}: {e}")
+        return False
+
+    
+def save_refined_json_to_minio(refined_df, minio_connector, bucket_name, upload_filename, wrapped=True):
+    try:
+        clean_path = upload_filename.lstrip('/')
+        minio_connector.write_wrapped_json(refined_df, bucket_name, clean_path, key="frame_detections")
+        logging.info(f"Successfully uploaded refined JSON to {bucket_name}/{clean_path}")
+        return True
+    except Exception as e:
+        logging.error(f"Failed to upload refined JSON to {bucket_name}/{upload_filename}: {e}")
+        return False
+    
+def get_common_output_structure(source_file):
+    """Common output structure for all types"""
+    return {
+        "source_file": source_file,
+        "processing_date": datetime.now(timezone.utc).isoformat(),
+        "processing_version": "1.0"
+    }
