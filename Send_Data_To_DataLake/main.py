@@ -24,6 +24,7 @@ from Preprocess_Json_Data.split_vehicle_data.split_vehicle import VehicleDataSpl
 from Preprocess_Json_Data.spilt_safety_data.split_safety import SafetyDataSplitter
 from Preprocess_Json_Data.split_people_data.split_people import PeopleDataSplitter
 from Preprocess_Json_Data.split_pose_data.split_pose import PoseDataSplitter
+from Preprocess_Json_Data.split_geolocation_data.split_geolocation import GeolocationDataSplitter
 
 app = Flask(__name__)
 
@@ -207,6 +208,16 @@ def upload_geolocation_json():
             latest_file = max(objects, key=lambda x: x.last_modified)
             refined_file_name = latest_file.object_name.split('/')[-1]
             logging.info(f"Selected latest refined file: {refined_file_name}")
+
+            try:
+                splitter = GeolocationDataSplitter()
+                if splitter.process(refined_file_name):
+                    logging.info(f"Successfully split refined file: {refined_file_name}")
+                else:
+                    logging.error(f"Failed to split refined file: {refined_file_name}")
+            except Exception as e:
+                logging.error(f"Error split refined file: {str(e)}", exc_info=True)
+                raise
 
             # Fetch the refined JSON
             logging.info(f"Fetching refined JSON: {refined_file_name}")
