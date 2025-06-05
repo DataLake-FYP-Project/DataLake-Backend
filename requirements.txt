@@ -14,3 +14,10 @@ minio
 pyspark
 dotenv
 typing_extensions>=4.5.0
+mediapipe~=0.10.9
+pandas~=2.2.3
+scikit-learn~=1.6.1
+shapely~=2.1.0
+python-dotenv~=1.1.0
+config~=0.5.1
+connectors~=4.1

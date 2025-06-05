@@ -11,6 +11,7 @@ import os
 from dotenv import load_dotenv
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_people import process_people_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_geolocation import process_geolocation_json_data
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_pose import process_pose_json_data
 from Preprocess_Json_Data.registry import DETECTION_REGISTRY
 
 # Load environment variables
@@ -29,7 +30,8 @@ def process_video_data(spark, input_path, video_type):
         type_folder = "vehicle_detection" if video_type.lower() == "vehicle" else \
             "people_detection" if video_type.lower() == "people" else \
                 "safety_detection" if video_type.lower() == "safety" else \
-                    "geolocation_detection"
+                    "pose_detection" if video_type.lower() == "pose" else \
+                        "geolocation_detection"
         full_input_path = f"{type_folder}/{input_path}"
 
         raw_df = minio_conn.read_json(BUCKETS["raw"], full_input_path)
@@ -43,6 +45,9 @@ def process_video_data(spark, input_path, video_type):
         elif video_type.lower() == "safety":
             processed_df, processing_status = process_safety_json_data(raw_df)
             output_path = f"safety_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
+        elif video_type.lower() == "pose":
+            processed_df, processing_status = process_pose_json_data(raw_df)
+            output_path = f"pose_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         else:  # geolocation
             processed_df, processing_status = process_geolocation_json_data(raw_df)
             output_path = f"geolocation_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
@@ -170,8 +175,8 @@ def spark_preprocessing(filename, detection_type):
                                                                                          "geolocation")
                 if not write_output_json(spark, geolocation_df, geolocation_path, processing_status):
                     logging.error(f"Failed to process geolocation file: {geolocation_file}")
-                refine_output_path = geolocation_path.replace("preprocessed_", "refine_")
-                # minio_conn.write_json(geolocation_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
+                # refine_output_path = geolocation_path.replace("preprocessed_", "refine_") minio_conn.write_json(
+                # geolocation_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
 
             except Exception as e:
                 logging.error(f"Error processing geolocation file {geolocation_file}: {e}")
@@ -184,7 +189,7 @@ def spark_preprocessing(filename, detection_type):
             try:
                 logging.info(f"Processing safety file: {safety_file}")
                 safety_df, safety_path, processing_status = process_video_data(spark, safety_file,
-                                                                                         "safety")
+                                                                               "safety")
                 if not write_output_json(spark, safety_df, safety_path, processing_status):
                     logging.error(f"Failed to process safety file: {safety_file}")
                 refine_output_path = safety_path.replace("preprocessed_", "refine_")
@@ -193,12 +198,29 @@ def spark_preprocessing(filename, detection_type):
             except Exception as e:
                 logging.error(f"Error processing safety file {safety_file}: {e}")
 
+        elif detection_type == "Pose":
+            pose_file = minio_conn.get_json_file(BUCKETS["raw"], f"pose_detection/{filename}")
+            if not pose_file:
+                logging.warning(f"No {filename} file found in pose_detection folder")
+
+            try:
+                logging.info(f"Processing safety file: {pose_file}")
+                pose_df, pose_path, processing_status = process_video_data(spark, pose_file,
+                                                                           "pose")
+                if not write_output_json(spark, pose_df, pose_path, processing_status):
+                    logging.error(f"Failed to process pose file: {pose_file}")
+                # refine_output_path = pose_path.replace("preprocessed_", "refine_")
+                # minio_conn.write_json(pose_df, bucket="refine", path=refine_output_path, temp_bucket="processed")
+
+            except Exception as e:
+                logging.error(f"Error processing pose file {pose_file}: {e}")
+
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
         if processing_status == -1:
             logging.info("No detections in raw json to process. Skipping further preprocessing\n")
             return processing_status
-        elif processing_status == 1 and detection_type != "Geolocation":
+        elif processing_status == 1 and detection_type not in ("Geolocation", "Pose"):
             logging.info(f"Basic Processing completed in {duration:.2f} seconds")
 
             print("\n")

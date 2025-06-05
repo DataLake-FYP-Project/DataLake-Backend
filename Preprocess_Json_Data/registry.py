@@ -2,6 +2,7 @@ from Preprocess_Json_Data.preprocessing.basic_preprocessing_geolocation import p
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_people import process_people_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_safety import process_safety_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_vehicle import process_vehicle_json_data
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_pose import process_pose_json_data
 
 
 DETECTION_REGISTRY = {
@@ -24,5 +25,10 @@ DETECTION_REGISTRY = {
         "folder": "safety_detection",
         "processor": process_safety_json_data,
         "wrapped": False
+    },
+    "pose": {
+        "folder": "pose_detection",
+        "processor": process_pose_json_data,
+        "wrapped": True
     }
 }
