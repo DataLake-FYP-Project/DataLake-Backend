@@ -52,7 +52,7 @@ class SafetyProcessor:
             collect_list("bbox").alias("bbox_list")
         )
 
-    def _enrich_safety(self, row):
+    def _enrich_data(self, row):
         tid = str(row["tracker_id"])
         hardhat_list = row["hardhat_list"] or []
         mask_list = row["mask_list"] or []

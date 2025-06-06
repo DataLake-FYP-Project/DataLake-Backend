@@ -1,12 +1,13 @@
 import tempfile
 import pandas as pd
+from pyspark.sql import functions as F
 import streamlit as st
 from config.minio_config import BUCKETS
 from connectors.minio_connector import MinIOConnector
 from config.spark_config import create_spark_session
 from pyspark.sql import SparkSession
 
-from process_scripts.common import save_refined_json_to_minio
+from process_scripts.common import get_common_output_structure, save_processed_json_to_minio, save_refined_json_to_minio
 import processors_registry
 
 
@@ -98,9 +99,55 @@ if uploaded_file:
     else:
         processed_df = None
 
+    if processed_df:
+        try:
+            processed_object_name = f"{folder_prefix}/processed_{uploaded_file.name}"
+            success_processed = save_processed_json_to_minio(
+                processed_df,
+                minio_connector,
+                processed_bucket_name,
+                processed_object_name,
+                wrapped=False
+            )
+
+            if success_processed:
+                st.success(f"Processed data uploaded to '{processed_bucket_name}' bucket as processed_{uploaded_file.name}")
+            else:
+                st.error(f"Failed to save or upload processed JSON.")
+
+        except Exception as e:
+            st.error(f"Failed to save or upload processed JSON: {e}")
+
+    refined_df = None
     if processed_df is not None:
         try:
-            refined_df = data_processor.format_processed_data(processed_df)
+            processed_df = data_processor.format_processed_data(processed_df)
+            if "timestamp" in processed_df.columns:
+                processed_df = processed_df.withColumn("timestamp",
+                                            F.to_timestamp(F.regexp_replace("timestamp", r"\+05:30$", "")))
+            
+            if "frame_timestamp" in processed_df.columns:
+                processed_df = processed_df.withColumn("frame_timestamp",
+                                            F.to_timestamp(
+                                                F.regexp_replace("frame_timestamp", r"\+05:30$", "")))
+
+            grouped = data_processor._group_data(processed_df)
+            collected = grouped.collect()
+
+            enriched_data = dict(
+                sorted(
+                    [data_processor._enrich_data(row) for row in collected],
+                    key=lambda x: int(x[0])
+                )
+            )
+            output = get_common_output_structure(uploaded_file.name)
+            output.update({
+                "count": len(enriched_data),
+                "detections": enriched_data
+            })
+            
+            pdf = pd.DataFrame([output])
+            refined_df = spark.createDataFrame(pdf)
 
             # Optionally show a sample if the format_processed_data returns something viewable
             if isinstance(refined_df, pd.DataFrame):

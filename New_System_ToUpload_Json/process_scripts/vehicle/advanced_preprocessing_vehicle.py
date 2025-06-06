@@ -83,7 +83,7 @@ class VehicleProcessor:
 
         )
 
-    def _enrich_vehicle(self, row):
+    def _enrich_data(self, row):
         """Enrich vehicle data with aggregated information and the new counts"""
         tid = str(row["tracker_id"])
         lanes = row["lanes"] or []
