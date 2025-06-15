@@ -1,48 +1,32 @@
-import math
-from flask import Flask, request, jsonify
 import os
-import supervision as sv
-from ultralytics import YOLO
 import json
-import cv2
-import numpy as np
-import requests
-from deepface import DeepFace
-import ffmpeg
-from datetime import timezone
-from datetime import datetime, timedelta
 import time
+from urllib import request
+import cv2
+from flask import Flask, jsonify,request
+import numpy as np
+from datetime import datetime
+from ultralytics import YOLO
 from collections import defaultdict
+from flask import Flask, jsonify, request
+import requests
+from datetime import datetime, timedelta, timezone
 
+
+# Paths and folders
 app = Flask(__name__)
-
 UPLOAD_FOLDER = "uploads"
 RESULTS_FOLDER = "results"
-FRAME_SAVE_DIR = os.path.join(RESULTS_FOLDER, "Frames")
-SECOND_BACKEND_URL = "http://localhost:8013/upload_2_animal"
-MODEL_DIR = 'Model'
-
-PROTO_TXT = os.path.join(MODEL_DIR, "MobileNetSSD_deploy.prototxt.txt")
-CAFFE_MODEL = os.path.join(MODEL_DIR, "MobileNetSSD_deploy.caffemodel")
-
-CLASSES = [
-    "background", "aeroplane", "bicycle", "bird", "boat", "bottle",
-    "bus", "car", "cat", "chair", "cow", "dining-table", "dog",
-    "horse", "motorbike", "person", "potted plant", "sheep",
-    "sofa", "train", "monitor"
-]
-REQ_CLASSES = ["bird", "cat", "cow", "dog", "horse", "sheep"]
-COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
-CONF_THRESH = 0.2
-
-# Create folders
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
-os.makedirs(FRAME_SAVE_DIR, exist_ok=True)
-os.makedirs(MODEL_DIR, exist_ok=True)
+FRAME_SAVE_DIR = 'results/frames/'
 
-# ===== Helper Functions =====
+SECOND_BACKEND_URL = "http://localhost:8013/upload_2_animal"
 
+# Required animal classes from COCO
+REQ_CLASSES = ["cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "bird"]
+
+# Helper functions
 def convert_to_serializable(obj):
     if isinstance(obj, (np.integer, np.int32, np.int64)):
         return int(obj)
@@ -63,105 +47,86 @@ def format_detection_counts(detections):
         count_dict[det['class_name']] += 1
     return ", ".join(f"{cnt} {cls}{'s' if cnt > 1 else ''}" for cls, cnt in count_dict.items())
 
+# Main detection function
+def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):
+    os.makedirs(FRAME_SAVE_DIR, exist_ok=True)
+    model_path = os.path.join("Model", "yolov8x.pt")
+    model = YOLO(model_path)
+    model.fuse()
+    
+    # Get COCO class names from model
+    COCO_CLASSES = model.names
+    COLORS = np.random.uniform(0, 255, size=(len(COCO_CLASSES), 3))
 
-# ===== ModelRun Function =====
-
-def ModelRun(SOURCE_VIDEO_PATH, TARGET_VIDEO_PATH):  
     video_name = os.path.splitext(os.path.basename(SOURCE_VIDEO_PATH))[0]
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     json_output_path = os.path.join(RESULTS_FOLDER, f"{video_name}_{now}.json")
 
-    net = cv2.dnn.readNetFromCaffe(PROTO_TXT, CAFFE_MODEL)
+    cap = cv2.VideoCapture(SOURCE_VIDEO_PATH)
+    if not cap.isOpened():
+        raise ValueError(f"Could not open video {SOURCE_VIDEO_PATH}")
 
-    vs = cv2.VideoCapture(SOURCE_VIDEO_PATH)
-    if not vs.isOpened():
-        raise ValueError(f"Error opening video file: {SOURCE_VIDEO_PATH}")
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    frame_width = int(vs.get(cv2.CAP_PROP_FRAME_WIDTH))
-    frame_height = int(vs.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = int(vs.get(cv2.CAP_PROP_FPS))
-    total_frames = int(vs.get(cv2.CAP_PROP_FRAME_COUNT))
-
-    #Initialize video writer to save processed video
-    out = cv2.VideoWriter(
-        TARGET_VIDEO_PATH,
-        cv2.VideoWriter_fourcc(*'mp4v'),
-        fps,
-        (frame_width, frame_height)
-    )
-
+    out = cv2.VideoWriter(TARGET_VIDEO_PATH, cv2.VideoWriter_fourcc(*'mp4v'), fps, (frame_width, frame_height))
     frame_data_list = []
 
-    print(f"Processing video: {SOURCE_VIDEO_PATH}")
-    print(f"Video dimensions: {frame_width}x{frame_height}, Total frames: {total_frames}")
-
+    frame_number = 0
     while True:
-        start_time = time.time()
-        success, frame = vs.read()
-        if not success:
+        ret, frame = cap.read()
+        if not ret:
             break
 
-        frame_number = int(vs.get(cv2.CAP_PROP_POS_FRAMES))
-        timestamp_sec = round(float(vs.get(cv2.CAP_PROP_POS_MSEC)) / 1000, 2)
-
-        (h, w) = frame.shape[:2]
-        blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 0.007843, (300, 300), 127.5)
-        net.setInput(blob)
-        detections = net.forward()
-
+        start_time = time.time()
+        results = model(frame)[0]  # Ultralytics prediction
         detected_animals = []
 
-        for i in np.arange(0, detections.shape[2]):
-            confidence = detections[0, 0, i, 2]
-            if confidence > CONF_THRESH:
-                idx = int(detections[0, 0, i, 1])
-                if CLASSES[idx] in REQ_CLASSES:
-                    box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-                    (startX, startY, endX, endY) = box.astype(int)
+        for box in results.boxes:
+            cls_id = int(box.cls)
+            cls_name = COCO_CLASSES[cls_id]
+            conf = float(box.conf)
 
-                    detection_info = {
-                        "class_id": int(idx),
-                        "class_name": CLASSES[idx],
-                        "confidence": float(confidence),
-                        "bbox": [int(startX), int(startY), int(endX), int(endY)],
-                        "center": {
-                            "x": float((startX + endX) / 2),
-                            "y": float((startY + endY) / 2)
-                        },
-                        "area": int((endX - startX) * (endY - startY)),
-                        "frame_number": int(frame_number),
-                        "timestamp": float(timestamp_sec)
-                    }
-                    detected_animals.append(detection_info)
+            if cls_name in REQ_CLASSES:
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                label = f"{cls_name}: {conf * 100:.1f}%"
+                cv2.rectangle(frame, (x1, y1), (x2, y2), COLORS[cls_id], 2)
+                cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[cls_id], 2)
 
-                    # Draw bounding box
-                    label = f"{CLASSES[idx]}: {confidence * 100:.2f}%"
-                    cv2.rectangle(frame, (startX, startY), (endX, endY), COLORS[idx], 2)
-                    cv2.putText(frame, label, (startX, startY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
+                detected_animals.append({
+                    "class_id": cls_id,
+                    "class_name": cls_name,
+                    "confidence": conf,
+                    "bbox": [x1, y1, x2, y2],
+                    "center": {"x": float((x1 + x2) / 2), "y": float((y1 + y2) / 2)},
+                    "area": int((x2 - x1) * (y2 - y1)),
+                    "frame_number": frame_number,
+                    "timestamp": float(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000
+                })
 
-        processing_time = (time.time() - start_time) * 1000
         detection_str = format_detection_counts(detected_animals) if detected_animals else "No animals detected"
-        print(f"Frame {frame_number}/{total_frames} - {detection_str} ({processing_time:.1f}ms)")
+        print(f"Frame {frame_number}/{total_frames}: {detection_str} ({(time.time() - start_time)*1000:.1f}ms)")
 
         if detected_animals:
             frame_data_list.append({
-                "frame_number": int(frame_number),
-                "timestamp": float(timestamp_sec),
+                "frame_number": frame_number,
+                "timestamp": float(cap.get(cv2.CAP_PROP_POS_MSEC)) / 1000,
                 "detections": detected_animals
             })
+
             frame_path = os.path.join(FRAME_SAVE_DIR, f"frame_{frame_number:04d}.jpg")
             cv2.imwrite(frame_path, frame)
 
-        #Save frame to output video
         out.write(frame)
+        frame_number += 1
 
-    vs.release()
+    cap.release()
     out.release()
 
-    #Save JSON
     save_json(frame_data_list, json_output_path)
-
-    print("Detection completed. Output video and JSON saved.")
+    print(f"YOLOv8 detection completed. JSON saved at: {json_output_path}")
     return json_output_path
 
 
