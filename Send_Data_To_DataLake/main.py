@@ -20,6 +20,7 @@ from processing_people import convert_people_json_format, people_upload_to_elast
 from processing_geolocation import geolocation_upload_to_elasticsearch, geolocation_upload_to_minio
 from processing_safety import safety_upload_to_minio
 from Send_Data_To_DataLake.preprocessing_pose import pose_upload_to_minio
+from processing_animal import animal_upload_to_minio
 from Preprocess_Json_Data.split_vehicle_data.split_vehicle import VehicleDataSplitter
 from Preprocess_Json_Data.spilt_safety_data.split_safety import SafetyDataSplitter
 from Preprocess_Json_Data.split_people_data.split_people import PeopleDataSplitter
@@ -615,6 +616,34 @@ def upload_pose_json():
         logging.info("Nothing to query/dashboard. Stop calling elastic search")
         return jsonify({"message": "Nothing to query/dashboard. Stop calling elastic search"}), 200
 
+@app.route("/upload_2_animal", methods=["POST"])
+def upload_animal_json():
+    if "json_file" not in request.files:
+        logging.error("No JSON file uploaded in request")
+        return jsonify({"error": "No JSON file found"}), 400
+
+    json_file = request.files["json_file"]
+    if json_file.filename == "":
+        logging.error("No selected file in request")
+        return jsonify({"error": "No selected file"}), 400
+
+    filename = json_file.filename
+    video_name = filename.split('.')[0]
+    logging.info(f"Received file: {filename}, video name: {video_name}")
+
+    json_folder_animal = "Animal_Json_Folder"
+    os.makedirs(json_folder_animal, exist_ok=True)
+
+    # Save uploaded file
+    json_path = os.path.join(json_folder_animal, filename)
+    json_file.save(json_path)
+    logging.info(f"Saved file to local path: {json_path}")
+
+    # Upload original (raw) file to MinIO
+    animal_upload_to_minio(json_path)
+    logging.info(f"Uploaded file to MinIO raw bucket")
+
+    
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8013, debug=True, use_reloader=False)
