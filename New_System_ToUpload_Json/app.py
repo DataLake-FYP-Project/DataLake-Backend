@@ -75,8 +75,10 @@ if uploaded_file:
 
     try:
         raw_df = minio_connector.read_json(raw_bucket_name, object_name)
-        st.write("### Raw Data Sample")
-        st.dataframe(raw_df.limit(10).toPandas())
+
+        st.write("### Raw Data Sample (Top Level)")
+        st.dataframe(raw_df.select("frame_number", "timestamp").limit(10).toPandas())
+
     except Exception as e:
         st.error(f"Failed to read raw JSON from MinIO: {e}")
         raw_df = None
