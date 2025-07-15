@@ -1,0 +1,41 @@
+GET _cat/indices?v
+
+DELETE datalake-animal-data
+
+PUT /datalake-animal-data
+{
+  "mappings": {
+    "properties": {
+      "@timestamp": { "type": "date" },
+      "animal_type": { "type": "keyword" },
+      "confidence": { "type": "float" },
+      "area": { "type": "integer" },
+      "frame_number": { "type": "integer" },
+      "video_timestamp": { "type": "float" }
+    }
+  }
+}
+
+PUT _ingest/pipeline/animal_data_timestamp_pipeline
+{
+  "description": "Add timestamp to animal detection data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+POST /datalake-animal-data/_doc?pipeline=animal_data_timestamp_pipeline
+{
+  "animal_type": "cow",
+  "confidence": 0.7433731555938721,
+  "area": 267528,
+  "frame_number": 5,
+  "video_timestamp": 0.07120063821300358
+}
+
+GET datalake-animal-data/_search
