@@ -22,11 +22,14 @@ def get_max_percentage(attribute_values):
     max_value = max(value_counts, key=value_counts.get)
     return max_value
 
+
 def get_average_confidence(confidences):
     return sum(confidences) / len(confidences) if confidences else 0
 
+
 def get_average_speed(speeds):
     return sum(speeds) / len(speeds) if speeds else 0
+
 
 def process_tracker_data(data):
     tracker_data = defaultdict(lambda: {
@@ -77,7 +80,6 @@ def process_tracker_data(data):
     return output_data
 
 
-
 def convert_json_format(input_path, output_path):
     with open(input_path, "r") as f:
         data = json.load(f)
@@ -88,6 +90,7 @@ def convert_json_format(input_path, output_path):
         json.dump(output_data, f, indent=4)
 
     print(f"Transformed JSON saved to {output_path}")
+
 
 def safety_upload_to_minio(file_path):
     s3 = boto3.client(
@@ -110,29 +113,28 @@ def parse_safety_data(file_path):
         with open(file_path, "r") as file:
             data = json.load(file)
 
-        vehicles = data.get("safety", {})
         parsed_records = []
 
-        for vehicle_id_str, vehicle_info in vehicles.items():
-            vehicle_info["vehicle_id"] = int(vehicle_id_str)  # Convert to int
+        # Your file can have a list of frames or a single frame.
+        # Wrap it in a list if needed:
+        frames = data if isinstance(data, list) else [data]
 
-            original_count = vehicle_info.get("red_light_violation_count", 0)
-            vehicle_info["red_light_violation"] = original_count > 0
-            vehicle_info.pop("red_light_violation_count", None)
+        for frame in frames:
+            frame_number = frame.get("frame_number")
+            people = frame.get("people", [])
 
-            original_count = vehicle_info.get("line_crossing_count", 0)
-            vehicle_info["line_crossing_violation"] = original_count > 0
-            vehicle_info.pop("line_crossing_count", None)
-
-            original_count = vehicle_info.get("stopped_duration", 0)
-            vehicle_info["stopped"] = original_count > 0
-            vehicle_info.pop("stopped_duration", None)
-
-            vehicle_info["entry_time"] = vehicle_info.pop("first_detection", None)
-            vehicle_info["exit_time"] = vehicle_info.pop("last_detection", None)
-
-
-            parsed_records.append(vehicle_info)
+            for person in people:
+                record = {
+                    "frame_number": frame_number,
+                    "tracker_id": person.get("tracker_id"),
+                    "wearing_hardhat": person.get("hardhat", False),
+                    "wearing_mask": person.get("mask") is not None,
+                    "wearing_safety_vest": person.get("safety_vest", False),
+                    "safety_status": person.get("safety_status"),
+                    "missing_items": person.get("missing_items", []),
+                    "bbox": person.get("bbox", [])
+                }
+                parsed_records.append(record)
 
         return parsed_records
 
@@ -140,19 +142,20 @@ def parse_safety_data(file_path):
         print(f"Error parsing JSON file: {e}")
         return []
 
-# def vehicle_upload_to_elasticsearch(file_path):
-#     try:
-#         vehicle_records = parse_vehicle_data(file_path)
-#         if not vehicle_records:
-#             print("No vehicle data to upload.")
-#             return
 
-#         es = Elasticsearch([ES_HOST])
-#         es.indices.create(index=ES_INDEX, ignore=400)
+def safety_upload_to_elasticsearch(file_path):
+    try:
+        safety_records = parse_safety_data(file_path)
+        if not safety_records:
+            print("No safety data to upload.")
+            return
 
-#         for i, record in enumerate(vehicle_records):
-#             res = es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="vehicle_data_timestamp_pipeline")
-#             print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
+        es = Elasticsearch([ES_HOST])
+        es.indices.create(index=ES_INDEX, ignore=400)
 
-#     except Exception as e:
-#         print(f"Error uploading to Elasticsearch: {e}")
+        for i, record in enumerate(safety_records):
+            res = es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="safety_data_timestamp_pipeline")
+            print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
+
+    except Exception as e:
+        print(f"Error uploading to Elasticsearch: {e}")

@@ -1,0 +1,59 @@
+GET _cat/indices?v
+
+DELETE datalake-safety-data
+
+PUT /datalake-safety-data
+{
+  "mappings": {
+    "properties": {
+      "@timestamp": { "type": "date" },
+      "source_file": { "type": "keyword" },
+      "processing_date": { "type": "date" },
+      "processing_version": { "type": "keyword" },
+
+      "frame_number": { "type": "integer" },
+      "tracker_id": { "type": "integer" },
+
+      "wearing_hardhat": { "type": "boolean" },
+      "wearing_mask": { "type": "boolean" },
+      "wearing_safety_vest": { "type": "boolean" },
+
+      "safety_status": { "type": "keyword" },
+      "missing_items": { "type": "keyword" },
+      "bbox": { "type": "float" }
+    }
+  }
+}
+
+PUT _ingest/pipeline/safety_data_timestamp_pipeline
+{
+  "description": "Add timestamp to safety data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+POST /datalake-safety-data/_doc?pipeline=safety_data_timestamp_pipeline
+{
+  "source_file": "site_cam_001.mp4",
+  "processing_date": "2025-07-14",
+  "processing_version": "v1.0",
+  "frame_number": 288,
+  "tracker_id": 45,
+
+  "wearing_hardhat": true,
+  "wearing_mask": false,
+  "wearing_safety_vest": true,
+
+  "safety_status": "Unsafe",
+  "missing_items": ["mask"],
+  "bbox": [582, 395, 1283, 1079]
+}
+
+GET datalake-safety-data/_search
+
