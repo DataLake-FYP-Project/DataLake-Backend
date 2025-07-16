@@ -10,7 +10,6 @@ from config.minio_config import BUCKETS
 from connectors.minio_connector import MinIOConnector
 from config.spark_config import create_spark_session
 from pyspark.sql import SparkSession
-
 from process_scripts.common import get_common_output_structure, save_processed_json_to_minio, save_refined_json_to_minio, upload_to_elasticsearch
 import processors_registry
 
@@ -30,28 +29,21 @@ spark = get_spark()
 minio_connector = get_minio_connector()
 
 st.title("MinIO JSON Upload, Process & Viewer")
-
-# ======= NEW: Select type dropdown =======
 type_options = list(processors_registry.PROCESSOR_REGISTRY.keys())
 selected_type = st.selectbox("Select data type", type_options, index=type_options.index("vehicle"))
 
-# Load processor config for selected type
 config = processors_registry.PROCESSOR_REGISTRY[selected_type]
-
 processor_class = config["processor_class"]
 process_func = config["process_func"]
 folder_prefix = config["folder_prefix"]
-
 raw_bucket_name = BUCKETS["raw"]
 processed_bucket_name = BUCKETS["processed"]
 refine_bucket_name = BUCKETS["refine"]
 ELK_index = config["ELK_index"]
 
-# Initialize processor instance
+
 data_processor = processor_class(spark)
-
 uploaded_file = st.file_uploader("Upload a JSON file", type=["json"])
-
 
 def upload_file_to_minio(bucket, file_path, object_name):
     with open(file_path, "rb") as f:
@@ -62,7 +54,6 @@ def upload_file_to_minio(bucket, file_path, object_name):
             length=-1,
             part_size=10*1024*1024
         )
-
 
 if uploaded_file:
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -83,8 +74,6 @@ if uploaded_file:
     try:
         raw_df = minio_connector.read_json(raw_bucket_name, object_name)
 
-        st.write("### Raw Data Sample (Top Level)")
-        st.dataframe(raw_df.select("frame_number", "timestamp").limit(10).toPandas())
 
     except Exception as e:
         st.error(f"Failed to read raw JSON from MinIO: {e}")
@@ -158,7 +147,6 @@ if uploaded_file:
             pdf = pd.DataFrame([output])
             refined_df = spark.createDataFrame(pdf)
 
-            # Optionally show a sample if the format_processed_data returns something viewable
             if isinstance(refined_df, pd.DataFrame):
                 st.write("### Refined Data Sample")
                 st.dataframe(refined_df)
@@ -197,7 +185,6 @@ if uploaded_file:
             temp_file_path = temp_file.name
         logging.info(f"Saved refined data to temporary file: {temp_file_path}")
 
-        # Upload the refined JSON to Elasticsearch
         logging.info("Uploading refined JSON to Elasticsearch")
         try:
             upload_to_elasticsearch(temp_file_path, ELK_index)

@@ -8,8 +8,6 @@ import logging
 from minio import Minio
 from io import BytesIO
 
-
-# Elasticsearch Connection Details
 ES_HOST = "http://localhost:9200"
 
 def validate_schema(df: DataFrame, expected_schema: StructType) -> DataFrame:
@@ -81,14 +79,13 @@ def upload_to_elasticsearch(file_path, ELK_index):
         es.indices.create(index=ELK_index, ignore=400)
 
         for i, (detection_id_str, detection_info) in enumerate(detections.items()):
-            # Add vehicle_id as int if needed
             detection_info["detection_id"] = int(detection_id_str)
 
             res = es.index(
                 index=ELK_index,
                 id=i + 1,
                 body=detection_info,
-                pipeline="vehicle_data_timestamp_pipeline"
+                pipeline="timestamp_pipeline"
             )
             print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
 

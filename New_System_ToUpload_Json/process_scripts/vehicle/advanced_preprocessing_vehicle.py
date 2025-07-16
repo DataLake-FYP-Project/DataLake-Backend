@@ -25,7 +25,6 @@ class VehicleProcessor:
             F.explode("frame_data.detections").alias("detection")
         )
 
-        # Extract the required information
         df = df.select(
             "frame_number",
             F.col("detection.tracker_id").alias("tracker_id"),
@@ -43,7 +42,6 @@ class VehicleProcessor:
             F.col("detection.class_name").alias("class_name"),
             F.col("detection.vehicle_color").alias("vehicle_color"),
 
-            # ADD the new fields you need
             F.col("detection.red_light_violation").alias("red_light_violation"),
             F.col("detection.line_crossing").alias("line_crossing")
             # F.col("detection.geolocation.latitude").alias("latitude"),
@@ -75,7 +73,6 @@ class VehicleProcessor:
             collect_list("bbox").alias("bbox_list"),
             F.collect_list("timestamp").alias("timestamps"),
 
-            # Aggregate the red_light_violation and line_crossing fields
             F.sum(F.expr("CASE WHEN red_light_violation = true THEN 1 ELSE 0 END")).alias("red_light_violation_count"),
             F.sum(F.expr("CASE WHEN line_crossing = true THEN 1 ELSE 0 END")).alias("line_crossing_count")
             # F.first("latitude", ignorenulls=True).alias("latitude"),

@@ -37,5 +37,5 @@ PROCESSOR_REGISTRY = {
     },
 
     
-    # Add more as needed, e.g. "animal", "safety"...
+    # Add more as needed, e.g. "animal", "parking"...
 }

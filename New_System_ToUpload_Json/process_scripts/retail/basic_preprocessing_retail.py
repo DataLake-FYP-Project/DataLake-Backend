@@ -3,7 +3,7 @@ from pyspark.sql.types import *
 from process_scripts.common import clean_string_columns, convert_timestamps, handle_null_values
 
 def process_retail_json_data(df):
-    required_columns = ["frame_number", "timestamp", "products_detected"]
+    required_columns = ["frame_number", "timestamp", "detections"]
     missing_columns = [c for c in required_columns if c not in df.columns]
 
     if missing_columns:
@@ -28,14 +28,14 @@ def process_retail_json_data(df):
     config = default_config | {}
 
     try:
-        total_products = df.select(size(col("products_detected")).alias("count")).agg({"count": "sum"}).collect()[0][0]
+        total_products = df.select(size(col("detections")).alias("count")).agg({"count": "sum"}).collect()[0][0]
         if total_products == 0:
             print("No products detected. Returning original DataFrame.")
             return df, -1
 
-        frame_columns = [c for c in ["frame_number", "timestamp", "products_detected"] if c in df.columns]
+        frame_columns = [c for c in ["frame_number", "timestamp", "detections"] if c in df.columns]
 
-        processed = df.withColumn("product", explode("products_detected")) \
+        processed = df.withColumn("product", explode("detections")) \
             .select(
                 *[col(c) for c in frame_columns],
                 col("product.*")
@@ -75,12 +75,12 @@ def process_retail_json_data(df):
         result = (
             reconstructed_products
             .groupBy(*frame_columns)
-            .agg(collect_list("product").alias("products_detected"))
+            .agg(collect_list("product").alias("detections"))
             .orderBy("frame_number")
             .select(
                 struct(
                     *[col(c) for c in frame_columns],
-                    col("products_detected")
+                    col("detections")
                 ).alias("frame_data")
             )
         )

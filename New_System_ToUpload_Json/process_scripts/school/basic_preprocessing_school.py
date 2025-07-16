@@ -38,32 +38,25 @@ def process_school_json_data(df):
             print("No detections found. Returning original DataFrame.")
             return df, -1
         
-        # Select only available frame-level columns
         frame_columns = [col for col in ["frame_number", "timestamp", "detections"] 
                         if col in df.columns]
         
-        # Step 1: Explode detections and apply preprocessing
         processed = df.withColumn("detection", explode("detections")) \
             .select(
                 *[col(c) for c in frame_columns],
                 col("detection.*")
             )
         
-        # Apply preprocessing pipeline only to existing columns
         processed = (
             processed
-            # Type conversion and null handling
             .transform(lambda df: handle_null_values(df, config["default_values"]))
-            # String processing
             .transform(lambda df: clean_string_columns(df))
-            # Temporal fields - only convert existing ones
             .transform(lambda df: convert_timestamps(
                 df, 
                 [f for f in config["timestamp_fields"] if f in df.columns]
             ))
         )
 
-        # BBOX processing if available
         if "bbox" in processed.columns:
             processed = (
                 processed.withColumn("bbox", col("bbox").cast(ArrayType(DoubleType())))
@@ -98,7 +91,6 @@ def process_school_json_data(df):
             struct(*detection_fields).alias("detection")
         )
 
-        # Step 3: Regroup detections by frame
         result = (
             reconstructed_detections
             .groupBy(*frame_columns)
@@ -115,5 +107,5 @@ def process_school_json_data(df):
         return result, 1
 
     except Exception as e:
-        print(f"Error processing vehicle detection data: {str(e)}")
+        print(f"Error processing school detection data: {str(e)}")
         return df, -1
