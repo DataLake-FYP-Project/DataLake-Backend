@@ -14,22 +14,26 @@ PROCESSOR_REGISTRY = {
     "vehicle": {
         "processor_class": VehicleProcessor,
         "process_func": process_vehicle_json_data,
-        "folder_prefix": "vehicle_detection"
+        "folder_prefix": "vehicle_detection",
+        "ELK_index":"datalake-vehicle-data"
     },
     "safety": {
         "processor_class": SafetyProcessor,
         "process_func": process_safety_json_data,
-        "folder_prefix": "safety_detections"
+        "folder_prefix": "safety_detections",
+        "ELK_index":"datalake-safety-data"
     },
     "school": {
         "processor_class": SchoolProcessor,
         "process_func": process_school_json_data,
-        "folder_prefix": "school_detections"
+        "folder_prefix": "school_detections",
+        "ELK_index":"datalake-school-data"
     },
     "retail": {
         "processor_class": RetailProcessor,
         "process_func": process_retail_json_data,
-        "folder_prefix": "retail_detections"
+        "folder_prefix": "retail_detections",
+        "ELK_index":"datalake-retail-data"
     },
 
     

@@ -1,3 +1,7 @@
+from datetime import datetime
+import json
+import logging
+import os
 import tempfile
 import pandas as pd
 from pyspark.sql import functions as F
@@ -7,10 +11,10 @@ from connectors.minio_connector import MinIOConnector
 from config.spark_config import create_spark_session
 from pyspark.sql import SparkSession
 
-from process_scripts.common import get_common_output_structure, save_processed_json_to_minio, save_refined_json_to_minio
+from process_scripts.common import get_common_output_structure, save_processed_json_to_minio, save_refined_json_to_minio, upload_to_elasticsearch
 import processors_registry
 
-
+# python -m streamlit run app.py
 st.set_page_config(page_title="MinIO Spark Viewer", layout="wide")
 
 @st.cache_resource
@@ -41,6 +45,7 @@ folder_prefix = config["folder_prefix"]
 raw_bucket_name = BUCKETS["raw"]
 processed_bucket_name = BUCKETS["processed"]
 refine_bucket_name = BUCKETS["refine"]
+ELK_index = config["ELK_index"]
 
 # Initialize processor instance
 data_processor = processor_class(spark)
@@ -60,7 +65,9 @@ def upload_file_to_minio(bucket, file_path, object_name):
 
 
 if uploaded_file:
-    object_name = f"{folder_prefix}/{uploaded_file.name}"
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename, ext = os.path.splitext(uploaded_file.name)
+    object_name = f"{folder_prefix}/{filename}_{now}{ext}"
     st.info(f"Uploading file `{uploaded_file.name}` to raw bucket `{raw_bucket_name}`...")
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".json") as tmp:
@@ -183,3 +190,22 @@ if uploaded_file:
                 st.error("Failed to upload refined JSON.")
         except Exception as e:
             st.error(f"Failed to save or upload refined JSON: {e}")
+
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_file:
+            json.dump(output, temp_file, indent=4)
+            temp_file_path = temp_file.name
+        logging.info(f"Saved refined data to temporary file: {temp_file_path}")
+
+        # Upload the refined JSON to Elasticsearch
+        logging.info("Uploading refined JSON to Elasticsearch")
+        try:
+            upload_to_elasticsearch(temp_file_path, ELK_index)
+            logging.info("Successfully uploaded to Elasticsearch")
+            st.success("Refined JSON uploaded to Elasticsearch successfully.")
+        except Exception as e:
+            logging.error(f"Error uploading to Elasticsearch: {str(e)}", exc_info=True)
+            st.error(f"Error uploading refined JSON to Elasticsearch: {str(e)}")
+    except Exception as e:
+        logging.error(f"Error during saving refined JSON to temporary file: {str(e)}", exc_info=True)
+        st.error(f"Error during saving refined JSON to temporary file: {str(e)}")

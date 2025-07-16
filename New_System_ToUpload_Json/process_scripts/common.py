@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+import json
+from elasticsearch import Elasticsearch
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, to_timestamp, lit, coalesce, when, trim, current_timestamp, md5
 from pyspark.sql.types import StructType, StringType
@@ -6,6 +8,9 @@ import logging
 from minio import Minio
 from io import BytesIO
 
+
+# Elasticsearch Connection Details
+ES_HOST = "http://localhost:9200"
 
 def validate_schema(df: DataFrame, expected_schema: StructType) -> DataFrame:
     """Validate DataFrame schema against expected schema with type enforcement"""
@@ -62,6 +67,33 @@ def upload_to_minio(bucket_name, object_name, data_str, minio_config):
     data_bytes = BytesIO(data_str.encode('utf-8'))
     client.put_object(bucket_name, object_name, data_bytes, length=len(data_str))
 
+def upload_to_elasticsearch(file_path, ELK_index):
+    try:
+        with open(file_path, "r") as file:
+            data = json.load(file)
+
+        detections = data.get("detections", {})
+        if not detections:
+            print("No detection data to upload.")
+            return
+
+        es = Elasticsearch([ES_HOST])
+        es.indices.create(index=ELK_index, ignore=400)
+
+        for i, (detection_id_str, detection_info) in enumerate(detections.items()):
+            # Add vehicle_id as int if needed
+            detection_info["detection_id"] = int(detection_id_str)
+
+            res = es.index(
+                index=ELK_index,
+                id=i + 1,
+                body=detection_info,
+                pipeline="vehicle_data_timestamp_pipeline"
+            )
+            print(f"Document {i + 1} uploaded to Elasticsearch: {res['result']}")
+
+    except Exception as e:
+        print(f"Error uploading to Elasticsearch: {e}")
 
 def save_processed_json_to_minio(processed_df, minio_connector, bucket_name, upload_filename, wrapped=False):
     try:
