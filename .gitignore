@@ -30,5 +30,7 @@
 
 *.csv
 *.pt
+*.caffemodel
+*.prototxt.txt
 
 

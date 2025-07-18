@@ -77,6 +77,9 @@ def upload_video_and_points(video_file, points_data, video_type, metadata_to_sen
 
         elif video_type == "Pose":
             url = "http://localhost:8015/upload_pose"
+        
+        elif video_type == "Animal":
+            url = "http://localhost:8016/upload_animal"
 
         else:
             raise ValueError("Invalid video type")
@@ -107,7 +110,7 @@ if 'points_data' not in st.session_state:
 if video_file:
     st.video(video_file)
 
-    video_type = st.selectbox("Select Video Type", ["People", "Vehicle", "Vehicle Geolocation tracker", "Safety", "Pose"])
+    video_type = st.selectbox("Select Video Type", ["People", "Vehicle", "Vehicle Geolocation tracker", "Safety", "Pose","Animal"])
 
     camera_metadata = None
 
@@ -202,6 +205,9 @@ if video_file:
             valid = True  # No point selection needed
 
         elif video_type == "Pose":
+            valid = True  # No point selection needed
+        
+        elif video_type == "Animal":
             valid = True  # No point selection needed
 
         if valid:
