@@ -99,7 +99,9 @@ if uploaded_file:
 
     if processed_df:
         try:
-            processed_object_name = f"{folder_prefix}/processed_{uploaded_file.name}"
+            processed_now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            processed_filename, processed_ext = os.path.splitext(uploaded_file.name)
+            processed_object_name = f"{folder_prefix}/processed_{processed_filename}_{processed_now}{processed_ext}"
             success_processed = save_processed_json_to_minio(
                 processed_df,
                 minio_connector,
@@ -163,7 +165,9 @@ if uploaded_file:
 
     if refined_df:
         try:
-            refined_object_name = f"{folder_prefix}/refine_{uploaded_file.name}"
+            refined_now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            refined_filename, refined_ext = os.path.splitext(uploaded_file.name)
+            refined_object_name = f"{folder_prefix}/refine_{refined_filename}_{refined_now}{refined_ext}"
             success_refined = save_refined_json_to_minio(
                 refined_df,
                 minio_connector,
