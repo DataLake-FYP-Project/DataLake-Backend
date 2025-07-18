@@ -6,6 +6,7 @@ from pathlib import Path
 import logging
 import tempfile
 
+
 # Configure logging with more detail
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -20,6 +21,7 @@ from processing_people import convert_people_json_format, people_upload_to_elast
 from processing_geolocation import geolocation_upload_to_elasticsearch, geolocation_upload_to_minio
 from processing_safety import safety_upload_to_minio, safety_upload_to_elasticsearch
 from Send_Data_To_DataLake.preprocessing_pose import pose_upload_to_minio
+from Send_Data_To_DataLake.processing_pose import pose_upload_to_elasticsearch
 from Preprocess_Json_Data.split_vehicle_data.split_vehicle import VehicleDataSplitter
 from Preprocess_Json_Data.spilt_safety_data.split_safety import SafetyDataSplitter
 from Preprocess_Json_Data.split_people_data.split_people import PeopleDataSplitter
@@ -593,7 +595,7 @@ def upload_pose_json():
             # Upload the refined JSON to Elasticsearch
             logging.info("Uploading refined JSON to Elasticsearch")
             try:
-                people_upload_to_elasticsearch(temp_file_path)
+                pose_upload_to_elasticsearch(temp_file_path)
                 logging.info("Successfully uploaded to Elasticsearch")
             except Exception as e:
                 logging.error(f"Error uploading to Elasticsearch: {str(e)}", exc_info=True)

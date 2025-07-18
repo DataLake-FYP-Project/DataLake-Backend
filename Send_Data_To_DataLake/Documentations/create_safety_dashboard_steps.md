@@ -83,4 +83,3 @@ Index Pattern: datalake-safety-data
 - **Title**: Detections Per Frame
 
 ✅ Helps you see how many people were detected in each frame.
-
