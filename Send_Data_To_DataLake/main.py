@@ -683,15 +683,15 @@ def upload_animal_json():
             refined_file_name = latest_file.object_name.split('/')[-1]
             logging.info(f"Selected latest refined file: {refined_file_name}")
 
-            # try:
-            #     splitter = AnimalDataSplitter()
-            #     if splitter.process(refined_file_name):
-            #         logging.info(f"Successfully split refined file: {refined_file_name}")
-            #     else:
-            #         logging.error(f"Failed to split refined file: {refined_file_name}")
-            # except Exception as e:
-            #     logging.error(f"Error split refined file: {str(e)}", exc_info=True)
-            #     raise
+            try:
+                splitter = AnimalDataSplitter()
+                if splitter.process(refined_file_name):
+                    logging.info(f"Successfully split refined file: {refined_file_name}")
+                else:
+                    logging.error(f"Failed to split refined file: {refined_file_name}")
+            except Exception as e:
+                logging.error(f"Error split refined file: {str(e)}", exc_info=True)
+                raise
 
             # Fetch the refined JSON
             logging.info(f"Fetching refined JSON: {refined_file_name}")
