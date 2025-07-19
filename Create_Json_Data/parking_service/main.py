@@ -159,6 +159,7 @@ def process_parking():
     cap.release()
     out.release()
 
+    # In the output_json dictionary construction (around line 180), modify to:
     output_json = {
         "processing_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "video_source": video_file.filename,
@@ -178,14 +179,16 @@ def process_parking():
                     [slots[i][0], slots[i][1] + slots[i][3]]
                 ]
                 for i in range(len(slots))
-            }
+            },
+            "detection_method": "manual"  # Added this line
         },
         "results": {
             "total_vehicles": sum(len(v) for v in vehicle_data.values()),
             "final_occupancy": {k: v[-1]["occupied"] if v else False for k, v in slot_status.items()},
-            "vehicle_data": vehicle_data
+            "vehicle_data": vehicle_data,
+            "occupancy_history": slot_status  # Added this line (uses existing slot_status data)
         },
-        "frames_directory": FRAME_SAVE_DIR  # Include frames directory in output
+        "frames_directory": FRAME_SAVE_DIR
     }
 
     with open(output_json_path, "w") as jf:
