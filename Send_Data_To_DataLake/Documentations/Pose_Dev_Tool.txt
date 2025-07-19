@@ -1,0 +1,74 @@
+GET _cat/indices?v
+
+DELETE datalake-pose-data
+
+PUT /datalake-pose-data
+{
+  "mappings": {
+    "properties": {
+      "@timestamp":        { "type": "date" },
+      "source_file":       { "type": "keyword" },
+      "processing_date":   { "type": "date" },
+      "processing_version":{ "type": "keyword" },
+
+      "frame_number":      { "type": "integer" },
+      "action":            { "type": "keyword" },
+      "confidence":        { "type": "float" },
+
+      "keypoints": {
+        "type": "nested",
+        "properties": {
+          "landmark_id": { "type": "float" },
+          "x":           { "type": "float" },
+          "y":           { "type": "float" },
+          "z":           { "type": "float" },
+          "visibility":  { "type": "float" }
+        }
+      }
+    }
+  }
+}
+
+PUT _ingest/pipeline/pose_data_timestamp_pipeline
+{
+  "description": "Add timestamp to pose data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+POST /datalake-pose-data/_doc?pipeline=pose_data_timestamp_pipeline
+{
+  "source_file": "pose_cam_01.mp4",
+  "processing_date": "2025-07-18",
+  "processing_version": "v1.0",
+
+  "frame_number": 10,
+  "action": "Down",
+  "confidence": 0.41,
+
+  "keypoints": [
+    {
+      "landmark_id": 0,
+      "x": 0.8958,
+      "y": 0.4261,
+      "z": 0.5930,
+      "visibility": -0.3299
+    },
+    {
+      "landmark_id": 1,
+      "x": 0.8913,
+      "y": 0.4281,
+      "z": 0.5980,
+      "visibility": -0.3421
+    }
+    // ... more keypoints
+  ]
+}
+
+GET datalake-pose-data/_search
