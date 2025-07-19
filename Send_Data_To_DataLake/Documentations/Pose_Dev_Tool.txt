@@ -1,24 +1,34 @@
-GET _cat/indices?v
-
-DELETE datalake-pose-data
+DELETE /datalake-pose-data
 
 PUT /datalake-pose-data
 {
   "mappings": {
     "properties": {
-      "@timestamp":        { "type": "date" },
-      "source_file":       { "type": "keyword" },
-      "processing_date":   { "type": "date" },
-      "processing_version":{ "type": "keyword" },
-
-      "frame_number":      { "type": "integer" },
-      "action":            { "type": "keyword" },
-      "confidence":        { "type": "float" },
-
+      "@timestamp": {
+        "type": "date"
+      },
+      "source_file": {
+        "type": "keyword"
+      },
+      "processing_date": {
+        "type": "date"
+      },
+      "processing_version": {
+        "type": "keyword"
+      },
+      "frame_number": {
+        "type": "integer"
+      },
+      "action": {
+        "type": "keyword"
+      },
+      "confidence": {
+        "type": "float"
+      },
       "keypoints": {
         "type": "nested",
         "properties": {
-          "landmark_id": { "type": "float" },
+          "landmark_id": { "type": "integer" },
           "x":           { "type": "float" },
           "y":           { "type": "float" },
           "z":           { "type": "float" },
@@ -31,7 +41,7 @@ PUT /datalake-pose-data
 
 PUT _ingest/pipeline/pose_data_timestamp_pipeline
 {
-  "description": "Add timestamp to pose data",
+  "description": "Add @timestamp to pose data using ingest timestamp",
   "processors": [
     {
       "set": {
@@ -47,11 +57,9 @@ POST /datalake-pose-data/_doc?pipeline=pose_data_timestamp_pipeline
   "source_file": "pose_cam_01.mp4",
   "processing_date": "2025-07-18",
   "processing_version": "v1.0",
-
   "frame_number": 10,
   "action": "Down",
   "confidence": 0.41,
-
   "keypoints": [
     {
       "landmark_id": 0,
@@ -67,8 +75,7 @@ POST /datalake-pose-data/_doc?pipeline=pose_data_timestamp_pipeline
       "z": 0.5980,
       "visibility": -0.3421
     }
-    // ... more keypoints
   ]
 }
 
-GET datalake-pose-data/_search
+GET /datalake-pose-data/_search
