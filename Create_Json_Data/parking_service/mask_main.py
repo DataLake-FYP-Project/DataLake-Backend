@@ -88,7 +88,7 @@ def print_progress(frame_id, total_frames, free_count, total_slots):
     if frame_id + 1 == total_frames:
         print()
 
-@app.route('/upload_parking', methods=['POST'])
+@app.route('/upload_mask_parking', methods=['POST'])
 def process_parking():
     if 'file' not in request.files:
         return jsonify({"error": "Missing video file"}), 400
@@ -289,4 +289,4 @@ def process_parking():
     }), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8017, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=8018, debug=True, use_reloader=False)
