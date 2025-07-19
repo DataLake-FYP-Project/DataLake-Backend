@@ -50,8 +50,11 @@ def process_parking():
         slots = pickle.load(f)
 
     # Setup output paths
-    output_video_path = os.path.join(RESULT_FOLDER, f"annotated_{video_file.filename}")
-    output_json_path = os.path.join(RESULT_FOLDER, f"parking_{os.path.splitext(video_file.filename)[0]}.json")
+    SOURCE_VIDEO=video_file.filename
+    video_name=os.path.splitext(SOURCE_VIDEO)[0]
+    output_video_path = os.path.join(RESULT_FOLDER, f"annotated_{SOURCE_VIDEO}")
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    output_json_path = os.path.join(RESULT_FOLDER, f"{video_name}_{now}.json")
 
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
@@ -193,13 +196,13 @@ def process_parking():
     print(f"JSON_PATH: {output_json_path}")
     print(f"FRAME_SAVE_DIR: {FRAME_SAVE_DIR} ")
 
-    # try:
-    #     with open(output_json_path, 'rb') as json_file:
-    #         response = requests.post(SECOND_BACKEND_URL, files={"json_file": json_file}, timeout=10)
-    #         response_data = response.json()
+    try:
+        with open(output_json_path, 'rb') as json_file:
+            response = requests.post(SECOND_BACKEND_URL, files={"json_file": json_file}, timeout=10)
+            response_data = response.json()
 
-    # except Exception as e:
-    #     return jsonify({"error": f"Error during second backend communication: {str(e)}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Error during second backend communication: {str(e)}"}), 500
 
     return jsonify({
         "message": "Processed successfully",
