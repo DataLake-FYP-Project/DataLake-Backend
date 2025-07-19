@@ -12,7 +12,7 @@ BUCKET_NAME = 'raw'
 
 # Elasticsearch Connection Details
 ES_HOST = "http://localhost:9200"
-ES_INDEX = "datalake-vehicle-data"
+ES_INDEX = "datalake-safety-data"
 
 
 def get_max_percentage(attribute_values):
