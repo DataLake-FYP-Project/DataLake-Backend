@@ -46,69 +46,68 @@ def scale_polygon_points(polygon_points, original_width, original_height, new_wi
     return [(int(x * scale_x), int(y * scale_y)) for x, y in polygon_points]
 
 
-# Function to slot selection for parking on the video
-def draw_parking_slots(video_path):
-    cap = cv2.VideoCapture(video_path)
-    success, frame = cap.read()
-    cap.release()
+# # Function to slot selection for parking on the video
+# def draw_parking_slots(video_path):
+#     cap = cv2.VideoCapture(video_path)
+#     success, frame = cap.read()
+#     cap.release()
 
-    if not success:
-        st.error("Could not read the video.")
-        return None
+#     if not success:
+#         st.error("Could not read the video.")
+#         return None
 
-    clone = frame.copy()
-    drawing = False
-    ix, iy = -1, -1
-    slots = []
-    window_closed = False
+#     clone = frame.copy()
+#     drawing = False
+#     ix, iy = -1, -1
+#     slots = []
+#     window_closed = False
 
-    def draw_rectangle(event, x, y, flags, param):
-        nonlocal ix, iy, drawing, slots, clone, frame
-        if event == cv2.EVENT_LBUTTONDOWN:
-            drawing = True
-            ix, iy = x, y
-        elif event == cv2.EVENT_MOUSEMOVE:
-            if drawing:
-                temp = clone.copy()
-                cv2.rectangle(temp, (ix, iy), (x, y), (255, 0, 0), 2)
-                for sx, sy, sw, sh in slots:
-                    cv2.rectangle(temp, (sx, sy), (sx + sw, sy + sh), (0, 255, 0), 1)
-                cv2.imshow("Draw Parking Slots", temp)
-        elif event == cv2.EVENT_LBUTTONUP:
-            drawing = False
-            x1, y1 = min(ix, x), min(iy, y)
-            w, h = abs(x - ix), abs(y - iy)
-            slots.append((x1, y1, w, h))
-            cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), (0, 255, 0), 2)
-            cv2.imshow("Draw Parking Slots", frame)
+#     def draw_rectangle(event, x, y, flags, param):
+#         nonlocal ix, iy, drawing, slots, clone, frame
+#         if event == cv2.EVENT_LBUTTONDOWN:
+#             drawing = True
+#             ix, iy = x, y
+#         elif event == cv2.EVENT_MOUSEMOVE:
+#             if drawing:
+#                 temp = clone.copy()
+#                 cv2.rectangle(temp, (ix, iy), (x, y), (255, 0, 0), 2)
+#                 for sx, sy, sw, sh in slots:
+#                     cv2.rectangle(temp, (sx, sy), (sx + sw, sy + sh), (0, 255, 0), 1)
+#                 cv2.imshow("Draw Parking Slots", temp)
+#         elif event == cv2.EVENT_LBUTTONUP:
+#             drawing = False
+#             x1, y1 = min(ix, x), min(iy, y)
+#             w, h = abs(x - ix), abs(y - iy)
+#             slots.append((x1, y1, w, h))
+#             cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), (0, 255, 0), 2)
+#             cv2.imshow("Draw Parking Slots", frame)
 
-    cv2.namedWindow("Draw Parking Slots", cv2.WINDOW_NORMAL)
-    cv2.setMouseCallback("Draw Parking Slots", draw_rectangle)
-    cv2.imshow("Draw Parking Slots", frame)
+#     cv2.namedWindow("Draw Parking Slots", cv2.WINDOW_NORMAL)
+#     cv2.setMouseCallback("Draw Parking Slots", draw_rectangle)
+#     cv2.imshow("Draw Parking Slots", frame)
 
-    st.info("\nClick and drag to draw parking slots. Close the window when finished.\n")
+#     st.info("\nClick and drag to draw parking slots. Close the window when finished.\n")
 
-    # Get the current script's directory (folder A)
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    save_path = os.path.join(parent_dir, "Create_Json_Data", "parking_service", "uploads", "parking_slot_coords.pkl")
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+#     # Get the current script's directory (folder A)
+#     current_dir = os.path.dirname(os.path.abspath(__file__))
+#     parent_dir = os.path.dirname(current_dir)
+#     save_path = os.path.join(parent_dir, "Create_Json_Data", "parking_service", "uploads", "parking_slot_coords.pkl")
+#     os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
-    while True:
-        key = cv2.waitKey(1) & 0xFF
-        # Check if window was closed
-        if cv2.getWindowProperty("Draw Parking Slots", cv2.WND_PROP_VISIBLE) < 1:
-            break
+#     while True:
+#         key = cv2.waitKey(1) & 0xFF
+#         # Check if window was closed
+#         if cv2.getWindowProperty("Draw Parking Slots", cv2.WND_PROP_VISIBLE) < 1:
+#             break
 
-    if slots:  # Only save if we have slots
-        with open(save_path, "wb") as f:
-            pickle.dump(slots, f)
-        print(f"Saved {len(slots)} slots to {save_path}")
-        return save_path
-    else:
-        print("No slots were saved")
-        return None
-
+#     if slots:  # Only save if we have slots
+#         with open(save_path, "wb") as f:
+#             pickle.dump(slots, f)
+#         print(f"Saved {len(slots)} slots to {save_path}")
+#         return save_path
+#     else:
+#         print("No slots were saved")
+#         return None
 
 
 def upload_video_and_points(video_file, points_data, video_type, metadata_to_send=None):
@@ -233,19 +232,19 @@ if video_file:
         }
         st.session_state.camera_metadata = camera_metadata
 
-    elif video_type == "Parking":
-        if st.button("Draw Parking Slots"):
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
-                tmp.write(video_file.read())
-                tmp_path = tmp.name
+    # elif video_type == "Parking":
+    #     if st.button("Draw Parking Slots"):
+    #         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
+    #             tmp.write(video_file.read())
+    #             tmp_path = tmp.name
 
-            save_path = draw_parking_slots(tmp_path)
-            os.remove(tmp_path)
+    #         save_path = draw_parking_slots(tmp_path)
+    #         os.remove(tmp_path)
 
-            if save_path:
-                st.success(f"Saved parking slot coordinates to: {save_path}")
-            else:
-                st.warning("No slots saved.")
+    #         if save_path:
+    #             st.success(f"Saved parking slot coordinates to: {save_path}")
+    #         else:
+    #             st.warning("No slots saved.")
 
     if st.button("Upload Video"):
         valid = False
