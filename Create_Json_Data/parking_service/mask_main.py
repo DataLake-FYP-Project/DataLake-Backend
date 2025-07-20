@@ -143,7 +143,8 @@ def process_parking():
 
     frame_id = 0
     step = 30  # Process every 30 frames
-
+    
+    frame_data = [] 
     while True:
         success, frame = cap.read()
         if not success:
@@ -151,42 +152,50 @@ def process_parking():
 
         frame_time = frame_id / fps
         free_count = 0
+        current_frame_data = {
+        "frame_number": frame_id,
+        "timestamp_sec": round(frame_time, 2),
+        "slots": {},
+        "free_slots": 0
+        }
 
         # Process frame for occupancy detection
-        if frame_id % step == 0 or frame_id == 0:
-            for idx, (x, y, w, h) in enumerate(slots):
-                slot_id = str(idx + 1)
-                spot_crop = frame[y:y+h, x:x+w, :]
-                
-                try:
-                    spot_status = empty_or_not(spot_crop)
-                    occupied = not spot_status  # Invert since EMPTY=True in the model
-                    
-                    # Update slot status
-                    slot_status[slot_id].append({
-                        "frame": frame_id,
-                        "time": round(frame_time, 2),
-                        "occupied": occupied
-                    })
+        for idx, (x, y, w, h) in enumerate(slots):
+            slot_id = str(idx + 1)
+            spot_crop = frame[y:y+h, x:x+w, :]
+            
+            spot_status = empty_or_not(spot_crop)
+            occupied = not spot_status
+            
+            # Update current frame data
+            current_frame_data["slots"][slot_id] = {
+                "occupied": occupied,
+                "bbox": [x, y, w, h]
+            }
                     
                     # Track vehicle entry/exit
-                    if current_status[slot_id] != occupied:
-                        if occupied:  # Vehicle entered
-                            occupancy_start_time[slot_id] = frame_time
-                        else:  # Vehicle exited
-                            if slot_id in occupancy_start_time:
-                                duration = round(frame_time - occupancy_start_time[slot_id], 2)
-                                vehicle_data.setdefault(slot_id, []).append({
-                                    "entry_time": round(occupancy_start_time[slot_id], 2),
-                                    "exit_time": round(frame_time, 2),
-                                    "duration_sec": duration,
-                                    "vehicle_type": "unknown"
-                                })
-                                del occupancy_start_time[slot_id]
-                        current_status[slot_id] = occupied
-                except Exception as e:
-                    print(f"Error processing slot {slot_id}: {str(e)}")
-                    continue
+            if current_status[slot_id] != occupied:
+                if occupied:  # Vehicle entered
+                    occupancy_start_time[slot_id] = frame_time
+                else:  # Vehicle exited
+                    if slot_id in occupancy_start_time:
+                        duration = round(frame_time - occupancy_start_time[slot_id], 2)
+                        vehicle_data.setdefault(slot_id, []).append({
+                            "entry_time": round(occupancy_start_time[slot_id], 2),
+                            "exit_time": round(frame_time, 2),
+                            "duration_sec": duration,
+                            "vehicle_type": "unknown"
+                        })
+                        del occupancy_start_time[slot_id]
+                current_status[slot_id] = occupied
+
+            if not occupied:
+              free_count += 1
+
+        # Add to frame_data array
+        current_frame_data["free_slots"] = free_count
+        frame_data.append(current_frame_data)
+    
 
         # Draw parking slots with current status
         for idx, (x, y, w, h) in enumerate(slots):
@@ -252,13 +261,14 @@ def process_parking():
             },
             "detection_method": "mask_based"
         },
-        "results": {
-            "total_vehicles": sum(len(v) for v in vehicle_data.values()),
-            "final_occupancy": current_status,
-            "vehicle_data": vehicle_data,
-            "occupancy_history": {k: v[1:] for k, v in slot_status.items()}  # Skip initial dummy entry
-        },
-        "frames_directory": FRAME_SAVE_DIR
+        # "results": {
+        #     "total_vehicles": sum(len(v) for v in vehicle_data.values()),
+        #     "final_occupancy": current_status,
+        #     "vehicle_data": vehicle_data,
+        #     "occupancy_history": {k: v[1:] for k, v in slot_status.items()}  # Skip initial dummy entry
+        # },
+        "frames_directory": FRAME_SAVE_DIR,
+        "frame_detections": frame_data
     }
 
     with open(output_json_path, "w") as jf:
