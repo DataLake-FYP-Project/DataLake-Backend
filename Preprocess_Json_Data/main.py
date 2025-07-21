@@ -256,28 +256,27 @@ def spark_preprocessing(filename, detection_type):
             except Exception as e:
                 logging.error(f"Error processing parking file {parking_file}: {e}")
 
+        end_time = datetime.now(timezone.utc)
+        duration = (end_time - start_time).total_seconds()
+        if processing_status == -1:
+            logging.info("No detections in raw json to process. Skipping further preprocessing\n")
+            return processing_status
+        elif processing_status == 1 and detection_type not in ("Geolocation", "Pose","Animal"):
+            logging.info(f"Basic Processing completed in {duration:.2f} seconds")
 
-        # end_time = datetime.now(timezone.utc)
-        # duration = (end_time - start_time).total_seconds()
-        # if processing_status == -1:
-        #     logging.info("No detections in raw json to process. Skipping further preprocessing\n")
-        #     return processing_status
-        # elif processing_status == 1 and detection_type not in ("Geolocation", "Pose","Animal","Parking"):
-        #     logging.info(f"Basic Processing completed in {duration:.2f} seconds")
+            print("\n")
+            logging.info("Starting Advanced Preprocessing ")
+            try:
+                processing_status = advanced_preprocessing(detection_type, filename)
+            except Exception as e:
+                logging.error(f"Error during advanced preprocessing: {e}")
+                processing_status = None
 
-        #     print("\n")
-        #     logging.info("Starting Advanced Preprocessing ")
-        #     try:
-        #         processing_status = advanced_preprocessing(detection_type, filename)
-        #     except Exception as e:
-        #         logging.error(f"Error during advanced preprocessing: {e}")
-        #         processing_status = None
-
-        #     print("\n")
-        #     logging.info("All processing stages completed ")
-        #     return processing_status
-        # else:
-        #     return processing_status
+            print("\n")
+            logging.info("All processing stages completed ")
+            return processing_status
+        else:
+            return processing_status
     except Exception as e:
         logging.error(f"Fatal error in processing pipeline: {e}")
         return processing_status

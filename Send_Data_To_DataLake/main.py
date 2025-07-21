@@ -786,7 +786,7 @@ def upload_parking_json():
                 base_name = video_name.split("preprocessed_")[1]
             else:
                 base_name = video_name
-            prefix = f"parkingLot_detection/refine_{base_name}"
+            prefix = f"parking_detection/refine_{base_name}"
             logging.info(f"Listing refined files with prefix: {prefix} in bucket: {refine_bucket}")
 
             # List refined files
@@ -809,21 +809,11 @@ def upload_parking_json():
             refined_file_name = latest_file.object_name.split('/')[-1]
             logging.info(f"Selected latest refined file: {refined_file_name}")
 
-            # try:
-            #     splitter = AnimalDataSplitter()
-            #     if splitter.process(refined_file_name):
-            #         logging.info(f"Successfully split refined file: {refined_file_name}")
-            #     else:
-            #         logging.error(f"Failed to split refined file: {refined_file_name}")
-            # except Exception as e:
-            #     logging.error(f"Error split refined file: {str(e)}", exc_info=True)
-            #     raise
-
             # Fetch the refined JSON
             logging.info(f"Fetching refined JSON: {refined_file_name}")
             refined_data = fetch_refined_file(
                 spark,
-                file_path="parkingLot_detection",
+                file_path="parking_detection",
                 file_name=refined_file_name,
                 detection_type="Parking"
             )
@@ -856,7 +846,7 @@ def upload_parking_json():
             spark.stop()
             logging.info("Spark session stopped after fetch/upload")
 
-        return jsonify({"message": "Animal file uploaded, processed, and indexed successfully"}), 200
+        return jsonify({"message": "Parking file uploaded, processed, and indexed successfully"}), 200
     else:
         logging.info("Nothing to query/dashboard. Stop calling elastic search")
         return jsonify({"message": "Nothing to query/dashboard. Stop calling elastic search"}), 200
