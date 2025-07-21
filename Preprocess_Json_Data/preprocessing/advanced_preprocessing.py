@@ -258,14 +258,15 @@ class CombinedProcessor:
                     logging.info(f"No valid detections in {filename}")
                     return -1
 
-                results, final_occupancy = self.parking_processor._analyze_slot_transitions(processed_df)
+                results, final_occupancy, free_count = self.parking_processor._analyze_slot_transitions(processed_df)
 
                 # Safely extract parking_config and convert to dict
                 raw_config_row = df.select("parking_config").first()
                 parking_config = raw_config_row["parking_config"]
                 if hasattr(parking_config, "asDict"):
                     parking_config = parking_config.asDict()
-
+                
+                parking_config["free_slots"] = free_count
                 parking_config["final_occupancy"] = final_occupancy
 
                 output = {

@@ -22,7 +22,7 @@ from processing_safety import safety_upload_to_minio, safety_upload_to_elasticse
 from Send_Data_To_DataLake.preprocessing_pose import pose_upload_to_minio
 from Send_Data_To_DataLake.processing_pose import pose_upload_to_elasticsearch
 from processing_animal import animal_upload_to_elasticsearch, animal_upload_to_minio
-from Send_Data_To_DataLake.processing_parkingLot import parkingLot_upload_to_minio
+from Send_Data_To_DataLake.processing_parkingLot import parking_upload_to_elasticsearch, parkingLot_upload_to_minio
 from Preprocess_Json_Data.split_vehicle_data.split_vehicle import VehicleDataSplitter
 from Preprocess_Json_Data.spilt_safety_data.split_safety import SafetyDataSplitter
 from Preprocess_Json_Data.split_people_data.split_people import PeopleDataSplitter
@@ -764,12 +764,6 @@ def upload_parking_json():
     parkingLot_upload_to_minio(json_path)
     logging.info(f"Uploaded file to MinIO raw bucket")
 
-    # return jsonify({
-    #     "message": "Parking JSON file uploaded successfully",
-    #     "file_path": json_path,
-    #     "minio_path": f"parkingLot_detection/{filename}"
-    # }), 200
-
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
     processing_status = spark_preprocessing(filename, "Parking")
     logging.info("Completed Spark preprocessing")
@@ -829,7 +823,7 @@ def upload_parking_json():
             # Upload the refined JSON to Elasticsearch
             logging.info("Uploading refined JSON to Elasticsearch")
             try:
-                animal_upload_to_elasticsearch(temp_file_path)
+                parking_upload_to_elasticsearch(temp_file_path)
                 logging.info("Successfully uploaded to Elasticsearch")
             except Exception as e:
                 logging.error(f"Error uploading to Elasticsearch: {str(e)}", exc_info=True)

@@ -47,9 +47,10 @@ class ParkingProcessor:
         slot_ids = [row["slot_id"] for row in df.select("slot_id").distinct().collect()]
         results = []
         final_occupancy = {}
+        free_count = 0
 
         for sid in slot_ids:
-            sdf = df.filter(F.col("slot_id") == sid).orderBy("timestamp_sec").cache()
+            sdf = df.filter(F.col("slot_id") == sid).orderBy("timestamp_sec")
             rows = sdf.collect()
 
             became_free = 0
@@ -65,7 +66,7 @@ class ParkingProcessor:
                 occ = row["occupied"]
 
                 if last_state is not None and occ != last_state:
-                    if last_state:  # was occupied → now free
+                    if last_state:  # occupied → free
                         became_free += 1
                         duration = t - last_change_time
                         total_occupied += duration
@@ -74,7 +75,7 @@ class ParkingProcessor:
                             "exit_time": round(t, 3),
                             "duration": round(duration, 3)
                         })
-                    else:  # was free → now occupied
+                    else:  # free → occupied
                         became_occupied += 1
                         duration = t - last_change_time
                         total_free += duration
@@ -84,9 +85,9 @@ class ParkingProcessor:
 
                 last_state = occ
 
-            # Handle trailing time till last timestamp
+            # Handle duration from last state till the last timestamp
             if last_state is not None and last_change_time is not None and rows:
-                last_row_time = rows[-1]["timestamp_sec"]
+                last_row_time = max(row["timestamp_sec"] for row in rows)
                 duration = last_row_time - last_change_time
                 if last_state:
                     total_occupied += duration
@@ -96,10 +97,13 @@ class ParkingProcessor:
             total_time = total_occupied + total_free
             free_percentage = total_free / total_time if total_time > 0 else 0.0
 
-            final_state = rows[-1]["occupied"] if rows else False
+            # Get the actual final status based on the latest timestamp
+            latest_row = max(rows, key=lambda r: r["timestamp_sec"]) if rows else None
+            final_state = latest_row["occupied"] if latest_row else False
+
             results.append({
                 "slot_id": int(sid),
-                "slot_status": "free" if final_state is False else "occupied",
+                "slot_status": "free" if not final_state else "occupied",
                 "state_transitions": {
                     "became_free": became_free,
                     "became_occupied": became_occupied
@@ -113,5 +117,7 @@ class ParkingProcessor:
             })
 
             final_occupancy[int(sid)] = final_state
+            if not final_state:
+              free_count += 1 
 
-        return results, final_occupancy
+        return results, final_occupancy, free_count

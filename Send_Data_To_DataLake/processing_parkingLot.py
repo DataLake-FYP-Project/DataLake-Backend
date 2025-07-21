@@ -15,7 +15,7 @@ BUCKET_NAME = 'raw'
 ES_HOST = "http://localhost:9200"
 ES_INDEX = "datalake-parking-data"
 
-def parking_upload_to_minio(file_path):
+def parkingLot_upload_to_minio(file_path):
     s3 = boto3.client(
         's3',
         endpoint_url=MINIO_ENDPOINT,

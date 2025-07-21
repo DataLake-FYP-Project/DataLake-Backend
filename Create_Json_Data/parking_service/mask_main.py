@@ -145,6 +145,8 @@ def process_parking():
     step = 30  # Process every 30 frames
     
     frame_data = [] 
+    last_known_status = current_status.copy()
+
     while True:
         success, frame = cap.read()
         if not success:
@@ -153,76 +155,81 @@ def process_parking():
         frame_time = frame_id / fps
         free_count = 0
         current_frame_data = {
-        "frame_number": frame_id,
-        "timestamp_sec": round(frame_time, 2),
-        "slots": {},
-        "free_slots": 0
+            "frame_number": frame_id,
+            "timestamp_sec": round(frame_time, 2),
+            "slots": {},
+            "free_slots": 0
         }
 
-        # Process frame for occupancy detection
+        if frame_id % step == 0 or frame_id == 0:
+            for idx, (x, y, w, h) in enumerate(slots):
+                slot_id = str(idx + 1)
+                spot_crop = frame[y:y + h, x:x + w, :]
+
+                try:
+                    spot_status = empty_or_not(spot_crop)
+                    occupied = not spot_status
+
+                    # Update last known status
+                    last_known_status[slot_id] = occupied
+
+                    # Append to slot_status
+                    slot_status[slot_id].append({
+                        "frame": frame_id,
+                        "time": round(frame_time, 2),
+                        "occupied": occupied
+                    })
+
+                    # Detect entry/exit
+                    if current_status[slot_id] != occupied:
+                        if occupied:
+                            occupancy_start_time[slot_id] = frame_time
+                        else:
+                            if slot_id in occupancy_start_time:
+                                duration = round(frame_time - occupancy_start_time[slot_id], 2)
+                                vehicle_data.setdefault(slot_id, []).append({
+                                    "entry_time": round(occupancy_start_time[slot_id], 2),
+                                    "exit_time": round(frame_time, 2),
+                                    "duration_sec": duration,
+                                    "vehicle_type": "unknown"
+                                })
+                                del occupancy_start_time[slot_id]
+                        current_status[slot_id] = occupied
+                except Exception as e:
+                    print(f"Error processing slot {slot_id}: {str(e)}")
+
+        # Use last known state for this frame
         for idx, (x, y, w, h) in enumerate(slots):
             slot_id = str(idx + 1)
-            spot_crop = frame[y:y+h, x:x+w, :]
-            
-            spot_status = empty_or_not(spot_crop)
-            occupied = not spot_status
-            
-            # Update current frame data
+            occupied = last_known_status.get(slot_id, False)
+
             current_frame_data["slots"][slot_id] = {
                 "occupied": occupied,
                 "bbox": [x, y, w, h]
             }
-                    
-                    # Track vehicle entry/exit
-            if current_status[slot_id] != occupied:
-                if occupied:  # Vehicle entered
-                    occupancy_start_time[slot_id] = frame_time
-                else:  # Vehicle exited
-                    if slot_id in occupancy_start_time:
-                        duration = round(frame_time - occupancy_start_time[slot_id], 2)
-                        vehicle_data.setdefault(slot_id, []).append({
-                            "entry_time": round(occupancy_start_time[slot_id], 2),
-                            "exit_time": round(frame_time, 2),
-                            "duration_sec": duration,
-                            "vehicle_type": "unknown"
-                        })
-                        del occupancy_start_time[slot_id]
-                current_status[slot_id] = occupied
 
             if not occupied:
-              free_count += 1
-
-        # Add to frame_data array
-        current_frame_data["free_slots"] = free_count
-        frame_data.append(current_frame_data)
-    
-
-        # Draw parking slots with current status
-        for idx, (x, y, w, h) in enumerate(slots):
-            slot_id = str(idx + 1)
-            # Safely get the current status
-            current_occupied = current_status.get(slot_id, False)
-            color = (0, 0, 255) if current_occupied else (0, 255, 0)
-            
-            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(frame, slot_id, (x+2, y+h-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
-            
-            if not current_occupied:
                 free_count += 1
 
-        # Save individual frame
+            # Draw
+            color = (0, 0, 255) if occupied else (0, 255, 0)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
+            cv2.putText(frame, slot_id, (x + 2, y + h - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+
+        current_frame_data["free_slots"] = free_count
+        frame_data.append(current_frame_data)
+
         frame_filename = os.path.join(FRAME_SAVE_DIR, f"frame_{frame_id:04d}.jpg")
         cv2.imwrite(frame_filename, frame)
 
-        # Print progress for current frame
         print_progress(frame_id, total_frames, free_count, len(slots))
 
-        # Display free spots count
         cv2.putText(frame, f"Free: {free_count}/{len(slots)}", (10, 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
-        
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+
         out.write(frame)
         frame_id += 1
+
 
     # Handle any vehicles still parked at the end
     end_time = total_frames / fps
