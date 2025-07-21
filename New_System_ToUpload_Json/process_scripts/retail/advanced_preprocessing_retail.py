@@ -12,7 +12,7 @@ class RetailProcessor:
         df = df.select(
             col("frame_number"),
             col("timestamp").alias("frame_timestamp"),
-            explode("detections").alias("product")
+            explode("products_detected").alias("product")
         )
 
         df = df.select(
