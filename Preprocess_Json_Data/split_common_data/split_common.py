@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 from collections import defaultdict
 from sklearn.cluster import KMeans
@@ -25,7 +26,7 @@ class CommonDataSplitter:
             result_files = self._process_objects(objects_by_type)
             self._upload_files(result_files)
 
-            print("✅ Processing completed successfully")
+            print("Processing completed successfully")
             return True
 
         except Exception as e:
@@ -48,11 +49,17 @@ class CommonDataSplitter:
 
         return raw
 
-    def _split_by_class(self, data_list):
-        """Group objects by class_name"""
+    def _split_by_class(self, frames):
+        """Extract and group all detection objects by class_name from frames"""
         grouped = defaultdict(list)
-        for item in data_list:
-            grouped[item["class_name"]].append(item)
+
+        for frame in frames:
+            detections = frame.get("detections", [])
+            for detection in detections:
+                detection["frame_number"] = frame.get("frame_number")
+                detection["timestamp"] = frame.get("timestamp")
+                grouped[detection["class_name"]].append(detection)
+
         return grouped
 
     def _process_objects(self, grouped_data):
@@ -80,8 +87,12 @@ class CommonDataSplitter:
 
     def _upload_files(self, files_dict):
         for path, data in files_dict.items():
-            self.minio_connector.write_single_json(data, BUCKETS["refine"], path)
-            print(f"Uploaded: {path}")
+            print(f"🟡 Writing file to MinIO → Bucket: {BUCKETS['refine']} | Key: {path}")
+            try:
+                self.minio_connector.write_single_json(data, BUCKETS["refine"], path)
+                print(f"✅ Successfully uploaded: {path}")
+            except Exception as e:
+                print(f"❌ Failed to upload {path}: {e}")
 
     def _bbox_center(self, bbox):
         x1, y1, x2, y2 = bbox

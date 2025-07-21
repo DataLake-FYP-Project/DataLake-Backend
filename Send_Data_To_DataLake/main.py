@@ -31,7 +31,6 @@ from Preprocess_Json_Data.split_animal_data.split_animal import AnimalDataSplitt
 from Preprocess_Json_Data.split_common_data.split_common import CommonDataSplitter
 from Send_Data_To_DataLake.processing_common import common_upload_to_minio, common_upload_to_elasticsearch
 
-
 app = Flask(__name__)
 
 
@@ -621,6 +620,7 @@ def upload_pose_json():
         logging.info("Nothing to query/dashboard. Stop calling elastic search")
         return jsonify({"message": "Nothing to query/dashboard. Stop calling elastic search"}), 200
 
+
 @app.route("/upload_2_animal", methods=["POST"])
 def upload_animal_json():
     if "json_file" not in request.files:
@@ -738,6 +738,7 @@ def upload_animal_json():
     else:
         logging.info("Nothing to query/dashboard. Stop calling elastic search")
         return jsonify({"message": "Nothing to query/dashboard. Stop calling elastic search"}), 200
+
 
 @app.route("/upload_2_common", methods=["POST"])
 def upload_common_json():
