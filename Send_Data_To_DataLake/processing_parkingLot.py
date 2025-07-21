@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 import boto3
 import os
 import json
@@ -36,10 +37,10 @@ def parking_upload_to_elasticsearch(file_path):
         with open(file_path, "r") as f:
             data = json.load(f)
 
-        detections = data.get("frame_detections", [])
-        if not detections:
-            print("No detections found in refined file.")
-            return
+        slot_summaries = data.get("slot_level_summary", [])
+        if not slot_summaries:
+            logging.warning("No slot-level summaries found in refined file.")
+            raise ValueError("No parking data to upload.")
 
         es = Elasticsearch([ES_HOST])
         es.indices.create(index=ES_INDEX, ignore=400)
@@ -49,23 +50,26 @@ def parking_upload_to_elasticsearch(file_path):
         processing_date = now.date().isoformat()
         processing_version = "v1.0"
 
-        for i, detection in enumerate(detections):
+        for i, slot in enumerate(slot_summaries):
             record = {
                 "@timestamp": now.isoformat(),
                 "source_file": source_file,
                 "processing_date": processing_date,
-                "processing_version": processing_version
+                "processing_version": processing_version,
+                "slot_id": slot.get("slot_id"),
+                "slot_status": slot.get("slot_status"),
+                "state_transitions": slot.get("state_transitions"),
+                "time_metrics": slot.get("time_metrics"),
+                "parking_sessions": slot.get("parking_sessions")
             }
 
-            # Add detection fields directly
-            for key, value in detection.items():
-                record[key] = value
 
             es.index(index=ES_INDEX, id=i + 1, body=record, pipeline="parking_data_timestamp_pipeline")
             print(f"Uploaded doc {i + 1} to Elasticsearch")
 
     except Exception as e:
         print(f"Error uploading parking data: {e}")
+        raise
 
 
 
