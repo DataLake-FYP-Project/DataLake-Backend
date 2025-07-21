@@ -5,6 +5,7 @@ from pathlib import Path
 
 from Preprocess_Json_Data.preprocessing.advanced_preprocessing_animal import AnimalProcessor
 from Preprocess_Json_Data.preprocessing.advanced_preprocessing_safety import SafetyProcessor
+from .advanced_preprocessing_common import CommonProcessor
 
 sys.path.append(str(Path(__file__).parent.parent))
 from .advanced_preprocessing_people import PeopleProcessor
@@ -21,6 +22,7 @@ class CombinedProcessor:
         self.vehicle_processor = VehicleProcessor(spark)
         self.safety_processor = SafetyProcessor(spark)
         self.animal_processor = AnimalProcessor(spark)
+        self.common_processor = CommonProcessor(spark)
 
     def _get_common_output_structure(self, source_file):
         """Common output structure for both people and vehicle processing"""
@@ -241,7 +243,41 @@ class CombinedProcessor:
             except Exception as e:
                 logging.info(f"ERROR in animal processing: {str(e)}")
                 return -1
-        
+
+        elif detection_type == "Common":
+            logging.info("Processing Common Detections")
+            try:
+                common_file = self.common_processor.minio.get_json_file(input_bucket,
+                                                                        f"common_detection/preprocessed_{filename}")
+                processed_df = self._process_file(self.common_processor, input_bucket, output_bucket, common_file,
+                                                  "common_detection")
+
+                if processed_df == "all_invalid":
+                    logging.info("Stopping preprocessing - all common data tracker IDs are -1")
+                    return -1
+
+                if processed_df is None:
+                    logging.info("No valid common data detections to process")
+                    return -1
+
+                grouped = self.common_processor._group_data(processed_df)
+                collected = grouped.collect()
+                enriched_data = dict(
+                    sorted([self.common_processor._enrich_common(row) for row in collected],
+                           key=lambda x: int(x[0])))
+
+                output = self._get_common_output_structure(common_file)
+                output.update({
+                    "common_count": len(enriched_data),
+                    "common": enriched_data
+                })
+                out_path = f"common_detection/refine_{filename}"
+                self._write_output(output_bucket, out_path, output)
+                logging.info(f"Successfully processed {len(enriched_data)} animals in {common_file}")
+
+            except Exception as e:
+                logging.info(f"ERROR in common data processing: {str(e)}")
+                return -1
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
         logging.info(f"Advanced Processing completed in {duration:.2f} seconds")

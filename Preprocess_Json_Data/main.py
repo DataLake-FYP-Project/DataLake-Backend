@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_people import process_people_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_geolocation import process_geolocation_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_pose import process_pose_json_data
+from Preprocess_Json_Data.preprocessing.basic_processing_common import process_common_json_data
 from Preprocess_Json_Data.registry import DETECTION_REGISTRY
 
 # Load environment variables
@@ -33,8 +34,9 @@ def process_video_data(spark, input_path, video_type):
                 "safety_detection" if video_type.lower() == "safety" else \
                     "pose_detection" if video_type.lower() == "pose" else \
                         "geolocation_detection" if video_type.lower() == "geolocation" else \
-                            "animal_detection"
-        
+                            "common_detection" if video_type.lower() == "common" else \
+                                "animal_detection"
+
         full_input_path = f"{type_folder}/{input_path}"
 
         raw_df = minio_conn.read_json(BUCKETS["raw"], full_input_path)
@@ -57,6 +59,9 @@ def process_video_data(spark, input_path, video_type):
         elif video_type.lower() == "animal":
             processed_df, processing_status = process_animal_json_data(raw_df)
             output_path = f"animal_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
+        elif video_type.lower() == "common":
+            processed_df, processing_status = process_common_json_data(raw_df)
+            output_path = f"common_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         return processed_df, output_path, processing_status
     except Exception as e:
         logging.error(f"Data processing failed for {input_path}: {e}")
@@ -234,13 +239,25 @@ def spark_preprocessing(filename, detection_type):
             except Exception as e:
                 logging.error(f"Error processing animal file {animal_file}: {e}")
 
+        elif detection_type == "Common":
+            common_file = minio_conn.get_json_file(BUCKETS["raw"], f"common_detection/{filename}")
+            if not common_file:
+                logging.warning(f"No {filename} file found in common_detection folder")
+
+            try:
+                logging.info(f"Processing common file: {common_file}")
+                common_df, common_path, processing_status = process_video_data(spark, common_file, "common")
+                if not write_output_json(spark, common_df, common_path, processing_status):
+                    logging.error(f"Failed to process common file: {common_file}")
+            except Exception as e:
+                logging.error(f"Error processing common file {common_file}: {e}")
 
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
         if processing_status == -1:
             logging.info("No detections in raw json to process. Skipping further preprocessing\n")
             return processing_status
-        elif processing_status == 1 and detection_type not in ("Geolocation", "Pose","Animal"):
+        elif processing_status == 1 and detection_type not in ("Geolocation", "Pose", "Animal"):
             logging.info(f"Basic Processing completed in {duration:.2f} seconds")
 
             print("\n")

@@ -19,7 +19,7 @@ from processing_vehicle import convert_json_format, vehicle_upload_to_minio, veh
 from processing_people import convert_people_json_format, people_upload_to_elasticsearch, people_upload_to_minio
 from processing_geolocation import geolocation_upload_to_elasticsearch, geolocation_upload_to_minio
 from processing_safety import safety_upload_to_minio, safety_upload_to_elasticsearch
-from Send_Data_To_DataLake.preprocessing_pose import pose_upload_to_minio
+from Send_Data_To_DataLake.processing_pose import pose_upload_to_minio
 from Send_Data_To_DataLake.processing_pose import pose_upload_to_elasticsearch
 from processing_animal import animal_upload_to_elasticsearch, animal_upload_to_minio
 from Preprocess_Json_Data.split_vehicle_data.split_vehicle import VehicleDataSplitter
@@ -30,7 +30,6 @@ from Preprocess_Json_Data.split_geolocation_data.split_geolocation import Geoloc
 from Preprocess_Json_Data.split_animal_data.split_animal import AnimalDataSplitter
 from Preprocess_Json_Data.split_common_data.split_common import CommonDataSplitter
 from Send_Data_To_DataLake.processing_common import common_upload_to_minio, common_upload_to_elasticsearch
-from processing_common import group_and_save_objects
 
 
 app = Flask(__name__)
@@ -763,11 +762,8 @@ def upload_common_json():
     json_file.save(json_path)
     logging.info(f"Saved file to local path: {json_path}")
 
-    grouped_paths = group_and_save_objects(json_path)
-
     # Upload original (raw) file to MinIO
-    for class_name, file_path in grouped_paths:
-        common_upload_to_minio(file_path, class_name)
+    common_upload_to_minio(json_path)
     logging.info(f"Uploaded file to MinIO raw bucket")
 
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
@@ -823,9 +819,9 @@ def upload_common_json():
             logging.info(f"Fetching refined JSON: {refined_file_name}")
             refined_data = fetch_refined_file(
                 spark,
-                file_path="safety_detection",
+                file_path="common_detection",
                 file_name=refined_file_name,
-                detection_type="Safety"
+                detection_type="Common"
             )
             logging.info("Successfully fetched refined JSON")
 
@@ -838,8 +834,7 @@ def upload_common_json():
             # Upload the refined JSON to Elasticsearch
             logging.info("Uploading refined JSON to Elasticsearch")
             try:
-                for class_name, file_path in grouped_paths:
-                    common_upload_to_elasticsearch(temp_file_path)
+                common_upload_to_elasticsearch(temp_file_path)
                 logging.info("Successfully uploaded to Elasticsearch")
             except Exception as e:
                 logging.error(f"Error uploading to Elasticsearch: {str(e)}", exc_info=True)

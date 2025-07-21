@@ -34,7 +34,19 @@ class CommonDataSplitter:
 
     def _get_original_data(self):
         """Fetch original JSON from MinIO"""
-        return self.minio_connector.fetch_json(BUCKETS["refine"], self.source_file)
+        raw = self.minio_connector.fetch_json(BUCKETS["refine"], self.source_file)
+
+        # If it's wrapped like {"data": [...]}, extract it
+        if isinstance(raw, dict):
+            for value in raw.values():
+                if isinstance(value, list):
+                    return value
+            raise ValueError("Unsupported JSON structure: expected list inside dict")
+
+        if not isinstance(raw, list):
+            raise ValueError("Expected JSON to be a list of dicts")
+
+        return raw
 
     def _split_by_class(self, data_list):
         """Group objects by class_name"""
@@ -57,11 +69,11 @@ class CommonDataSplitter:
 
                 for cluster_id in range(self.n_clusters):
                     cluster_objs = [obj for i, obj in enumerate(objects) if labels[i] == cluster_id]
-                    path = f"generic_detection/{class_name}/{class_name}_cluster_{cluster_id}_{timestamp}.json"
+                    path = f"common_detection/{class_name}/{class_name}_cluster_{cluster_id}_{timestamp}.json"
                     result_files[path] = cluster_objs
             else:
                 # No clustering; single file per class
-                path = f"generic_detection/{class_name}/{class_name}_{timestamp}.json"
+                path = f"common_detection/{class_name}/{class_name}_{timestamp}.json"
                 result_files[path] = objects
 
         return result_files
