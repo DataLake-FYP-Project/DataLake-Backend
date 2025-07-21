@@ -257,7 +257,7 @@ def spark_preprocessing(filename, detection_type):
         if processing_status == -1:
             logging.info("No detections in raw json to process. Skipping further preprocessing\n")
             return processing_status
-        elif processing_status == 1 and detection_type not in ("Geolocation", "Pose", "Animal"):
+        elif processing_status == 1 and detection_type not in ("Geolocation", "Pose", "Animal", "Common"):
             logging.info(f"Basic Processing completed in {duration:.2f} seconds")
 
             print("\n")
