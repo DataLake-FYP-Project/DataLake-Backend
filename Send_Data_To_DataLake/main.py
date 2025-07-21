@@ -764,102 +764,102 @@ def upload_parking_json():
     parkingLot_upload_to_minio(json_path)
     logging.info(f"Uploaded file to MinIO raw bucket")
 
-    return jsonify({
-        "message": "Parking JSON file uploaded successfully",
-        "file_path": json_path,
-        "minio_path": f"parkingLot_detection/{filename}"
-    }), 200
+    # return jsonify({
+    #     "message": "Parking JSON file uploaded successfully",
+    #     "file_path": json_path,
+    #     "minio_path": f"parkingLot_detection/{filename}"
+    # }), 200
 
     # Process the file using Spark (this will create the refined JSON in the refine bucket)
-    # processing_status = spark_preprocessing(filename, "Parking")
-    # logging.info("Completed Spark preprocessing")
+    processing_status = spark_preprocessing(filename, "Parking")
+    logging.info("Completed Spark preprocessing")
 
-    # if processing_status == 1:
-    #     # Fetch the most recent refined JSON from the refine bucket
-    #     spark = create_spark_session()
-    #     minio_conn = MinIOConnector(spark)
-    #     temp_file_path = None
-    #     try:
-    #         # Construct the prefix for refined files
-    #         refine_bucket = "refine"  # Adjust if BUCKETS["refine"] is different
-    #         if "preprocessed_" in video_name:
-    #             base_name = video_name.split("preprocessed_")[1]
-    #         else:
-    #             base_name = video_name
-    #         prefix = f"animal_detection/refine_{base_name}"
-    #         logging.info(f"Listing refined files with prefix: {prefix} in bucket: {refine_bucket}")
+    if processing_status == 1:
+        # Fetch the most recent refined JSON from the refine bucket
+        spark = create_spark_session()
+        minio_conn = MinIOConnector(spark)
+        temp_file_path = None
+        try:
+            # Construct the prefix for refined files
+            refine_bucket = "refine"  # Adjust if BUCKETS["refine"] is different
+            if "preprocessed_" in video_name:
+                base_name = video_name.split("preprocessed_")[1]
+            else:
+                base_name = video_name
+            prefix = f"parkingLot_detection/refine_{base_name}"
+            logging.info(f"Listing refined files with prefix: {prefix} in bucket: {refine_bucket}")
 
-    #         # List refined files
-    #         refined_files = minio_conn.list_json_files(refine_bucket, prefix)
-    #         logging.info(f"Found refined files: {refined_files}")
+            # List refined files
+            refined_files = minio_conn.list_json_files(refine_bucket, prefix)
+            logging.info(f"Found refined files: {refined_files}")
 
-    #         if not refined_files:
-    #             logging.error(f"No refined files found for {video_name} in {refine_bucket}")
-    #             return jsonify({"error": f"No refined files found for {video_name} in {refine_bucket}"}), 404
+            if not refined_files:
+                logging.error(f"No refined files found for {video_name} in {refine_bucket}")
+                return jsonify({"error": f"No refined files found for {video_name} in {refine_bucket}"}), 404
 
-    #         # Sort by last modified time
-    #         logging.info("Fetching objects to determine the latest file")
-    #         objects = list(minio_conn.minio_client.list_objects(refine_bucket, prefix=prefix, recursive=True))
-    #         logging.info(f"Objects found: {[obj.object_name for obj in objects]}")
-    #         if not objects:
-    #             logging.error(f"No objects found with prefix {prefix} in {refine_bucket}")
-    #             return jsonify({"error": f"No objects found with prefix {prefix} in {refine_bucket}"}), 404
+            # Sort by last modified time
+            logging.info("Fetching objects to determine the latest file")
+            objects = list(minio_conn.minio_client.list_objects(refine_bucket, prefix=prefix, recursive=True))
+            logging.info(f"Objects found: {[obj.object_name for obj in objects]}")
+            if not objects:
+                logging.error(f"No objects found with prefix {prefix} in {refine_bucket}")
+                return jsonify({"error": f"No objects found with prefix {prefix} in {refine_bucket}"}), 404
 
-    #         latest_file = max(objects, key=lambda x: x.last_modified)
-    #         refined_file_name = latest_file.object_name.split('/')[-1]
-    #         logging.info(f"Selected latest refined file: {refined_file_name}")
+            latest_file = max(objects, key=lambda x: x.last_modified)
+            refined_file_name = latest_file.object_name.split('/')[-1]
+            logging.info(f"Selected latest refined file: {refined_file_name}")
 
-    #         try:
-    #             splitter = AnimalDataSplitter()
-    #             if splitter.process(refined_file_name):
-    #                 logging.info(f"Successfully split refined file: {refined_file_name}")
-    #             else:
-    #                 logging.error(f"Failed to split refined file: {refined_file_name}")
-    #         except Exception as e:
-    #             logging.error(f"Error split refined file: {str(e)}", exc_info=True)
-    #             raise
+            # try:
+            #     splitter = AnimalDataSplitter()
+            #     if splitter.process(refined_file_name):
+            #         logging.info(f"Successfully split refined file: {refined_file_name}")
+            #     else:
+            #         logging.error(f"Failed to split refined file: {refined_file_name}")
+            # except Exception as e:
+            #     logging.error(f"Error split refined file: {str(e)}", exc_info=True)
+            #     raise
 
-    #         # Fetch the refined JSON
-    #         logging.info(f"Fetching refined JSON: {refined_file_name}")
-    #         refined_data = fetch_refined_file(
-    #             spark,
-    #             file_path="animal_detection",
-    #             file_name=refined_file_name,
-    #             detection_type="Animal"
-    #         )
+            # Fetch the refined JSON
+            logging.info(f"Fetching refined JSON: {refined_file_name}")
+            refined_data = fetch_refined_file(
+                spark,
+                file_path="parkingLot_detection",
+                file_name=refined_file_name,
+                detection_type="Parking"
+            )
 
-    #         logging.info("Successfully fetched refined JSON")
+            logging.info("Successfully fetched refined JSON")
 
-    #         # Save the refined data to a temporary file
-    #         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_file:
-    #             json.dump(refined_data, temp_file, indent=4)
-    #             temp_file_path = temp_file.name
-    #         logging.info(f"Saved refined data to temporary file: {temp_file_path}")
+            # Save the refined data to a temporary file
+            with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_file:
+                json.dump(refined_data, temp_file, indent=4)
+                temp_file_path = temp_file.name
+            logging.info(f"Saved refined data to temporary file: {temp_file_path}")
 
-    #         # Upload the refined JSON to Elasticsearch
-    #         logging.info("Uploading refined JSON to Elasticsearch")
-    #         try:
-    #             animal_upload_to_elasticsearch(temp_file_path)
-    #             logging.info("Successfully uploaded to Elasticsearch")
-    #         except Exception as e:
-    #             logging.error(f"Error uploading to Elasticsearch: {str(e)}", exc_info=True)
-    #             raise  # Re-raise the exception to be caught by the outer try-except
+            # Upload the refined JSON to Elasticsearch
+            logging.info("Uploading refined JSON to Elasticsearch")
+            try:
+                animal_upload_to_elasticsearch(temp_file_path)
+                logging.info("Successfully uploaded to Elasticsearch")
+            except Exception as e:
+                logging.error(f"Error uploading to Elasticsearch: {str(e)}", exc_info=True)
+                raise  # Re-raise the exception to be caught by the outer try-except
 
-    #     except Exception as e:
-    #         logging.error(f"Error in fetch/upload process: {str(e)}", exc_info=True)
-    #         return jsonify({"error": f"Failed to fetch or upload refined JSON to Elasticsearch: {str(e)}"}), 500
-    #     finally:
-    #         # Clean up the temporary file if it was created
-    #         if temp_file_path and os.path.exists(temp_file_path):
-    #             os.unlink(temp_file_path)
-    #             logging.info(f"Deleted temporary file: {temp_file_path}")
-    #         spark.stop()
-    #         logging.info("Spark session stopped after fetch/upload")
+        except Exception as e:
+            logging.error(f"Error in fetch/upload process: {str(e)}", exc_info=True)
+            return jsonify({"error": f"Failed to fetch or upload refined JSON to Elasticsearch: {str(e)}"}), 500
+        finally:
+            # Clean up the temporary file if it was created
+            if temp_file_path and os.path.exists(temp_file_path):
+                os.unlink(temp_file_path)
+                logging.info(f"Deleted temporary file: {temp_file_path}")
+            spark.stop()
+            logging.info("Spark session stopped after fetch/upload")
 
-    #     return jsonify({"message": "Animal file uploaded, processed, and indexed successfully"}), 200
-    # else:
-    #     logging.info("Nothing to query/dashboard. Stop calling elastic search")
-    #     return jsonify({"message": "Nothing to query/dashboard. Stop calling elastic search"}), 200
+        return jsonify({"message": "Animal file uploaded, processed, and indexed successfully"}), 200
+    else:
+        logging.info("Nothing to query/dashboard. Stop calling elastic search")
+        return jsonify({"message": "Nothing to query/dashboard. Stop calling elastic search"}), 200
 
 
 if __name__ == "__main__":
