@@ -6,9 +6,11 @@ from pathlib import Path
 from Preprocess_Json_Data.preprocessing.advanced_preprocessing_animal import AnimalProcessor
 from Preprocess_Json_Data.preprocessing.advanced_preprocessing_safety import SafetyProcessor
 
+
 sys.path.append(str(Path(__file__).parent.parent))
 from .advanced_preprocessing_people import PeopleProcessor
 from .advanced_preprocessing_vehicle import VehicleProcessor
+from .advanced_preprocessing_parkingLot import ParkingProcessor
 from ..config.spark_config import create_spark_session
 from ..config.minio_config import BUCKETS
 from pyspark.sql import functions as F
@@ -21,6 +23,7 @@ class CombinedProcessor:
         self.vehicle_processor = VehicleProcessor(spark)
         self.safety_processor = SafetyProcessor(spark)
         self.animal_processor = AnimalProcessor(spark)
+        self.parking_processor = ParkingProcessor(spark)
 
     def _get_common_output_structure(self, source_file):
         """Common output structure for both people and vehicle processing"""
@@ -242,6 +245,47 @@ class CombinedProcessor:
                 logging.info(f"ERROR in animal processing: {str(e)}")
                 return -1
         
+        elif detection_type == "Parking":
+            logging.info("Processing Parking Lot Detections")
+            try:
+                parking_file = self.parking_processor.minio.get_json_file(
+                    input_bucket, f"parking_detection/preprocessed_{filename}"
+                )
+                df = self.parking_processor.minio.read_json(input_bucket, f"parking_detection/preprocessed_{filename}")
+                processed_df = self.parking_processor._process_parking_format(df)
+
+                if processed_df is None or processed_df.count() == 0:
+                    logging.info(f"No valid detections in {filename}")
+                    return -1
+
+                results, final_occupancy, free_count = self.parking_processor._analyze_slot_transitions(processed_df)
+
+                # Safely extract parking_config and convert to dict
+                raw_config_row = df.select("parking_config").first()
+                parking_config = raw_config_row["parking_config"]
+                if hasattr(parking_config, "asDict"):
+                    parking_config = parking_config.asDict()
+                
+                parking_config["free_slots"] = free_count
+                parking_config["final_occupancy"] = final_occupancy
+
+                output = {
+                    "source_file": parking_file,
+                    "processing_date": datetime.now(timezone.utc).isoformat(),
+                    "processing_version": "1.0",
+                    "parking_config": parking_config,
+                    "slot_level_summary": results
+                }
+
+                out_path = f"parking_detection/refine_{filename}"
+                self.parking_processor.minio.write_single_json(output, output_bucket, out_path)
+                logging.info(f"Successfully processed parking stats for {filename}")
+
+            except Exception as e:
+                logging.info(f"ERROR in parking processing: {str(e)}")
+                return -1
+
+
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
         logging.info(f"Advanced Processing completed in {duration:.2f} seconds")

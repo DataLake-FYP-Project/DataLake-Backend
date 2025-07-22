@@ -5,6 +5,7 @@ from Preprocess_Json_Data.config.spark_config import create_spark_session
 from Preprocess_Json_Data.config.minio_config import BUCKETS
 from Preprocess_Json_Data.connectors.minio_connector import MinIOConnector
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_animal import process_animal_json_data
+from Preprocess_Json_Data.preprocessing.basic_preprocessing_parkingLot import process_parking_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_safety import process_safety_json_data
 from Preprocess_Json_Data.preprocessing.basic_preprocessing_vehicle import process_vehicle_json_data
 import logging
@@ -32,6 +33,7 @@ def process_video_data(spark, input_path, video_type):
             "people_detection" if video_type.lower() == "people" else \
                 "safety_detection" if video_type.lower() == "safety" else \
                     "pose_detection" if video_type.lower() == "pose" else \
+                    "parkingLot_detection" if video_type.lower() == "parking" else \
                         "geolocation_detection" if video_type.lower() == "geolocation" else \
                             "animal_detection"
         
@@ -51,6 +53,9 @@ def process_video_data(spark, input_path, video_type):
         elif video_type.lower() == "pose":
             processed_df, processing_status = process_pose_json_data(raw_df)
             output_path = f"pose_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
+        elif video_type.lower() == "parking":
+            processed_df, processing_status = process_parking_json_data(raw_df)
+            output_path = f"parking_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
         elif video_type.lower() == "geolocation":
             processed_df, processing_status = process_geolocation_json_data(raw_df)
             output_path = f"geolocation_detection/preprocessed_{os.path.splitext(os.path.basename(input_path))[0]}.json"
@@ -78,7 +83,11 @@ def write_output_json(spark, df, output_path, processing_status):
             refine_path = clean_path.replace("preprocessed_", "refine_")
             minio_conn.write_wrapped_json(df, BUCKETS["refine"], refine_path, key="frame_detections")
         else:
-            minio_conn.write_json(df, BUCKETS["processed"], clean_path)
+            if video_type == "parking":
+                minio_conn.write_proper_json(df, BUCKETS["processed"], clean_path)
+            else:
+                minio_conn.write_json(df, BUCKETS["processed"], clean_path)
+
 
         if processing_status == 1:
             logging.info(f"Successfully wrote output to processed/{clean_path}")
@@ -234,6 +243,18 @@ def spark_preprocessing(filename, detection_type):
             except Exception as e:
                 logging.error(f"Error processing animal file {animal_file}: {e}")
 
+        elif detection_type == "Parking":
+            parking_file = minio_conn.get_json_file(BUCKETS["raw"], f"parkingLot_detection/{filename}")
+            if not parking_file:
+                logging.warning(f"No {filename} file found in parkingLot_detection folder")
+
+            try:
+                logging.info(f"Processing parking file: {parking_file}")
+                parking_df, parking_path, processing_status = process_video_data(spark, parking_file, "parking")
+                if not write_output_json(spark, parking_df, parking_path, processing_status):
+                    logging.error(f"Failed to process parking file: {parking_file}")
+            except Exception as e:
+                logging.error(f"Error processing parking file {parking_file}: {e}")
 
         end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
