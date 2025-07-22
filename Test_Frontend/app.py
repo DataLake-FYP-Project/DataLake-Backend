@@ -147,15 +147,14 @@ def upload_video_and_points(video_file, points_data, video_type, metadata_to_sen
         elif video_type == "Animal":
             url = "http://localhost:8016/upload_animal"
 
-
-        elif video_type == "Common":
-            url = "http://localhost:8017/upload_common"
-
         elif video_type == "Parking":
             url = "http://localhost:8017/upload_parking"
         
         elif video_type == "Mask_Parking":
             url = "http://localhost:8018/upload_mask_parking"
+
+        elif video_type == "Common":
+            url = "http://localhost:8019/upload_common"
 
         else:
             raise ValueError("Invalid video type")
