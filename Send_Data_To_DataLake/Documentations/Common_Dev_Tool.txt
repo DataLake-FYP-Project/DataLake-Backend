@@ -1,0 +1,55 @@
+DELETE /datalake-common-data
+
+PUT /datalake-common-data
+{
+  "mappings": {
+    "properties": {
+      "@timestamp": { "type": "date" },
+      "frame_number": { "type": "integer" },
+      "tracker_id": { "type": "integer" },
+      "class_id": { "type": "integer" },
+      "class_name": { "type": "keyword" },
+      "confidence": { "type": "float" },
+      "bbox": {
+        "type": "object",
+        "properties": {
+          "x1": { "type": "integer" },
+          "y1": { "type": "integer" },
+          "x2": { "type": "integer" },
+          "y2": { "type": "integer" }
+        }
+      }
+    }
+  }
+}
+
+
+PUT /_ingest/pipeline/common_data_timestamp_pipeline
+{
+  "description": "Add @timestamp to object detection data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+POST /datalake-common-data/_doc?pipeline=common_data_timestamp_pipeline
+{
+  "frame_number": 1,
+  "tracker_id": 5,
+  "class_id": 0,
+  "class_name": "person",
+  "confidence": 0.5202221274375916,
+  "bbox": {
+    "x1": 1177,
+    "y1": 464,
+    "x2": 1202,
+    "y2": 530
+  }
+}
+
+GET datalake-common-data/_search
