@@ -32,5 +32,6 @@
 *.pt
 *.caffemodel
 *.prototxt.txt
+*.pkl
 
 

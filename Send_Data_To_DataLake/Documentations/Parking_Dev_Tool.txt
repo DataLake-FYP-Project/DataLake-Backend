@@ -1,0 +1,51 @@
+GET _cat/indices?v
+
+DELETE datalake-parking-data
+
+PUT /datalake-parking-data
+{
+  "mappings": {
+    "properties": {
+      "@timestamp": { "type": "date" },
+      "slot_id": { "type": "integer" },
+      "slot_status": { "type": "keyword" },
+      "total_occupied_seconds": { "type": "float" },
+      "total_free_seconds": { "type": "float" },
+      "free_percentage": { "type": "float" },
+      "became_free": { "type": "integer" },
+      "became_occupied": { "type": "integer" },
+      "entry_time": { "type": "float" },
+      "exit_time": { "type": "float" },
+      "duration": { "type": "float" }
+    }
+  }
+}
+
+PUT _ingest/pipeline/parking_data_timestamp_pipeline
+{
+  "description": "Add timestamp to parking detection data",
+  "processors": [
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{_ingest.timestamp}}"
+      }
+    }
+  ]
+}
+
+POST /datalake-parking-data/_doc?pipeline=parking_data_timestamp_pipeline
+{
+  "slot_id": 1,
+  "slot_status": "occupied",
+  "total_occupied_seconds": 235.5,
+  "total_free_seconds": 64.2,
+  "free_percentage": 0.214,
+  "became_free": 2,
+  "became_occupied": 3,
+  "entry_time": 0.5,
+  "exit_time": 65.0,
+  "duration": 64.5
+}
+
+GET datalake-parking-data/_search

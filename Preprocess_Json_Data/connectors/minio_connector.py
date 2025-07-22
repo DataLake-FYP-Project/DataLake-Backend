@@ -165,7 +165,40 @@ class MinIOConnector:
             logging.error(f"Unexpected error fetching JSON file: {e}")
             return None
 
+    def write_proper_json(self, df: DataFrame, bucket: str, path: str, mode: str = "overwrite"):
+            """
+            Collects the DataFrame and writes a clean, pretty-printed JSON object
+            (with metadata + frame_detections) to MinIO as a single JSON file.
+            """
+            try:
+                # Step 1: Collect all rows (should only be one row ideally)
+                rows = df.collect()
+                if not rows:
+                    logging.warning("DataFrame is empty, nothing to write.")
+                    return False
 
+                row = rows[0].asDict(recursive=True)  # flatten Row object
+
+                # Step 2: Pretty-print JSON
+                json_str = json.dumps(row, indent=4)
+                json_bytes = json_str.encode('utf-8')
+
+                # Step 3: Write to MinIO
+                self.ensure_bucket_exists(bucket)
+
+                self.minio_client.put_object(
+                    bucket,
+                    path,
+                    BytesIO(json_bytes),
+                    length=len(json_bytes),
+                    content_type='application/json'
+                )
+                logging.info(f"Successfully wrote proper JSON to s3a://{bucket}/{path}")
+                return True
+
+            except Exception as e:
+                logging.error(f"Error writing proper JSON to MinIO: {e}", exc_info=True)
+                return False
     
     def list_json_files(self, bucket: str, folder: str = "") -> List[str]:
         """
